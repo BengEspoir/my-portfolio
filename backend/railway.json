@@ -1,0 +1,10 @@
+{
+  "name": "portfolio-backend",
+  "services": {
+    "api": {
+      "buildCommand": "npm install",
+      "startCommand": "npm start",
+      "healthcheckPath": "/api/health"
+    }
+  }
+}
