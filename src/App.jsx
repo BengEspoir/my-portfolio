@@ -1,4 +1,4 @@
-﻿import { useEffect } from "react";
+import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -8,6 +8,8 @@ import Portfolio from "./pages/Portfolio";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import CaseStudy from "./pages/CaseStudy";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import useTheme from "./hooks/useTheme";
 import { initializeSectionReveal, smoothPageTransition } from "./animations/motion";
 
@@ -32,6 +34,8 @@ function AppRoutes() {
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/portfolio/netflix-clone" element={<CaseStudy />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
     </div>
