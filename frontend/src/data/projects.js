@@ -35,16 +35,16 @@ const projectImageUrls = {
 
   // GRAPHICS DESIGN image URLs (card 1 -> card 10)
   graphicsDesign: [
-    "src/assets/Hi-TV flyer edited.png",
-    "src/assets/ketty's service FRE.png",
-    "src/assets/Page 1 - Outside.png",
-    "src/assets/Hi-TV flyer edited.png",
-    "src/assets/Hi-TV flyer edited.png",
-    "src/assets/Hi-TV flyer edited.png",
-    "src/assets/Hi-TV flyer edited.png",
-    "src/assets/Hi-TV flyer edited.png",
-    "src/assets/Hi-TV flyer edited.png",
-    "src/assets/Hi-TV flyer edited.png"
+    "/images/hi-tv-flyer.png",
+    "/images/kettys-service.png",
+    "/images/restaurant-menu.png",
+    "/images/hi-tv-flyer.png",
+    "/images/hi-tv-flyer.png",
+    "/images/hi-tv-flyer.png",
+    "/images/hi-tv-flyer.png",
+    "/images/hi-tv-flyer.png",
+    "/images/hi-tv-flyer.png",
+    "/images/hi-tv-flyer.png"
   ],
 
   // PROGRAMMING image URLs (card 1 -> card 10)

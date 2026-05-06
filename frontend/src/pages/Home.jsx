@@ -236,7 +236,7 @@ export default function Home() {
             <div className="mx-auto max-w-sm">
               <div className="overflow-hidden rounded-3xl bg-brand-100 p-2 shadow-soft">
                 <img
-                  src="/src/assets/Portfolio pic.jpg"
+                  src="/images/portfolio-pic.jpg"
                   alt="Beng Espoir portrait"
                   className="h-full w-full rounded-[1.25rem] object-cover"
                   loading="lazy"

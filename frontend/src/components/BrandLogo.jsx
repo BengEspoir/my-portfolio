@@ -13,7 +13,7 @@ export default function BrandLogo({ className = "" }) {
 
   return (
     <img
-      src="/src/assets/logo.png"
+      src="/images/logo.png"
       alt="Beng Espoir logo"
       className={["h-30 w-50 object-contain sm:h-20", className].filter(Boolean).join(" ")}
       loading="eager"

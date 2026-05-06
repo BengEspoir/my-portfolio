@@ -1,4 +1,4 @@
-﻿import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight } from "react-icons/fi";
 import { revealUp, staggerContainer } from "../animations/motion";
 import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
@@ -30,7 +30,7 @@ export default function About() {
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <div className="mx-auto max-w-md overflow-hidden rounded-full bg-brand-100 p-3 shadow-soft">
             <img
-              src="/src/assets/Portfolio pic.jpg"
+              src="/images/portfolio-pic.jpg"
               alt="Beng Espoir portrait"
               className="h-full w-full rounded-full object-cover"
               loading="lazy"
