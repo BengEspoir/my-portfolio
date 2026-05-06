@@ -13,44 +13,33 @@ This portfolio consists of:
 
 ## Deployment Options
 
-### Option 1: Vercel (Frontend) + Railway (Backend) - Recommended
+### Option 1: Vercel (Frontend) + Render (Backend) - Recommended (100% Free)
 
-#### Backend Deployment (Railway)
+#### Backend Deployment (Render)
 1. Push your code to GitHub
-2. Go to [railway.app](https://railway.app)
-3. Connect your GitHub repository
-4. Select the `backend` folder as the root directory
-5. Set environment variables:
+2. Go to [render.com](https://render.com) and create an account
+3. Click "New" -> "Web Service"
+4. Connect your GitHub repository and select your portfolio repo
+5. In settings, set the **Root Directory** to `backend`
+6. Set the **Build Command** to `npm install` and **Start Command** to `node server.js`
+7. Select the **Free** instance type
+8. Set environment variables:
    - `EMAIL_USER`: Your Gmail address
    - `EMAIL_PASS`: Your Gmail App Password
    - `PORT`: 3001
-   - `FRONTEND_URL`: Your Vercel URL (after frontend deployment)
-6. Deploy and copy the Railway URL
+   - `FRONTEND_URL`: Your Vercel URL (Update this after you deploy your frontend)
+9. Deploy and copy the Render URL (e.g., `https://your-backend.onrender.com`)
+*Note: Render's free tier spins down after 15 minutes of inactivity. It may take ~50 seconds to wake up when someone uses your contact form for the first time.*
 
 #### Frontend Deployment (Vercel)
 1. Go to [vercel.com](https://vercel.com)
 2. Connect your GitHub repository
 3. Set environment variable:
-   - `VITE_API_URL`: Your Railway backend URL
-4. Deploy
-
-### Option 2: Netlify (Frontend) + Render (Backend)
-
-#### Backend Deployment (Render)
-1. Go to [render.com](https://render.com)
-2. Connect GitHub repository
-3. Select `backend` folder
-4. Set same environment variables as Railway
-5. Deploy
-
-#### Frontend Deployment (Netlify)
-1. Go to [netlify.com](https://netlify.com)
-2. Connect GitHub repository
-3. Set environment variable:
    - `VITE_API_URL`: Your Render backend URL
 4. Deploy
 
-### Option 3: Full-stack on Vercel (Advanced)
+### Option 2: Vercel (Frontend) + Railway (Backend)
+*Note: Railway requires a credit card or offers a limited free trial.*
 Merge backend into the main project and use Vercel serverless functions.
 
 ## Email Setup (Required)

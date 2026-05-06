@@ -98,6 +98,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Root endpoint to prevent "Cannot GET /" in browser
+app.get('/', (req, res) => {
+  res.send('Portfolio Backend API is running successfully!');
+});
+
 app.listen(PORT, () => {
   console.log(`Portfolio backend server running on port ${PORT}`);
 });
