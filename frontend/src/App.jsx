@@ -7,9 +7,10 @@ import About from "./pages/About";
 import Portfolio from "./pages/Portfolio";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
-import CaseStudy from "./pages/CaseStudy";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import CaseStudyPage from "./pages/CaseStudyPage";
+import FullDesignPage from "./pages/FullDesignPage";
 import useTheme from "./hooks/useTheme";
 import { initializeSectionReveal, smoothPageTransition } from "./animations/motion";
 
@@ -32,7 +33,8 @@ function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/portfolio/netflix-clone" element={<CaseStudy />} />
+        <Route path="/projects/:slug/case-study" element={<CaseStudyPage />} />
+        <Route path="/projects/:slug/full-design" element={<FullDesignPage />} />
         <Route path="/services" element={<Services />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />

@@ -43,6 +43,27 @@
   .subtle-gradient {
     @apply bg-white/40 backdrop-blur-lg border border-white/50;
   }
+
+  .premium-link {
+    @apply relative inline-flex items-center gap-1.5 font-bold text-brand-600 transition-colors duration-300 hover:text-brand-700 pb-1;
+  }
+
+  .premium-link::after {
+    content: "";
+    @apply absolute bottom-0 left-0 h-0.5 w-0 origin-left bg-brand-600 transition-all duration-300;
+  }
+
+  .premium-link:hover::after {
+    @apply w-full;
+  }
+
+  .premium-link svg {
+    @apply transition-transform duration-300;
+  }
+
+  .premium-link:hover svg {
+    @apply translate-x-1;
+  }
 }
 
 @layer utilities {

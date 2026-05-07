@@ -65,27 +65,77 @@ const projectImageUrls = {
 const buildProject = ({
   id,
   title,
+  slug,
   description,
   image,
   category,
   tags,
-  ctaLabel = "View Project",
-  ctaLink = "/portfolio"
-}) => ({
-  id,
-  title,
-  description,
-  image,
-  category,
-  tags,
+  ctaType = "default",
   ctaLabel,
-  ctaLink
-});
+  ctaLink,
+  figmaUrl = "https://figma.com/file/PLACEHOLDER-LINK",
+  prototypeUrl = "https://figma.com/proto/PLACEHOLDER-LINK",
+  previewScreens = [
+    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80"
+  ],
+  projectBackground = "This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.",
+  problemStatement = "Users were facing high cognitive load and difficulty navigating through fragmented information sets, leading to increased drop-off rates.",
+  designJourney = "The process began with stakeholder interviews followed by detailed persona creation. I iterated through multiple low-fidelity sketches before arriving at the final structural direction.",
+  challenges = "The main challenge was balancing dense data presentation with a minimalist aesthetic, ensuring that expert users have all tools at hand without overwhelming new users.",
+  solution = "By implementing a modular grid system and progressive disclosure patterns, I successfully reduced perceived complexity while maintaining full functionality.",
+  outcome = "Post-launch metrics showed a 25% increase in task completion speed and significantly improved user satisfaction scores in qualitative testing."
+}) => {
+  // Set default labels if not provided
+  let finalCtaLabel = ctaLabel;
+  if (!finalCtaLabel) {
+    if (ctaType === "prototype") finalCtaLabel = "View Prototype";
+    else if (ctaType === "case-study") finalCtaLabel = "View Case Study";
+    else if (ctaType === "full-design") finalCtaLabel = "View Full Design";
+    else finalCtaLabel = "View Project";
+  }
+
+  // Set default link if not provided
+  let finalCtaLink = ctaLink;
+  if (!finalCtaLink) {
+    if (ctaType === "prototype") finalCtaLink = prototypeUrl;
+    else if (ctaType === "case-study") finalCtaLink = `/projects/${slug}/case-study`;
+    else if (ctaType === "full-design") finalCtaLink = `/projects/${slug}/full-design`;
+    else finalCtaLink = "/portfolio";
+  }
+
+  return {
+    id,
+    title,
+    slug: slug || id,
+    description,
+    image,
+    category,
+    tags,
+    ctaType,
+    ctaLabel: finalCtaLabel,
+    ctaLink: finalCtaLink,
+    figmaUrl,
+    prototypeUrl,
+    previewScreens,
+    projectBackground,
+    problemStatement,
+    designJourney,
+    challenges,
+    solution,
+    outcome
+  };
+};
 
 const uiUxProjects = [
   buildProject({
     id: "uiux-mobile-banking-redesign",
     title: "Mobile Banking App Redesign",
+    slug: "mobile-banking-redesign",
+    ctaType: "prototype",
     description:
       "A full UI/UX redesign focused on clearer onboarding, faster transfers, and stronger trust cues for first-time users.",
     image: projectImageUrls.uiux[0],
@@ -95,6 +145,8 @@ const uiUxProjects = [
   buildProject({
     id: "uiux-healthcare-dashboard",
     title: "Healthcare Dashboard Experience",
+    slug: "healthcare-dashboard",
+    ctaType: "full-design",
     description:
       "Designed a doctor-facing dashboard with simplified patient status cards, prioritization filters, and clean visual hierarchy.",
     image: projectImageUrls.uiux[1],
@@ -104,6 +156,8 @@ const uiUxProjects = [
   buildProject({
     id: "uiux-food-delivery-flow",
     title: "Food Delivery Checkout Flow",
+    slug: "food-delivery-flow",
+    ctaType: "full-design",
     description:
       "Reworked cart and checkout interactions to reduce drop-off, improve trust, and shorten the order completion journey.",
     image: projectImageUrls.uiux[2],
@@ -113,6 +167,8 @@ const uiUxProjects = [
   buildProject({
     id: "uiux-elearning-platform",
     title: "E-Learning Platform UX",
+    slug: "elearning-platform",
+    ctaType: "case-study",
     description:
       "Structured course discovery, progress tracking, and lesson playback for a learner-first study platform experience.",
     image: projectImageUrls.uiux[3],
@@ -122,6 +178,8 @@ const uiUxProjects = [
   buildProject({
     id: "uiux-travel-planner-app",
     title: "Travel Planner Mobile App",
+    slug: "travel-planner-app",
+    ctaType: "prototype",
     description:
       "Built an intuitive itinerary planning flow with day-by-day views, map integration, and collaborative trip editing.",
     image: projectImageUrls.uiux[4],
@@ -131,6 +189,8 @@ const uiUxProjects = [
   buildProject({
     id: "uiux-real-estate-portal",
     title: "Real Estate Search Portal",
+    slug: "real-estate-portal",
+    ctaType: "case-study",
     description:
       "Improved listing comparison and filtering by creating clean card layouts and progressive detail disclosure patterns.",
     image: projectImageUrls.uiux[5],
@@ -140,6 +200,8 @@ const uiUxProjects = [
   buildProject({
     id: "uiux-fintech-onboarding",
     title: "Fintech Onboarding Journey",
+    slug: "fintech-onboarding",
+    ctaType: "full-design",
     description:
       "Designed a frictionless account setup process with clear progress indicators and compliance-focused microcopy.",
     image: projectImageUrls.uiux[6],
@@ -149,6 +211,8 @@ const uiUxProjects = [
   buildProject({
     id: "uiux-saas-admin-panel",
     title: "SaaS Admin Panel Redesign",
+    slug: "saas-admin-panel",
+    ctaType: "full-design",
     description:
       "Reorganized analytics modules and navigation to help team leads complete high-frequency tasks with fewer clicks.",
     image: projectImageUrls.uiux[7],
@@ -158,6 +222,8 @@ const uiUxProjects = [
   buildProject({
     id: "uiux-portfolio-case-study",
     title: "Creative Portfolio Case Study",
+    slug: "portfolio-case-study",
+    ctaType: "case-study",
     description:
       "Created a storytelling layout for showcasing process, outcomes, and before/after visual transformations.",
     image: projectImageUrls.uiux[8],
@@ -167,11 +233,30 @@ const uiUxProjects = [
   buildProject({
     id: "uiux-event-booking",
     title: "Event Booking UX Design",
+    slug: "event-booking",
+    ctaType: "full-design",
     description:
       "Crafted a ticket booking interface with progressive pricing details, seating guidance, and clearer confirmation states.",
     image: projectImageUrls.uiux[9],
     category: "UI/UX",
     tags: ["Booking", "UX Flow", "UI Kit", "Conversion"]
+  }),
+  buildProject({
+    id: "uiux-netflix-clone",
+    title: "Netflix Clone",
+    slug: "netflix-clone",
+    ctaType: "case-study",
+    description:
+      "A complete UI/UX exploration of a streaming app flow, designed to sharpen hierarchy, interaction design, and onboarding patterns.",
+    image: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=1400&q=80",
+    category: "UI/UX",
+    tags: ["UI/UX", "Netflix Clone", "Prototype", "Design Practice"],
+    projectBackground: "A deep dive into the UX patterns of a leading streaming platform to understand complex content delivery systems.",
+    problemStatement: "Maintaining user engagement during browsing and ensuring frictionless transitions between discovery and playback.",
+    designJourney: "Replicated 15+ high-fidelity screens, testing interaction states and mobile-first navigation logic.",
+    challenges: "Recreating the smooth, dark-mode aesthetic while maintaining perfect contrast and readability.",
+    solution: "Applied high-fidelity UI systems inspired by Netflix's production patterns, focusing on card carousels and hero animations.",
+    outcome: "Gained significant insight into scalable component architecture and high-performance interaction design."
   })
 ];
 
@@ -474,5 +559,5 @@ export const featuredCaseStudy = {
     "Applied typography systems and spacing rules inspired by production streaming interfaces.",
     "Tested transitions and interaction states for a smoother mobile-first experience."
   ],
-  ctaLink: "/portfolio/netflix-clone"
+  ctaLink: "/projects/netflix-clone/case-study"
 };

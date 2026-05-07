@@ -1,26 +1,24 @@
-﻿import Button from "./Button";
+import ProjectCardLink from "./ProjectCardLink";
 
 function ProjectCta({ project }) {
   if (!project.ctaLink) return null;
 
   if (project.ctaLink.startsWith("/")) {
     return (
-      <Button to={project.ctaLink} size="sm" className="mt-4 w-fit">
-        {project.ctaLabel || "View Project"}
-      </Button>
+      <ProjectCardLink 
+        to={project.ctaLink} 
+        label={project.ctaLabel || "View Project"} 
+        className="mt-4" 
+      />
     );
   }
 
   return (
-    <Button
-      href={project.ctaLink}
-      target="_blank"
-      rel="noreferrer"
-      size="sm"
-      className="mt-4 w-fit"
-    >
-      {project.ctaLabel || "View Project"}
-    </Button>
+    <ProjectCardLink 
+      href={project.ctaLink} 
+      label={project.ctaLabel || "View Project"} 
+      className="mt-4" 
+    />
   );
 }
 
