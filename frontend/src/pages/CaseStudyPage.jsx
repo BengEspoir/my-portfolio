@@ -195,9 +195,11 @@ export default function CaseStudyPage() {
                 <FiZap /> View Live Project
               </Button>
             )}
-            <Button href={project.figmaUrl} target="_blank" variant="secondary" className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20">
-              <FiFigma /> View Design in Figma
-            </Button>
+            {project.figmaUrl && (
+              <Button href={project.figmaUrl} target="_blank" variant="secondary" className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20">
+                <FiFigma /> View Design in Figma
+              </Button>
+            )}
             <Button to="/contact" variant="secondary" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20">
               Start a Similar Project
             </Button>

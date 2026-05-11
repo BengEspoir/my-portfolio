@@ -272,6 +272,8 @@ const webDevProjects = [
     category: "WEB DEV",
     tags: ["Next.js", "B2B Marketplace", "Fintech", "UX Design"],
     liveUrl: "https://cash-crop-app.vercel.app", // LIVE_LINK_PLACEHOLDER: This link will be updated once the custom domain is active.
+    figmaUrl: null,
+    prototypeUrl: null,
     previewScreens: [
       "/projects/agriculnet.png",
       "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=900&q=80",
