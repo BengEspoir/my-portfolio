@@ -126,6 +126,31 @@ export default function CaseStudyPage() {
         </div>
       </section>
 
+      {/* UX Flow Section */}
+      {project.uxFlow && (
+        <section className="site-container">
+          <SectionTitle 
+            title="Experience Architecture" 
+            description="A breakdown of the core platform modules and the UX strategy behind them."
+          />
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {project.uxFlow.map((item, idx) => (
+              <div key={idx} className="card-surface p-8 space-y-4">
+                <div className="text-brand-600 font-bold text-xl flex items-center gap-3">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-50 text-sm">
+                    {idx + 1}
+                  </span>
+                  {item.title}
+                </div>
+                <p className="text-slate-600 leading-relaxed">
+                  {item.content}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Solution & Outcome */}
       <section className="site-container">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
@@ -165,7 +190,12 @@ export default function CaseStudyPage() {
             Interested in seeing the full interaction design and how the components work together? View the read-only Figma file below.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Button href={project.figmaUrl} target="_blank" variant="cta" className="gap-2">
+            {project.liveUrl && (
+              <Button href={project.liveUrl} target="_blank" variant="cta" className="gap-2 !bg-emerald-600 hover:!bg-emerald-700">
+                <FiZap /> View Live Project
+              </Button>
+            )}
+            <Button href={project.figmaUrl} target="_blank" variant="secondary" className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20">
               <FiFigma /> View Design in Figma
             </Button>
             <Button to="/contact" variant="secondary" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20">

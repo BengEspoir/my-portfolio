@@ -271,7 +271,7 @@ const webDevProjects = [
     image: "/projects/agriculnet.png",
     category: "WEB DEV",
     tags: ["Next.js", "B2B Marketplace", "Fintech", "UX Design"],
-    ctaLink: "https://cash-crop-app.vercel.app", // LIVE_LINK_PLACEHOLDER: This link will be updated once the custom domain is active.
+    liveUrl: "https://cash-crop-app.vercel.app", // LIVE_LINK_PLACEHOLDER: This link will be updated once the custom domain is active.
     previewScreens: [
       "/projects/agriculnet.png",
       "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=900&q=80",
@@ -285,6 +285,36 @@ const webDevProjects = [
       "Agricultural trade in emerging markets suffers from trust asymmetry, middlemen dominance (absorbing 40-60% of value), and severe payment risks. Manual verification processes lock smallholder farmers out of formal trade.",
     designJourney:
       "The experience architecture focuses on conversion clarity and trust. It features a step-gated verification pipeline (KYC/AML), role-based registration, and a 3-tier trust hierarchy (Green/Gold/Amber) to reduce cognitive load in complex B2B transactions.",
+    uxFlow: [
+      {
+        title: "Landing & Discovery",
+        content: "HeroSection anchors on three value props—verified supply, protected payments, export readiness. Includes a trust strip with CountUp animations for real platform metrics."
+      },
+      {
+        title: "Progressive Onboarding",
+        content: "A step-gated verification pipeline (Registration → Role selection → Email/Phone OTP → Identity upload → Admin review) with TierBadge status indicators."
+      },
+      {
+        title: "Trust & Verification Layer",
+        content: "A 3-tier hierarchy (Green/Blue/Amber) and SellerTrustBar combining star ratings, verification status, and inquiry heat demand signals."
+      },
+      {
+        title: "Listing & Farmer Surfaces",
+        content: "Alibaba-style density model crop cards with standalone 'Send Inquiry' CTAs, status badges, and export readiness indicators."
+      },
+      {
+        title: "Order Management & Tracking",
+        content: "State-machine workflow with visual status badges (pending_payment → confirmed → in_transit → delivered) and vertical timeline tracking."
+      },
+      {
+        title: "Messaging & Context",
+        content: "ListingContextBanner surfaces trade context (crop, quantity, location) inline within chat to eliminate discovery friction."
+      },
+      {
+        title: "Admin Moderation UI",
+        content: "Decision velocity workspace with KPI cards, filterable user lists, and a split-pane review system for identity verification."
+      }
+    ],
     challenges:
       "The primary challenge was balancing the verification bottleneck with user conversion. We implemented progressive onboarding that converts users before asking for heavy KYC, using real-time status tracking.",
     solution:
