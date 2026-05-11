@@ -87,7 +87,9 @@ const buildProject = ({
   designJourney = "The process began with stakeholder interviews followed by detailed persona creation. I iterated through multiple low-fidelity sketches before arriving at the final structural direction.",
   challenges = "The main challenge was balancing dense data presentation with a minimalist aesthetic, ensuring that expert users have all tools at hand without overwhelming new users.",
   solution = "By implementing a modular grid system and progressive disclosure patterns, I successfully reduced perceived complexity while maintaining full functionality.",
-  outcome = "Post-launch metrics showed a 25% increase in task completion speed and significantly improved user satisfaction scores in qualitative testing."
+  outcome = "Post-launch metrics showed a 25% increase in task completion speed and significantly improved user satisfaction scores in qualitative testing.",
+  liveUrl = null,
+  uxFlow = null
 }) => {
   // Set default labels if not provided
   let finalCtaLabel = ctaLabel;
@@ -126,7 +128,9 @@ const buildProject = ({
     designJourney,
     challenges,
     solution,
-    outcome
+    outcome,
+    liveUrl,
+    uxFlow
   };
 };
 

@@ -42,13 +42,25 @@ export default function CaseStudyPage() {
             <div className="grid grid-cols-2 gap-8 border-t border-slate-100 pt-8">
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">Role</h4>
-                <p className="mt-1 font-semibold text-slate-900">Lead UI/UX Designer</p>
+                <p className="mt-1 font-semibold text-slate-900">
+                  {project.category === "WEB DEV" ? "Full Stack Developer" : "Lead UI/UX Designer"}
+                </p>
               </div>
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">Tools</h4>
-                <p className="mt-1 font-semibold text-slate-900">Figma, Adobe XD, Miro</p>
+                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">Tools / Stack</h4>
+                <p className="mt-1 font-semibold text-slate-900">
+                  {project.tags.slice(0, 3).join(", ")}
+                </p>
               </div>
             </div>
+
+            {project.liveUrl && (
+              <div className="pt-4">
+                <Button href={project.liveUrl} target="_blank" variant="cta" className="gap-2 !bg-emerald-600 hover:!bg-emerald-700">
+                  <FiZap /> View Live Project
+                </Button>
+              </div>
+            )}
           </div>
           
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-brand-100 shadow-2xl">
@@ -185,9 +197,14 @@ export default function CaseStudyPage() {
       {/* CTA Bottom */}
       <section className="site-container">
         <div className="rounded-[2.5rem] bg-slate-900 p-12 text-center text-white lg:p-20">
-          <h2 className="text-4xl font-bold lg:text-5xl">Explore the Prototype</h2>
+          <h2 className="text-4xl font-bold lg:text-5xl">
+            {project.liveUrl ? "Experience the Live Platform" : "Explore the Prototype"}
+          </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
-            Interested in seeing the full interaction design and how the components work together? View the read-only Figma file below.
+            {project.liveUrl 
+              ? "The AgriculNet ecosystem is currently live in its beta phase. You can explore the full B2B trade flow and verification system directly."
+              : "Interested in seeing the full interaction design and how the components work together? View the read-only Figma file below."
+            }
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             {project.liveUrl && (
