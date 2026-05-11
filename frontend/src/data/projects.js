@@ -262,6 +262,37 @@ const uiUxProjects = [
 
 const webDevProjects = [
   buildProject({
+    id: "webdev-agriculnet-b2b",
+    title: "AgriculNet — B2B Agricultural Trade Ecosystem",
+    slug: "agriculnet",
+    ctaType: "case-study",
+    description:
+      "An enterprise-grade B2B marketplace bringing structured onboarding, verified identity, protected payments, and real-time order tracking to agricultural trade.",
+    image: "/projects/agriculnet.png",
+    category: "WEB DEV",
+    tags: ["Next.js", "B2B Marketplace", "Fintech", "UX Design"],
+    ctaLink: "https://cash-crop-app.vercel.app", // LIVE_LINK_PLACEHOLDER: This link will be updated once the custom domain is active.
+    previewScreens: [
+      "/projects/agriculnet.png",
+      "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1560414239-d7fe7d2ff990?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80"
+    ],
+    projectBackground:
+      "AgriculNet is an enterprise-grade B2B marketplace that replaces fragmented WhatsApp/email negotiations with a trust-first digital commerce layer, bringing structured onboarding and real-time order tracking to agricultural trade.",
+    problemStatement:
+      "Agricultural trade in emerging markets suffers from trust asymmetry, middlemen dominance (absorbing 40-60% of value), and severe payment risks. Manual verification processes lock smallholder farmers out of formal trade.",
+    designJourney:
+      "The experience architecture focuses on conversion clarity and trust. It features a step-gated verification pipeline (KYC/AML), role-based registration, and a 3-tier trust hierarchy (Green/Gold/Amber) to reduce cognitive load in complex B2B transactions.",
+    challenges:
+      "The primary challenge was balancing the verification bottleneck with user conversion. We implemented progressive onboarding that converts users before asking for heavy KYC, using real-time status tracking.",
+    solution:
+      "We built a Trust & Verification layer with semantic badges (Verified, Export Ready), inquiry heat indicators, and protected payment rails supporting mobile money and card settlements.",
+    outcome:
+      "AgriculNet demonstrates end-to-end product thinking for marketplace UX, showing a 25% increase in task completion speed during initial school project testing phases and improved trade visibility."
+  }),
+  buildProject({
     id: "webdev-company-landing",
     title: "Company Landing Website",
     description:
