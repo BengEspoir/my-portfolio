@@ -8,6 +8,11 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+// Force Node.js to use IPv4 instead of IPv6 for DNS resolution
+// This fixes the ENETUNREACH error on Render's free tier
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
