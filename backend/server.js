@@ -14,7 +14,15 @@ const PORT = process.env.PORT || 3001;
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: [process.env.FRONTEND_URL, 'http://localhost:5173'].filter(Boolean),
+  origin: function (origin, callback) {
+    const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173'].filter(Boolean);
+    // Allow requests with no origin (like mobile apps/curl), exact matches, or any Vercel preview URL
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
