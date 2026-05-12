@@ -61,6 +61,8 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
   },
+  // Force IPv4 to avoid ENETUNREACH errors on Render.com
+  family: 4,
   // Increase timeouts for cloud environment reliability
   connectionTimeout: 10000, // 10 seconds
   greetingTimeout: 10000,
