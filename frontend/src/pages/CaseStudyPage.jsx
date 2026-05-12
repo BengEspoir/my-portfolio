@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { FiArrowLeft, FiArrowRight, FiFigma, FiSmartphone, FiLayout, FiCompass, FiTarget, FiZap } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiFigma, FiSmartphone, FiLayout, FiCompass, FiTarget, FiZap, FiPlay, FiDownload } from "react-icons/fi";
 import { projects } from "../data/projects";
 import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
@@ -29,7 +29,10 @@ export default function CaseStudyPage() {
         
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div className="space-y-6">
-            <div className="inline-flex rounded-full bg-brand-50 px-4 py-1.5 text-sm font-bold text-brand-600">
+            <div 
+              className="inline-flex rounded-full px-4 py-1.5 text-sm font-bold text-white"
+              style={{ backgroundColor: project.brandColor || "#6366f1" }}
+            >
               {project.category}
             </div>
             <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 lg:text-6xl">
@@ -54,13 +57,116 @@ export default function CaseStudyPage() {
               </div>
             </div>
 
-            {project.liveUrl && (
-              <div className="pt-4">
-                <Button href={project.liveUrl} target="_blank" variant="cta" className="gap-2 !bg-emerald-600 hover:!bg-emerald-700">
+            <div className="flex flex-wrap gap-4 pt-4">
+              {project.category === "WEB DEV" && project.liveUrl && (
+                <Button 
+                  href={project.liveUrl} 
+                  target="_blank" 
+                  variant="cta" 
+                  className="gap-2"
+                  style={{ backgroundColor: project.brandColor || "#059669" }}
+                >
                   <FiZap /> View Live Project
                 </Button>
-              </div>
-            )}
+              )}
+
+              {project.category === "UI/UX" && (
+                <>
+                  {project.prototypeUrl && (
+                    <Button 
+                      href={project.prototypeUrl} 
+                      target="_blank" 
+                      variant="cta" 
+                      className="gap-2"
+                      style={{ backgroundColor: project.brandColor || "#059669" }}
+                      onClick={(e) => {
+                        alert("trying to view protype flow will require figma User account permission, request access");
+                      }}
+                    >
+                      <FiFigma /> View Prototype Flow
+                    </Button>
+                  )}
+                  {project.videoUrl && (
+                    <Button 
+                      href={project.videoUrl} 
+                      target="_blank" 
+                      variant="cta" 
+                      className="gap-2"
+                      style={{ backgroundColor: project.brandColor || "#059669" }}
+                    >
+                      <FiPlay /> View Live Export Protype Video
+                    </Button>
+                  )}
+                  {project.figmaUrl && (
+                    <Button 
+                      href={project.figmaUrl} 
+                      target="_blank" 
+                      variant="cta" 
+                      className="gap-2"
+                      style={{ backgroundColor: project.brandColor || "#059669" }}
+                    >
+                      <FiFigma /> View Figma File
+                    </Button>
+                  )}
+                </>
+              )}
+
+              {project.category === "MOBILE DEV" && (
+                <>
+                  {project.prototypeUrl && (
+                    <Button 
+                      href={project.prototypeUrl} 
+                      target="_blank" 
+                      variant="cta" 
+                      className="gap-2"
+                      style={{ backgroundColor: project.brandColor || "#059669" }}
+                      onClick={(e) => {
+                        alert("trying to view protype flow will require figma User account permission, request access");
+                      }}
+                    >
+                      <FiFigma /> View Prototype Flow
+                    </Button>
+                  )}
+                  {project.videoUrl && (
+                    <Button 
+                      href={project.videoUrl} 
+                      target="_blank" 
+                      variant="cta" 
+                      className="gap-2"
+                      style={{ backgroundColor: project.brandColor || "#059669" }}
+                    >
+                      <FiPlay /> View Live Export Prototype Video
+                    </Button>
+                  )}
+                  {project.apkUrl !== undefined && (
+                    <Button 
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        alert("Project still in completion soon coming");
+                      }}
+                      variant="cta" 
+                      className="gap-2"
+                      style={{ backgroundColor: project.brandColor || "#059669" }}
+                    >
+                      <FiDownload /> Download APK file
+                    </Button>
+                  )}
+                </>
+              )}
+
+              {project.category === "GRAPHICS DESIGN" && project.downloadUrl && (
+                <Button 
+                  href={project.downloadUrl} 
+                  target="_blank" 
+                  variant="cta" 
+                  className="gap-2"
+                  style={{ backgroundColor: project.brandColor || "#059669" }}
+                >
+                  <FiDownload /> Download design file
+                </Button>
+              )}
+            </div>
           </div>
           
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-brand-100 shadow-2xl">
@@ -207,22 +313,128 @@ export default function CaseStudyPage() {
             }
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            {project.liveUrl && (
-              <Button href={project.liveUrl} target="_blank" variant="cta" className="gap-2 !bg-emerald-600 hover:!bg-emerald-700">
+            {project.category === "WEB DEV" && project.liveUrl && (
+              <Button 
+                href={project.liveUrl} 
+                target="_blank" 
+                variant="cta" 
+                className="gap-2"
+                style={{ backgroundColor: project.brandColor || "#059669" }}
+              >
                 <FiZap /> View Live Project
               </Button>
             )}
-            {project.figmaUrl && (
-              <Button href={project.figmaUrl} target="_blank" variant="secondary" className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20">
-                <FiFigma /> View Design in Figma
+
+            {project.category === "UI/UX" && (
+              <>
+                {project.prototypeUrl && (
+                  <Button 
+                    href={project.prototypeUrl} 
+                    target="_blank" 
+                    variant="secondary" 
+                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
+                    onClick={(e) => {
+                      alert("trying to view protype flow will require figma User account permission, request access");
+                    }}
+                  >
+                    <FiFigma /> View Prototype Flow
+                  </Button>
+                )}
+                {project.videoUrl && (
+                  <Button 
+                    href={project.videoUrl} 
+                    target="_blank" 
+                    variant="secondary" 
+                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
+                  >
+                    <FiPlay /> View Live Export Protype Video
+                  </Button>
+                )}
+                {project.figmaUrl && (
+                  <Button 
+                    href={project.figmaUrl} 
+                    target="_blank" 
+                    variant="secondary" 
+                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
+                  >
+                    <FiFigma /> View Figma File
+                  </Button>
+                )}
+              </>
+            )}
+
+            {project.category === "MOBILE DEV" && (
+              <>
+                {project.prototypeUrl && (
+                  <Button 
+                    href={project.prototypeUrl} 
+                    target="_blank" 
+                    variant="secondary" 
+                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
+                    onClick={(e) => {
+                      alert("trying to view protype flow will require figma User account permission, request access");
+                    }}
+                  >
+                    <FiFigma /> View Prototype Flow
+                  </Button>
+                )}
+                {project.videoUrl && (
+                  <Button 
+                    href={project.videoUrl} 
+                    target="_blank" 
+                    variant="secondary" 
+                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
+                  >
+                    <FiPlay /> View Live Export Prototype Video
+                  </Button>
+                )}
+                {project.apkUrl !== undefined && (
+                  <Button 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      alert("Project still in completion soon coming");
+                    }}
+                    variant="secondary" 
+                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
+                  >
+                    <FiDownload /> Download APK file
+                  </Button>
+                )}
+              </>
+            )}
+
+            {project.category === "GRAPHICS DESIGN" && project.downloadUrl && (
+              <Button 
+                href={project.downloadUrl} 
+                target="_blank" 
+                variant="secondary" 
+                className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
+              >
+                <FiDownload /> Download design file
               </Button>
             )}
+
             <Button to="/contact" variant="secondary" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20">
               Start a Similar Project
             </Button>
           </div>
         </div>
       </section>
+
+      {/* Interactive Prototype Section */}
+      {project.prototypeEmbed && (
+        <section className="site-container">
+          <SectionTitle 
+            title="Interactive Prototype Flow" 
+            description="Explore the full user journey and interactive transitions directly within this live Figma embed."
+          />
+          <div 
+            className="overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-50 shadow-2xl"
+            dangerouslySetInnerHTML={{ __html: project.prototypeEmbed }}
+          />
+        </section>
+      )}
     </div>
   );
 }

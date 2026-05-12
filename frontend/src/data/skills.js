@@ -17,7 +17,7 @@ import {
   SiWordpress
 } from "react-icons/si";
 import { FaFileExcel, FaFilePowerpoint, FaFileWord, FaJava } from "react-icons/fa6";
-import { FiBookOpen, FiCpu, FiMonitor, FiPenTool, FiStar } from "react-icons/fi";
+import { FiBookOpen, FiCpu, FiMonitor, FiPenTool, FiSmartphone, FiStar } from "react-icons/fi";
 
 // Shared source of truth for the Skills section across pages.
 export const skillCategories = [
@@ -32,6 +32,12 @@ export const skillCategories = [
     color: "web",
     icon: FiMonitor,
     items: ["Front-End", "Back-End"]
+  },
+  {
+    title: "Mobile Development",
+    color: "mobile",
+    icon: FiSmartphone,
+    items: ["React Native"]
   },
   {
     title: "Programming",
@@ -55,6 +61,7 @@ export const skillCategories = [
 
 // Tool list powers the compact bars in Home and detailed cards in About.
 export const toolSkills = [
+  { name: "React Native", level: 60, icon: SiReact, domain: "mobile" },
   { name: "Figma", level: 90, icon: SiFigma, domain: "design" },
   { name: "HTML5", level: 90, icon: SiHtml5, domain: "web" },
   { name: "C Programming", level: 85, icon: SiC, domain: "programming" },
@@ -79,7 +86,7 @@ export const toolSkills = [
 
 export const quickFacts = [
   { label: "Location", value: "Cameroon" },
-  { label: "Creative Strength", value: "UI/UX and Branding Design" },
+  { label: "Core Strength", value: "AI-powered Assistant Development & System Architecture" },
   { label: "Passion", value: "Turning ideas into functional and aesthetic digital solutions" },
   { label: "Collaboration", value: "Git and GitHub workflow" }
 ];

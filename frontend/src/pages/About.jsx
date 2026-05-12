@@ -8,6 +8,7 @@ import { quickFacts, skillCategories, toolSkills } from "../data/skills";
 const skillGroupTone = {
   design: "text-fuchsia-500",
   web: "text-emerald-500",
+  mobile: "text-blue-500",
   programming: "text-amber-500",
   documentation: "text-indigo-500",
   others: "text-cyan-500"
@@ -47,13 +48,12 @@ export default function About() {
               As I advanced in my studies in Software Engineering, I developed strong skills in
               programming, UI/UX design, and web development.
             </p>
-            <p className="text-lg leading-relaxed text-slate-600">
-              I gained hands-on experience through internships, collaborating with teams on real
-              projects that helped me grow in frontend development and version control.
+            <p className="text-lg leading-relaxed text-slate-600 font-medium text-slate-800">
+              Today, my strength in all development processes—be it web or mobile development with React Native—lies in AI-powered assistant development and system architecture understanding. We are now in the era of AI-powered development, and these capabilities form the core of my technical approach.
             </p>
             <p className="text-lg leading-relaxed text-slate-600">
-              Today, I am focused on blending my design eye with engineering knowledge to craft
-              solutions that are both functional and engaging.
+              I blend my design eye with these engineering foundations to craft
+              solutions that are both functional, highly intelligent, and engaging.
             </p>
           </article>
         </div>

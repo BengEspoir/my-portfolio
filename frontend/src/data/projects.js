@@ -1,4 +1,4 @@
-export const projectCategories = ["All", "UI/UX", "WEB DEV", "GRAPHICS DESIGN", "PROGRAMMING"];
+export const projectCategories = ["All", "UI/UX", "WEB DEV", "MOBILE DEV", "GRAPHICS DESIGN", "PROGRAMMING"];
 
 // QUICK IMAGE UPDATE GUIDE:
 // 1) Put your real images in public/projects (example: public/projects/my-project.jpg)
@@ -89,7 +89,11 @@ const buildProject = ({
   solution = "By implementing a modular grid system and progressive disclosure patterns, I successfully reduced perceived complexity while maintaining full functionality.",
   outcome = "Post-launch metrics showed a 25% increase in task completion speed and significantly improved user satisfaction scores in qualitative testing.",
   liveUrl = null,
-  uxFlow = null
+  uxFlow = null,
+  prototypeEmbed = null,
+  videoUrl = null,
+  apkUrl = null,
+  downloadUrl = null
 }) => {
   // Set default labels if not provided
   let finalCtaLabel = ctaLabel;
@@ -130,7 +134,11 @@ const buildProject = ({
     solution,
     outcome,
     liveUrl,
-    uxFlow
+    uxFlow,
+    prototypeEmbed,
+    videoUrl,
+    apkUrl,
+    downloadUrl
   };
 };
 
@@ -252,15 +260,57 @@ const uiUxProjects = [
     ctaType: "case-study",
     description:
       "A complete UI/UX exploration of a streaming app flow, designed to sharpen hierarchy, interaction design, and onboarding patterns.",
-    image: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=1400&q=80",
+    image: "/netflix-clone/Netflix user flow 1.png",
     category: "UI/UX",
     tags: ["UI/UX", "Netflix Clone", "Prototype", "Design Practice"],
+    prototypeUrl: "https://www.figma.com",
+    videoUrl: "#", // Add the real video URL later
+    previewScreens: [
+      "/netflix-clone/Netflix user flow 1.png",
+      "/netflix-clone/Netflix userflow 2.png",
+      "/netflix-clone/Netflix user flow 3.png",
+      "/netflix-clone/Netflix user flow 4.png",
+      "/netflix-clone/Netflix user flow 5.png",
+      "/netflix-clone/Netflix user flow 6.png",
+      "/netflix-clone/Netflix user flow 7.png",
+      "/netflix-clone/Netflix user flow 8.png",
+      "/netflix-clone/Netflix user flow 9.png",
+      "/netflix-clone/Netflix user flow 10.png",
+      "/netflix-clone/Netflix user flow 11.png"
+    ],
     projectBackground: "A deep dive into the UX patterns of a leading streaming platform to understand complex content delivery systems.",
     problemStatement: "Maintaining user engagement during browsing and ensuring frictionless transitions between discovery and playback.",
     designJourney: "Replicated 15+ high-fidelity screens, testing interaction states and mobile-first navigation logic.",
     challenges: "Recreating the smooth, dark-mode aesthetic while maintaining perfect contrast and readability.",
     solution: "Applied high-fidelity UI systems inspired by Netflix's production patterns, focusing on card carousels and hero animations.",
     outcome: "Gained significant insight into scalable component architecture and high-performance interaction design."
+  }),
+  buildProject({
+    id: "uiux-instagram-clone",
+    title: "Instagram Clone",
+    slug: "instagram-clone",
+    ctaType: "case-study",
+    description: "A detailed UI/UX replication of the Instagram mobile experience, focusing on feed interactions, profile layouts, and visual hierarchy.",
+    image: "/instagram-clone/thumbnail image.png",
+    category: "UI/UX",
+    tags: ["UI/UX", "Social Media", "Mobile Design", "Prototyping"],
+    prototypeUrl: "https://www.figma.com",
+    videoUrl: "#", // Add the real video URL later
+    previewScreens: [
+      "/instagram-clone/thumbnail image.png",
+      "/instagram-clone/iPhone 16 Pro Max - 1.png",
+      "/instagram-clone/iPhone 16 Pro Max - 2.png",
+      "/instagram-clone/iPhone 16 Pro Max - 3.png",
+      "/instagram-clone/iPhone 16 Pro Max - 4.png",
+      "/instagram-clone/iPhone 16 Pro Max - 5.png",
+      "/instagram-clone/iPhone 16 Pro Max - 6.png"
+    ],
+    projectBackground: "An exploratory project to understand the design systems powering one of the world's most popular social media applications.",
+    problemStatement: "Balancing high-density visual content (photos/videos) with intuitive navigation and interaction zones.",
+    designJourney: "Analyzed and recreated core screens including the home feed, explore page, and user profiles, paying close attention to icon sets and typography.",
+    challenges: "Achieving pixel-perfect alignments and recreating complex micro-interactions for liking and commenting.",
+    solution: "Leveraged component variants and auto-layout to build a scalable, reusable design system reflecting Instagram's latest UI.",
+    outcome: "Deepened expertise in mobile-first design patterns and complex component architecture."
   })
 ];
 
@@ -606,25 +656,80 @@ const programmingProjects = [
   })
 ];
 
+const mobileDevProjects = [
+  buildProject({
+    id: "mobile-motherly-lang",
+    title: "Motherly — Indigenous Language Preservation",
+    slug: "motherly",
+    ctaType: "case-study",
+    description:
+      "A culturally-rooted mobile language learning platform focused on preserving Cameroonian indigenous languages through gamification and native audio.",
+    image: "/motherly-images/A1 — Splash Screen.png",
+    category: "MOBILE DEV",
+    tags: ["React Native", "Google Stitch", "EdTech", "Cultural Preservation"],
+    figmaUrl: null,
+    prototypeUrl: "https://www.figma.com/proto/xZ8dTNlHZZkCEt0zfv8ZIz/motherly-app-maternal-language-app?node-id=25-492&p=f&viewport=190%2C371%2C0.11&t=ImaIPknrGoVU9YoP-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=25%3A75&page-id=0%3A1",
+    prototypeEmbed: `<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="100%" height="600" src="https://embed.figma.com/proto/xZ8dTNlHZZkCEt0zfv8ZIz/motherly-app-maternal-language-app?node-id=25-492&p=f&viewport=190%2C371%2C0.11&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=25%3A75&page-id=0%3A1&embed-host=share" allowfullscreen></iframe>`,
+    previewScreens: [
+      "/motherly-images/A1 — Splash Screen.png",
+      "/motherly-images/A2 — Onboarding Slide 1.png",
+      "/motherly-images/A3 — Onboarding Slide 2.png",
+      "/motherly-images/A4 — Onboarding Slide 3.png",
+      "/motherly-images/A5 — Onboarding Slide 4.png",
+      "/motherly-images/B1 — Sign Up Screen.png",
+      "/motherly-images/B7 — Role Selection Screen.png",
+      "/motherly-images/Learner Dashboard.png"
+    ],
+    projectBackground:
+      "Motherly is a culturally-rooted mobile language learning platform that replaces passive cultural drift with an active, gamified preservation engine — bringing structured lessons, native audio, and verified content to Cameroonian indigenous languages including Duala, Ewondo, Nso, Bafut, and Makon.",
+    problemStatement:
+      "Cameroonian indigenous languages are in rapid decline, with younger generations and diaspora communities losing access to their mother tongues. Existing platforms serve global languages exclusively, leaving 20M+ speakers without dedicated digital tools.",
+    designJourney:
+      "The experience architecture prioritises cultural familiarity and low-friction learning. It features a role-gated onboarding flow (Learner vs. Lecturer) and a three-tier content governance pipeline (Lecturer → Content Moderator → Publication). We addressed content quality with a split-panel review interface ensuring every word is verified by a native expert.",
+    uxFlow: [
+      {
+        title: "Splash & Onboarding",
+        content: "Culturally immersive entry with a golden-brown brand palette and African textile-inspired textures. Converts users emotionally before account creation."
+      },
+      {
+        title: "Role-Based Authentication",
+        content: "Step-gated auth (Registration → Verification → Role Selection). Role selection gates the entire experience—Learner or Lecturer."
+      },
+      {
+        title: "Learning Engine",
+        content: "Daily challenge cards, streak mechanics, and a lesson player supporting Listening, Translation, and Vocabulary Matching with animated feedback."
+      },
+      {
+        title: "Gamification Layer",
+        content: "Streak flames, XP accumulation, three-tier star ratings, and podium-style leaderboards designed to build daily learning habits."
+      },
+      {
+        title: "Lecturer Content Studio",
+        content: "A mobile-first lesson creation wizard with in-app audio recording and waveform previews for non-technical educators."
+      },
+      {
+        title: "Moderator Dashboard",
+        content: "A split-panel review workspace (Web) covering linguistic accuracy and pedagogical soundness, scoped per language expert."
+      },
+      {
+        title: "System Oversight",
+        content: "Full-platform admin dashboard with DAU/MAU analytics, feature flag control, and a complete audit log for system administrators."
+      }
+    ],
+    solution:
+      "We built a three-layer trust and quality architecture — Lecturer creates, Content Moderator approves, System Admin oversees — ensuring every lesson on Motherly carries genuine linguistic expertise. Roots in a warm, culturally-grounded UI deliver a learning experience that feels like a homecoming.",
+    outcome:
+      "Motherly demonstrates end-to-end product thinking for cultural preservation. Initial concept testing showed strong emotional resonance with the cultural identity elements and high intent-to-use scores for the daily streak mechanic.",
+    brandColor: "#92400e", // Golden-brown (Amber-800)
+    apkUrl: "#" // Triggers the 'soon coming' alert
+  })
+];
+
 export const projects = [
   ...uiUxProjects,
   ...webDevProjects,
+  ...mobileDevProjects,
   ...graphicsDesignProjects,
   ...programmingProjects
 ];
 
-export const featuredCaseStudy = {
-  title: "Netflix Clone - UI/UX Study",
-  summary:
-    "A complete UI/UX exploration of a streaming app flow, designed to sharpen hierarchy, interaction design, and onboarding patterns.",
-  // Featured large preview image on the Portfolio page.
-  // Replace this URL with your real image path, e.g. "/projects/featured-netflix-clone.jpg"
-  image:
-    "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=1400&q=80",
-  bullets: [
-    "Replicated 15+ high-fidelity screens across onboarding, login, and content discovery.",
-    "Applied typography systems and spacing rules inspired by production streaming interfaces.",
-    "Tested transitions and interaction states for a smoother mobile-first experience."
-  ],
-  ctaLink: "/projects/netflix-clone/case-study"
-};

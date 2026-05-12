@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import Button from "../components/Button";
 import ProjectCard from "../components/ProjectCard";
 import SectionTitle from "../components/SectionTitle";
-import { featuredCaseStudy, projectCategories, projects } from "../data/projects";
+import { projectCategories, projects } from "../data/projects";
 
 export default function Portfolio() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -42,32 +42,6 @@ export default function Portfolio() {
           {filteredProjects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
-        </div>
-      </section>
-
-      <section className="site-container">
-        <div className="overflow-hidden rounded-3xl bg-white shadow-soft lg:grid lg:grid-cols-[1.35fr_1fr]">
-          <div className="min-h-[360px]">
-            <img
-              src={featuredCaseStudy.image}
-              alt={featuredCaseStudy.title}
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-          </div>
-
-          <div className="space-y-5 p-8">
-            <h3 className="text-4xl font-bold text-slate-900">{featuredCaseStudy.title}</h3>
-            <p className="text-slate-600">{featuredCaseStudy.summary}</p>
-            <ul className="space-y-2 text-slate-600">
-              {featuredCaseStudy.bullets.map((item) => (
-                <li key={item}>- {item}</li>
-              ))}
-            </ul>
-            <Button to={featuredCaseStudy.ctaLink} className="mt-3">
-              Read Full Case Study
-            </Button>
-          </div>
         </div>
       </section>
 

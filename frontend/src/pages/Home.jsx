@@ -135,16 +135,17 @@ function validateContactForm(formData) {
 const skillGroupTone = {
   design: "text-fuchsia-500",
   web: "text-emerald-500",
+  mobile: "text-blue-500",
   programming: "text-amber-500",
   documentation: "text-indigo-500",
   others: "text-cyan-500"
 };
-
 const toolColumns = [
   { domain: "design", title: "Design" },
-  { domain: "web", title: "Web Development" },
+  { domain: "web", title: "Web Dev" },
+  { domain: "mobile", title: "Mobile Dev" },
   { domain: "programming", title: "Programming" },
-  { domain: "documentation", title: "Documentation" }
+  { domain: "documentation", title: "Docs" }
 ];
 
 const homeProjects = projects.slice(0, 4);
@@ -215,8 +216,8 @@ export default function Home() {
                 Hi I&apos;m Beng Espoir Nong
               </h1>
               <p className="max-w-xl text-lg text-slate-600">
-                I build meaningful digital products through UI/UX design, development, and thoughtful
-                problem-solving.
+                I build meaningful digital products through UI/UX design, full-stack & mobile development,
+                and AI-powered system architecture.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button to="/portfolio" variant="cta" className="gap-2">
@@ -350,7 +351,7 @@ export default function Home() {
           <div className="motion-stagger-item mt-10" style={{ "--stagger-index": 1 }}>
             <h3 className="text-base font-semibold text-brand-600">Tools</h3>
             {/* Mobile-first layout: 1 column on phones, 2 on tablets, 4 typed columns on desktop. */}
-            <div className="mt-4 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-5">
               {toolColumns.map((column, columnIndex) => {
                 const columnSkills = toolSkills.filter((skill) => skill.domain === column.domain);
 
