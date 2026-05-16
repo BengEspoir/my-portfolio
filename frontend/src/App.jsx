@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -21,7 +22,7 @@ import AdminTestimonials from "./pages/AdminTestimonials";
 import AdminInquiries from "./pages/AdminInquiries";
 import ProtectedRoute from "./components/ProtectedRoute";
 import useTheme from "./hooks/useTheme";
-import { initializeSectionReveal, smoothPageTransition } from "./animations/motion";
+import { initializeSectionReveal } from "./animations/motion";
 
 function ScrollToTop() {
   const location = useLocation();
@@ -32,8 +33,6 @@ function ScrollToTop() {
 
   return null;
 }
-
-import { AnimatePresence } from "framer-motion";
 
 function AppRoutes() {
   const location = useLocation();
