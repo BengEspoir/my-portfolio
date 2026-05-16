@@ -19,6 +19,7 @@ import { sendContactEmail } from "../utils/api";
 const initialForm = {
   name: "",
   email: "",
+  phone: "",
   subject: "",
   message: ""
 };
@@ -28,10 +29,10 @@ const socialLinks = [
   { icon: FaDribbble, href: "https://dribbble.com", label: "Dribbble" },
   { icon: FaGithub, href: "https://github.com", label: "GitHub" },
   { icon: FaFigma, href: "https://figma.com", label: "Figma" },
-  { icon: FaLinkedin, href: "https://linkedin.com", label: "LinkedIn" },
+  { icon: FaLinkedin, href: "https://www.linkedin.com/in/beng-espoir-a9a279318", label: "LinkedIn" },
   { icon: FaXTwitter, href: "https://x.com", label: "X" },
   { icon: FaInstagram, href: "https://instagram.com", label: "Instagram" },
-  { icon: FaFacebook, href: "https://facebook.com", label: "Facebook" },
+  { icon: FaFacebook, href: "https://www.facebook.com/bengespoir", label: "Facebook" },
   { icon: FaTiktok, href: "https://tiktok.com", label: "TikTok" },
   { icon: FaYoutube, href: "https://youtube.com", label: "YouTube" }
 ];
@@ -143,6 +144,24 @@ export default function Contact() {
                 <FiMail className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
               </div>
               {errors.email ? <p className="mt-1 text-sm text-red-600">{errors.email}</p> : null}
+            </div>
+
+            <div>
+              <label htmlFor="phone" className="mb-2 block font-semibold text-slate-900">
+                Phone / WhatsApp <span className="text-sm font-normal text-slate-400">(Optional)</span>
+              </label>
+              <div className="relative">
+                <input
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  type="tel"
+                  placeholder="e.g. +237 6xx xxx xxx"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 outline-none transition focus:border-brand-400"
+                />
+                <FiPhone className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
+              </div>
             </div>
 
             <div>

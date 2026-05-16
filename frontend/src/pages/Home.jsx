@@ -26,10 +26,14 @@ import {
   FaYoutube
 } from "react-icons/fa6";
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import Button from "../components/Button";
 import ProjectCard from "../components/ProjectCard";
 import SectionTitle from "../components/SectionTitle";
 import SkillBar from "../components/SkillBar";
+import PageTransition from "../components/PageTransition";
+import Testimonials from "../components/Testimonials";
+import { ProjectCardSkeleton } from "../components/Skeleton";
 import { revealUp, staggerContainer } from "../animations/motion";
 import { skillCategories, toolSkills } from "../data/skills";
 import { sendContactEmail } from "../utils/api";
@@ -99,6 +103,7 @@ const experiences = [
 const contactInitialForm = {
   name: "",
   email: "",
+  phone: "",
   subject: "",
   message: ""
 };
@@ -226,8 +231,17 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="space-y-24 pb-24">
-      <section className="site-container pt-10">
+    <PageTransition>
+      <Helmet>
+        <title>Beng Espoir | Product Designer & Software Engineer</title>
+        <meta name="description" content="Portfolio of Beng Espoir Nong, a Product Designer and Software Engineering student specializing in UI/UX, Web, and Mobile development." />
+        <meta property="og:title" content="Beng Espoir | Product Designer & Software Engineer" />
+        <meta property="og:description" content="Explore the portfolio of Beng Espoir Nong - UI/UX Designer and Software Engineer." />
+        <meta property="og:image" content={getPublicUrl("images/portfolio-pic.jpg")} />
+      </Helmet>
+
+      <div className="space-y-24 pb-24">
+        <section className="site-container pt-10">
         <div className="subtle-gradient overflow-hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-soft sm:p-10 lg:p-14">
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <div className="space-y-6">
@@ -419,8 +433,8 @@ export default function Home() {
         />
 
         {projectsLoading ? (
-          <div className="flex h-40 items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-500 border-t-transparent"></div>
+          <div className="grid gap-6 lg:grid-cols-2">
+            {[1, 2, 3, 4].map(i => <ProjectCardSkeleton key={i} />)}
           </div>
         ) : homeProjects.length > 0 ? (
           <div className="grid gap-6 lg:grid-cols-2">
@@ -451,10 +465,15 @@ export default function Home() {
           </div>
         )}
 
-        <div className="mt-8 flex justify-center">
-          <Button to="/portfolio">View All Projects</Button>
+        <div className="text-center">
+          <Button to="/portfolio" variant="secondary" className="px-8">
+            View All Projects
+          </Button>
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      <Testimonials />
 
       <section className="site-container">
         <SectionTitle
@@ -608,6 +627,24 @@ export default function Home() {
                 </div>
 
                 <div>
+                  <label htmlFor="home-phone" className="mb-2 block text-sm font-semibold text-slate-900">
+                    Phone / WhatsApp <span className="text-sm font-normal text-slate-400">(Optional)</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="home-phone"
+                      name="phone"
+                      value={contactFormData.phone}
+                      onChange={handleContactChange}
+                      type="tel"
+                      placeholder="e.g. +237 6xx xxx xxx"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 outline-none transition focus:border-brand-400"
+                    />
+                    <FiPhone className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                  </div>
+                </div>
+
+                <div>
                   <label htmlFor="home-subject" className="mb-2 block text-sm font-semibold text-slate-900">
                     Subject
                   </label>
@@ -661,5 +698,6 @@ export default function Home() {
         </div>
       </section>
     </div>
-  );
+  </PageTransition>
+);
 }

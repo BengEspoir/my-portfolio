@@ -1,9 +1,11 @@
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { FiArrowLeft, FiFigma, FiSmartphone, FiLayout, FiCompass, FiTarget, FiZap, FiPlay, FiDownload } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { supabase, getPublicUrl } from "../utils/supabase";
 import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
+import PageTransition from "../components/PageTransition";
 
 export default function CaseStudyPage() {
   const { slug } = useParams();
@@ -52,7 +54,17 @@ export default function CaseStudyPage() {
   }
 
   return (
-    <div className="space-y-24 pb-24 pt-10">
+    <PageTransition>
+      <Helmet>
+        <title>{`${project.title} | Case Study - Beng Espoir`}</title>
+        <meta name="description" content={project.description} />
+        <meta property="og:title" content={`${project.title} | Case Study - Beng Espoir`} />
+        <meta property="og:description" content={project.description} />
+        <meta property="og:image" content={getPublicUrl(project.image_url)} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
+
+      <div className="space-y-24 pb-24 pt-10">
       {/* Hero Section */}
       <section className="site-container">
         <Link to="/portfolio" className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition-colors hover:text-brand-600">
@@ -353,5 +365,6 @@ export default function CaseStudyPage() {
         </section>
       )}
     </div>
+    </PageTransition>
   );
 }

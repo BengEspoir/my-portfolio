@@ -5,7 +5,7 @@ import Button from '../components/Button';
 import { FiMail, FiLock, FiAlertCircle } from 'react-icons/fi';
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState('');
+  const [email] = useState('mbengespoir@gmail.com'); // Hardcoded admin email
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -39,30 +39,13 @@ export default function AdminLogin() {
             Admin Login
           </h2>
           <p className="mt-2 text-center text-sm text-slate-600">
-            Sign in to manage your portfolio
+            Sign in with your password to manage your portfolio
           </p>
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
           <div className="space-y-4 rounded-md shadow-sm">
-            <div>
-              <label htmlFor="email-address" className="sr-only">Email address</label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <FiMail className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  required
-                  className="block w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-3 text-slate-900 outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
-                  placeholder="Admin Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-            </div>
+            <input type="hidden" name="email" value={email} autoComplete="username" />
             <div>
               <label htmlFor="password" className="sr-only">Password</label>
               <div className="relative">

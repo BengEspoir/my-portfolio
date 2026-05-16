@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from "react-helmet-async";
 import ReactMarkdown from 'react-markdown';
 import { FiArrowLeft } from 'react-icons/fi';
 import { supabase } from '../utils/supabase';
+import PageTransition from "../components/PageTransition";
 
 export default function BlogPost() {
   const { slug } = useParams();
@@ -61,7 +63,17 @@ export default function BlogPost() {
   }
 
   return (
-    <article className="pt-24 pb-32">
+    <PageTransition>
+      <Helmet>
+        <title>{`${post.title} | Blog - Beng Espoir`}</title>
+        <meta name="description" content={post.excerpt} />
+        <meta property="og:title" content={`${post.title} | Blog - Beng Espoir`} />
+        <meta property="og:description" content={post.excerpt} />
+        <meta property="og:image" content={post.cover_image || post.main_image} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
+
+      <article className="pt-24 pb-32">
       {/* Header */}
       <header className="site-container max-w-4xl text-center mb-16">
         <Link to="/blog" className="inline-flex items-center text-brand-600 hover:text-brand-700 mb-10 font-medium transition-colors">
@@ -143,5 +155,6 @@ export default function BlogPost() {
         </div>
       </div>
     </article>
+    </PageTransition>
   );
 }

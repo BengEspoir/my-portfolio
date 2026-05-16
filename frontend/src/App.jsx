@@ -32,12 +32,14 @@ function ScrollToTop() {
   return null;
 }
 
+import { AnimatePresence } from "framer-motion";
+
 function AppRoutes() {
   const location = useLocation();
 
   return (
-    <div key={location.pathname} className={smoothPageTransition}>
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -62,7 +64,7 @@ function AppRoutes() {
           <Route path="/admin/inquiries" element={<AdminInquiries />} />
         </Route>
       </Routes>
-    </div>
+    </AnimatePresence>
   );
 }
 

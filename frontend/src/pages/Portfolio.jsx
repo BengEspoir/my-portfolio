@@ -1,13 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import Button from "../components/Button";
 import ProjectCard from "../components/ProjectCard";
 import SectionTitle from "../components/SectionTitle";
+import PageTransition from "../components/PageTransition";
+import { ProjectCardSkeleton } from "../components/Skeleton";
 import { supabase } from "../utils/supabase";
 
-const projectCategories = ["All", "UI/UX", "WEB DEV", "MOBILE DEV", "GRAPHICS DESIGN", "PROGRAMMING"];
+const categories = [
+  { id: "all", name: "All" },
+  { id: "ui/ux", name: "UI/UX" },
+  { id: "web dev", name: "WEB DEV" },
+  { id: "mobile dev", name: "MOBILE DEV" },
+  { id: "graphics design", name: "GRAPHICS DESIGN" },
+  { id: "programming", name: "PROGRAMMING" }
+];
 
 export default function Portfolio() {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState("all");
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,42 +43,48 @@ export default function Portfolio() {
   }, []);
 
   const filteredProjects = useMemo(() => {
-    if (activeCategory === "All") return projects;
-    return projects.filter((project) => project.categories?.includes(activeCategory));
+    if (activeCategory === "all") return projects;
+    return projects.filter((project) => 
+      project.categories?.some(c => c.toLowerCase() === activeCategory)
+    );
   }, [activeCategory, projects]);
 
   return (
-    <div className="space-y-24 pb-24">
-      <section className="site-container pt-10">
+    <PageTransition>
+      <Helmet>
+        <title>Portfolio | Beng Espoir</title>
+        <meta name="description" content="Explore the diverse range of product design and software engineering projects by Beng Espoir." />
+      </Helmet>
+
+      <div className="site-container py-12 md:py-20">
         <SectionTitle
-          title="My Work"
-          description="Here is a selection of projects I designed and developed across UI/UX, web development, graphics design, and programming."
+          title="My Creative Portfolio"
+          subtitle="A collection of products I've designed and built, ranging from mobile apps to complex web systems."
+          align="center"
         />
 
-        <div className="mb-8 flex flex-wrap gap-3">
-          {projectCategories.map((category) => (
+        <div className="mb-12 flex flex-wrap justify-center gap-3">
+          {categories.map((category) => (
             <button
-              key={category}
-              type="button"
-              onClick={() => setActiveCategory(category)}
-              className={[
-                "rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-300",
-                activeCategory === category
-                  ? "border-brand-500 bg-brand-500 text-white"
-                  : "border-slate-300 bg-white text-slate-700 hover:border-brand-300 hover:text-brand-600"
-              ].join(" ")}
+              key={category.id}
+              onClick={() => setActiveCategory(category.id)}
+              className={`rounded-full px-6 py-2 text-sm font-medium transition-all ${
+                activeCategory === category.id
+                  ? "bg-brand-500 text-white shadow-md shadow-brand-200"
+                  : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-100"
+              }`}
             >
-              {category}
+              {category.name}
             </button>
           ))}
         </div>
 
         {loading ? (
-          <div className="flex h-40 items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-500 border-t-transparent"></div>
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map(i => <ProjectCardSkeleton key={i} />)}
           </div>
         ) : filteredProjects.length > 0 ? (
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {filteredProjects.map((project) => (
               <ProjectCard key={project.id} project={{
                 ...project,
@@ -95,7 +111,7 @@ export default function Portfolio() {
             <p className="mt-2 text-slate-500">Check back later or try a different category!</p>
           </div>
         )}
-      </section>
+      </div>
 
       <section className="site-container">
         <div className="rounded-3xl bg-white px-6 py-14 text-center shadow-card">
@@ -108,7 +124,7 @@ export default function Portfolio() {
           </Button>
         </div>
       </section>
-    </div>
+    </PageTransition>
   );
 }
 
