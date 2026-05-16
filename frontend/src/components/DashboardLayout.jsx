@@ -7,7 +7,8 @@ import {
   FiLogOut, 
   FiHome,
   FiMenu,
-  FiX
+  FiX,
+  FiMessageSquare
 } from 'react-icons/fi';
 import { useState } from 'react';
 
@@ -25,6 +26,7 @@ export default function DashboardLayout({ children }) {
     { label: 'Overview', path: '/admin/dashboard', icon: FiHome },
     { label: 'Projects', path: '/admin/projects', icon: FiLayout },
     { label: 'Blog Posts', path: '/admin/blog', icon: FiFileText },
+    { label: 'Testimonials', path: '/admin/testimonials', icon: FiMessageSquare },
     { label: 'Inquiries', path: '/admin/inquiries', icon: FiMail },
   ];
 

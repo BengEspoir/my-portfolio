@@ -17,6 +17,7 @@ import AdminProjects from "./pages/AdminProjects";
 import AdminProjectForm from "./pages/AdminProjectForm";
 import AdminBlog from "./pages/AdminBlog";
 import AdminBlogForm from "./pages/AdminBlogForm";
+import AdminTestimonials from "./pages/AdminTestimonials";
 import AdminInquiries from "./pages/AdminInquiries";
 import ProtectedRoute from "./components/ProtectedRoute";
 import useTheme from "./hooks/useTheme";
@@ -61,6 +62,7 @@ function AppRoutes() {
           <Route path="/admin/blog" element={<AdminBlog />} />
           <Route path="/admin/blog/new" element={<AdminBlogForm />} />
           <Route path="/admin/blog/:id/edit" element={<AdminBlogForm />} />
+          <Route path="/admin/testimonials" element={<AdminTestimonials />} />
           <Route path="/admin/inquiries" element={<AdminInquiries />} />
         </Route>
       </Routes>

@@ -16,7 +16,7 @@ export default function Blog() {
       try {
         const { data, error } = await supabase
           .from('blog_posts')
-          .select('id, title, slug, cover_image, created_at, excerpt, category, reading_time')
+          .select('id, title, slug, cover_image_url, created_at, excerpt, category, reading_time')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -58,7 +58,7 @@ export default function Blog() {
               >
                 <Link to={`/blog/${post.slug}`} className="relative block aspect-[16/9] overflow-hidden">
                   <img
-                    src={post.cover_image || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070&auto=format&fit=crop"}
+                    src={post.cover_image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070&auto=format&fit=crop"}
                     alt={post.title}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />

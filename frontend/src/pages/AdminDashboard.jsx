@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
-import { FiLayout, FiFileText, FiMail, FiUsers, FiTrendingUp, FiPlus, FiArrowRight } from 'react-icons/fi';
+import { FiLayout, FiFileText, FiMail, FiUsers, FiTrendingUp, FiPlus, FiArrowRight, FiMessageSquare } from 'react-icons/fi';
 import DashboardLayout from '../components/DashboardLayout';
 
 export default function AdminDashboard() {
@@ -19,19 +19,22 @@ export default function AdminDashboard() {
         { count: projectsCount },
         { count: blogCount },
         { count: inquiriesCount },
-        { count: unreadCount }
+        { count: unreadCount },
+        { count: testimonialsCount }
       ] = await Promise.all([
         supabase.from('projects').select('*', { count: 'exact', head: true }),
         supabase.from('blog_posts').select('*', { count: 'exact', head: true }),
         supabase.from('contacts').select('*', { count: 'exact', head: true }),
-        supabase.from('contacts').select('*', { count: 'exact', head: true }).eq('is_read', false)
+        supabase.from('contacts').select('*', { count: 'exact', head: true }).eq('is_read', false),
+        supabase.from('testimonials').select('*', { count: 'exact', head: true })
       ]);
 
       setStats({
         projects: projectsCount || 0,
         blogPosts: blogCount || 0,
         inquiries: inquiriesCount || 0,
-        unreadInquiries: unreadCount || 0
+        unreadInquiries: unreadCount || 0,
+        testimonials: testimonialsCount || 0
       });
       setLoading(false);
     }
@@ -42,8 +45,8 @@ export default function AdminDashboard() {
   const statCards = [
     { label: 'Total Projects', value: stats.projects, icon: FiLayout, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+2 this month' },
     { label: 'Blog Posts', value: stats.blogPosts, icon: FiFileText, color: 'text-fuchsia-600', bg: 'bg-fuchsia-50', trend: '+1 this month' },
-    { label: 'Total Inquiries', value: stats.inquiries, icon: FiMail, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: '+5 this week' },
-    { label: 'Unread Messages', value: stats.unreadInquiries, icon: FiUsers, color: 'text-amber-600', bg: 'bg-amber-50', trend: 'Needs attention' },
+    { label: 'Testimonials', value: stats.testimonials, icon: FiMessageSquare, color: 'text-amber-600', bg: 'bg-amber-50', trend: 'Growing reputation' },
+    { label: 'Unread Messages', value: stats.unreadInquiries, icon: FiMail, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: 'Needs attention' },
   ];
 
   return (

@@ -69,7 +69,7 @@ export default function BlogPost() {
         <meta name="description" content={post.excerpt} />
         <meta property="og:title" content={`${post.title} | Blog - Beng Espoir`} />
         <meta property="og:description" content={post.excerpt} />
-        <meta property="og:image" content={post.cover_image || post.main_image} />
+        <meta property="og:image" content={post.cover_image_url} />
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
 
@@ -80,7 +80,7 @@ export default function BlogPost() {
           <FiArrowLeft className="mr-2" /> Back to Blog
         </Link>
         <p className="text-sm font-bold tracking-widest text-slate-400 uppercase mb-5">
-          {new Date(post.published_at).toLocaleDateString('en-US', {
+          {new Date(post.published_at || post.created_at).toLocaleDateString('en-US', {
             month: 'long',
             day: 'numeric',
             year: 'numeric',
@@ -91,9 +91,9 @@ export default function BlogPost() {
         </h1>
         {post.author_name && (
           <div className="flex items-center justify-center gap-4">
-            {post.author_image ? (
+            {post.author_image_url ? (
               <img 
-                src={post.author_image} 
+                src={post.author_image_url} 
                 alt={post.author_name} 
                 className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"
               />
@@ -104,18 +104,18 @@ export default function BlogPost() {
             )}
             <div className="text-left">
               <span className="block font-bold text-slate-900">{post.author_name}</span>
-              <span className="block text-sm text-slate-500">Author</span>
+              <span className="block text-sm text-slate-500">Author • {post.reading_time || "5 min"} read</span>
             </div>
           </div>
         )}
       </header>
 
       {/* Main Image */}
-      {post.main_image && (
+      {post.cover_image_url && (
         <div className="site-container max-w-5xl mb-20">
           <div className="aspect-[21/9] w-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-slate-900/5">
             <img
-              src={post.main_image}
+              src={post.cover_image_url}
               alt={post.title}
               className="w-full h-full object-cover"
             />

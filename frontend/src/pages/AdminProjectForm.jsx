@@ -66,7 +66,8 @@ export default function AdminProjectForm() {
     video_url: '',
     apk_url: '',
     download_url: '',
-    brand_color: '#6366f1'
+    brand_color: '#6366f1',
+    project_background: ''
   });
 
   useEffect(() => {
@@ -107,6 +108,49 @@ export default function AdminProjectForm() {
         : [...current, value];
       return { ...prev, [name]: updated };
     });
+  };
+
+  const addTag = (e) => {
+    if (e.key === 'Enter' && e.target.value) {
+      e.preventDefault();
+      const tag = e.target.value.trim();
+      if (!formData.tools_tech.includes(tag)) {
+        setFormData(prev => ({
+          ...prev,
+          tools_tech: [...prev.tools_tech, tag]
+        }));
+      }
+      e.target.value = '';
+    }
+  };
+
+  const removeTag = (tag) => {
+    setFormData(prev => ({
+      ...prev,
+      tools_tech: prev.tools_tech.filter(t => t !== tag)
+    }));
+  };
+
+  const addUxFlow = () => {
+    setFormData(prev => ({
+      ...prev,
+      ux_flow: [...(prev.ux_flow || []), { title: '', content: '' }]
+    }));
+  };
+
+  const updateUxFlow = (index, field, value) => {
+    setFormData(prev => {
+      const updated = [...prev.ux_flow];
+      updated[index] = { ...updated[index], [field]: value };
+      return { ...prev, ux_flow: updated };
+    });
+  };
+
+  const removeUxFlow = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      ux_flow: prev.ux_flow.filter((_, i) => i !== index)
+    }));
   };
 
   const handleFileUpload = async (e, fieldName) => {
@@ -249,6 +293,27 @@ export default function AdminProjectForm() {
                   <option value="archived">Archived</option>
                 </select>
               </div>
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Sort Order</label>
+                <input 
+                  type="number" name="sort_order" value={formData.sort_order} onChange={handleChange}
+                  className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Project Year</label>
+                <input 
+                  type="text" name="project_year" value={formData.project_year} onChange={handleChange} placeholder="e.g. 2024"
+                  className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Client / Company</label>
+                <input 
+                  type="text" name="client_company" value={formData.client_company} onChange={handleChange} placeholder="e.g. Personal Project"
+                  className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                />
+              </div>
               <div className="md:col-span-2">
                 <label className="block text-sm font-bold text-slate-700 mb-2">Categories</label>
                 <div className="flex flex-wrap gap-2">
@@ -336,47 +401,31 @@ export default function AdminProjectForm() {
 
           {/* CASE STUDY TAB */}
           {activeTab === 'case-study' && (
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">Case Study Title</label>
-                <input 
-                  type="text" name="case_study_title" value={formData.case_study_title} onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">Hero Image</label>
-                <input 
-                  type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'hero_image_url')}
-                  className="text-sm text-slate-500 mb-2"
-                />
-                {formData.hero_image_url && <img src={formData.hero_image_url} className="h-40 rounded-xl object-cover" />}
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">Problem Statement</label>
-                <textarea 
-                  name="problem_statement" value={formData.problem_statement} onChange={handleChange} rows="4"
-                  className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">Design Journey / Process</label>
-                <textarea 
-                  name="design_journey" value={formData.design_journey} onChange={handleChange} rows="6"
-                  className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">Solution</label>
-                <textarea 
-                  name="solution" value={formData.solution} onChange={handleChange} rows="4"
-                  className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
-                />
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-8">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Case Study Title</label>
+                  <input 
+                    type="text" name="case_study_title" value={formData.case_study_title} onChange={handleChange}
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                    placeholder="e.g. Redesigning the Banking Experience"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Project Background</label>
+                  <textarea 
+                    name="project_background" value={formData.project_background} onChange={handleChange} rows="3"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                    placeholder="Short overview of the project context..."
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-2">Role</label>
-                  <input type="text" name="role" value={formData.role} onChange={handleChange} className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500" />
+                  <input 
+                    type="text" name="role" value={formData.role} onChange={handleChange} 
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500" 
+                    placeholder="e.g. Lead UI/UX Designer"
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-2">Brand Color (Hex)</label>
@@ -384,6 +433,124 @@ export default function AdminProjectForm() {
                     <input type="color" name="brand_color" value={formData.brand_color} onChange={handleChange} className="h-12 w-12 rounded border-none cursor-pointer" />
                     <input type="text" name="brand_color" value={formData.brand_color} onChange={handleChange} className="flex-1 rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500" />
                   </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Tools & Technologies</label>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {formData.tools_tech?.map(tag => (
+                    <span key={tag} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-bold">
+                      {tag}
+                      <button type="button" onClick={() => removeTag(tag)} className="hover:text-red-500"><FiTrash2 size={12} /></button>
+                    </span>
+                  ))}
+                </div>
+                <input 
+                  type="text" 
+                  onKeyDown={addTag}
+                  placeholder="Type a tool and press Enter..."
+                  className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Hero Image</label>
+                <div className="flex gap-4 items-start">
+                  <div className="h-40 w-full max-w-md rounded-2xl bg-slate-100 border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden">
+                    {formData.hero_image_url ? (
+                      <img src={formData.hero_image_url} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      <FiImage size={32} className="text-slate-300" />
+                    )}
+                  </div>
+                  <input 
+                    type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'hero_image_url')}
+                    className="text-sm text-slate-500"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">The Problem</label>
+                  <textarea 
+                    name="problem_statement" value={formData.problem_statement} onChange={handleChange} rows="4"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">UX Thinking & Journey</label>
+                  <textarea 
+                    name="design_journey" value={formData.design_journey} onChange={handleChange} rows="6"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Challenges</label>
+                  <textarea 
+                    name="challenges" value={formData.challenges} onChange={handleChange} rows="4"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Solution</label>
+                  <textarea 
+                    name="solution" value={formData.solution} onChange={handleChange} rows="4"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Outcome & Impact</label>
+                  <textarea 
+                    name="outcome" value={formData.outcome} onChange={handleChange} rows="4"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <label className="block text-sm font-bold text-slate-700">Experience Architecture (UX Flow)</label>
+                  <button 
+                    type="button" 
+                    onClick={addUxFlow}
+                    className="inline-flex items-center gap-2 text-xs font-bold text-brand-600 hover:text-brand-700"
+                  >
+                    <FiPlus /> Add Flow Step
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  {formData.ux_flow?.map((step, idx) => (
+                    <div key={idx} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-3 relative group">
+                      <button 
+                        type="button" 
+                        onClick={() => removeUxFlow(idx)}
+                        className="absolute top-4 right-4 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <FiTrash2 size={16} />
+                      </button>
+                      <input 
+                        type="text" 
+                        value={step.title} 
+                        onChange={(e) => updateUxFlow(idx, 'title', e.target.value)}
+                        placeholder="Step Title (e.g. Discovery)"
+                        className="w-full bg-transparent font-bold text-slate-900 outline-none border-b border-slate-200 pb-2 focus:border-brand-500"
+                      />
+                      <textarea 
+                        value={step.content} 
+                        onChange={(e) => updateUxFlow(idx, 'content', e.target.value)}
+                        placeholder="Describe the UX thinking behind this step..."
+                        rows="2"
+                        className="w-full bg-transparent text-sm text-slate-600 outline-none"
+                      />
+                    </div>
+                  ))}
+                  {(!formData.ux_flow || formData.ux_flow.length === 0) && (
+                    <div className="p-8 text-center rounded-2xl border-2 border-dashed border-slate-200 text-slate-400 text-sm">
+                      No UX flow steps added yet.
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
