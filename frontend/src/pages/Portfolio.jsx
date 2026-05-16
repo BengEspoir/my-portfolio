@@ -1,16 +1,41 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "../components/Button";
 import ProjectCard from "../components/ProjectCard";
 import SectionTitle from "../components/SectionTitle";
-import { projectCategories, projects } from "../data/projects";
+import { supabase } from "../utils/supabase";
+
+const projectCategories = ["All", "UI/UX", "WEB DEV", "MOBILE DEV", "GRAPHICS DESIGN", "PROGRAMMING"];
 
 export default function Portfolio() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('status', 'published')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        setProjects(data || []);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProjects();
+  }, []);
 
   const filteredProjects = useMemo(() => {
     if (activeCategory === "All") return projects;
-    return projects.filter((project) => project.category === activeCategory);
-  }, [activeCategory]);
+    return projects.filter((project) => project.categories?.includes(activeCategory));
+  }, [activeCategory, projects]);
 
   return (
     <div className="space-y-24 pb-24">
@@ -38,11 +63,38 @@ export default function Portfolio() {
           ))}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          {filteredProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex h-40 items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-500 border-t-transparent"></div>
+          </div>
+        ) : filteredProjects.length > 0 ? (
+          <div className="grid gap-6 lg:grid-cols-2">
+            {filteredProjects.map((project) => (
+              <ProjectCard key={project.id} project={{
+                ...project,
+                image: project.image_url,
+                ctaType: project.cta_type,
+                ctaLabel: project.cta_label,
+                ctaLink: project.cta_link,
+                figmaUrl: project.figma_url,
+                prototypeUrl: project.prototype_url,
+                previewScreens: project.preview_screens,
+                tags: project.tools_tech,
+                projectBackground: project.project_background,
+                problemStatement: project.problem_statement,
+                designJourney: project.design_journey,
+                liveUrl: project.live_url,
+                videoUrl: project.video_url,
+                apkUrl: project.apk_url
+              }} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-16 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-12 text-center">
+            <h3 className="text-lg font-medium text-slate-900">No projects found</h3>
+            <p className="mt-2 text-slate-500">Check back later or try a different category!</p>
+          </div>
+        )}
       </section>
 
       <section className="site-container">

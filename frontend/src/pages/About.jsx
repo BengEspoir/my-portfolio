@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
 import SkillBar from "../components/SkillBar";
 import { quickFacts, skillCategories, toolSkills } from "../data/skills";
+import { getPublicUrl } from "../utils/supabase";
 
 const skillGroupTone = {
   design: "text-fuchsia-500",
@@ -31,7 +32,7 @@ export default function About() {
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <div className="mx-auto max-w-md overflow-hidden rounded-full bg-brand-100 p-3 shadow-soft">
             <img
-              src="/images/portfolio-pic.jpg"
+              src={getPublicUrl("images/portfolio-pic.jpg")}
               alt="Beng Espoir portrait"
               className="h-full w-full rounded-full object-cover"
               loading="lazy"

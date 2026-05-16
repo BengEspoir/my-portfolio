@@ -11,6 +11,14 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import CaseStudyPage from "./pages/CaseStudyPage";
 import FullDesignPage from "./pages/FullDesignPage";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminProjects from "./pages/AdminProjects";
+import AdminProjectForm from "./pages/AdminProjectForm";
+import AdminBlog from "./pages/AdminBlog";
+import AdminBlogForm from "./pages/AdminBlogForm";
+import AdminInquiries from "./pages/AdminInquiries";
+import ProtectedRoute from "./components/ProtectedRoute";
 import useTheme from "./hooks/useTheme";
 import { initializeSectionReveal, smoothPageTransition } from "./animations/motion";
 
@@ -30,6 +38,7 @@ function AppRoutes() {
   return (
     <div key={location.pathname} className={smoothPageTransition}>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/portfolio" element={<Portfolio />} />
@@ -39,6 +48,19 @@ function AppRoutes() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/contact" element={<Contact />} />
+
+        {/* Admin Routes */}
+        <Route path="/p/admin-access" element={<AdminLogin />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/projects" element={<AdminProjects />} />
+          <Route path="/admin/projects/new" element={<AdminProjectForm />} />
+          <Route path="/admin/projects/:id/edit" element={<AdminProjectForm />} />
+          <Route path="/admin/blog" element={<AdminBlog />} />
+          <Route path="/admin/blog/new" element={<AdminBlogForm />} />
+          <Route path="/admin/blog/:id/edit" element={<AdminBlogForm />} />
+          <Route path="/admin/inquiries" element={<AdminInquiries />} />
+        </Route>
       </Routes>
     </div>
   );
@@ -70,4 +92,3 @@ export default function App() {
     </div>
   );
 }
-

@@ -31,9 +31,9 @@ import ProjectCard from "../components/ProjectCard";
 import SectionTitle from "../components/SectionTitle";
 import SkillBar from "../components/SkillBar";
 import { revealUp, staggerContainer } from "../animations/motion";
-import { projects } from "../data/projects";
 import { skillCategories, toolSkills } from "../data/skills";
 import { sendContactEmail } from "../utils/api";
+import { supabase, getPublicUrl } from "../utils/supabase";
 
 const services = [
   {
@@ -148,8 +148,6 @@ const toolColumns = [
   { domain: "documentation", title: "Docs" }
 ];
 
-const homeProjects = projects.slice(0, 4);
-
 export default function Home() {
   const [activeExperience, setActiveExperience] = useState(0);
   const activeExperienceItem = experiences[activeExperience];
@@ -157,6 +155,30 @@ export default function Home() {
   const [contactErrors, setContactErrors] = useState({});
   const [isContactSending, setIsContactSending] = useState(false);
   const [contactStatus, setContactStatus] = useState({ type: "", message: "" });
+  const [homeProjects, setHomeProjects] = useState([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchHomeProjects() {
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('status', 'published')
+          .order('created_at', { ascending: false })
+          .limit(4);
+
+        if (error) throw error;
+        setHomeProjects(data || []);
+      } catch (error) {
+        console.error('Error fetching home projects:', error);
+      } finally {
+        setProjectsLoading(false);
+      }
+    }
+
+    fetchHomeProjects();
+  }, []);
 
   const handleContactChange = (event) => {
     const { name, value } = event.target;
@@ -237,7 +259,7 @@ export default function Home() {
             <div className="mx-auto max-w-sm">
               <div className="overflow-hidden rounded-3xl bg-brand-100 p-2 shadow-soft">
                 <img
-                  src="/images/portfolio-pic.jpg"
+                  src={getPublicUrl("images/portfolio-pic.jpg")}
                   alt="Beng Espoir portrait"
                   className="h-full w-full rounded-[1.25rem] object-cover"
                   loading="lazy"
@@ -396,11 +418,38 @@ export default function Home() {
           description="A selection of design and development work showcasing process, execution, and outcomes."
         />
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          {homeProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
+        {projectsLoading ? (
+          <div className="flex h-40 items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-500 border-t-transparent"></div>
+          </div>
+        ) : homeProjects.length > 0 ? (
+          <div className="grid gap-6 lg:grid-cols-2">
+            {homeProjects.map((project) => (
+              <ProjectCard key={project.id} project={{
+                ...project,
+                image: project.image_url,
+                ctaType: project.cta_type,
+                ctaLabel: project.cta_label,
+                ctaLink: project.cta_link,
+                figmaUrl: project.figma_url,
+                prototypeUrl: project.prototype_url,
+                previewScreens: project.preview_screens,
+                tags: project.tools_tech,
+                projectBackground: project.project_background,
+                problemStatement: project.problem_statement,
+                designJourney: project.design_journey,
+                liveUrl: project.live_url,
+                videoUrl: project.video_url,
+                apkUrl: project.apk_url
+              }} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-12 text-center">
+            <h3 className="text-lg font-medium text-slate-900">No projects yet</h3>
+            <p className="mt-2 text-slate-500">Check back later for my latest work!</p>
+          </div>
+        )}
 
         <div className="mt-8 flex justify-center">
           <Button to="/portfolio">View All Projects</Button>

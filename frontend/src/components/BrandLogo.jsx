@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getPublicUrl } from "../utils/supabase";
 
 export default function BrandLogo({ className = "" }) {
   const [failed, setFailed] = useState(false);
@@ -13,7 +14,7 @@ export default function BrandLogo({ className = "" }) {
 
   return (
     <img
-      src="/images/logo.png"
+      src={getPublicUrl("images/logo.png")}
       alt="Beng Espoir logo"
       className={["h-30 w-50 object-contain sm:h-20", className].filter(Boolean).join(" ")}
       loading="eager"

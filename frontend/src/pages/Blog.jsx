@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { client, urlFor } from '../utils/sanity';
+import { supabase } from '../utils/supabase';
 import SectionTitle from '../components/SectionTitle';
 
 export default function Blog() {
@@ -8,22 +8,23 @@ export default function Blog() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    client
-      .fetch(
-        `*[_type == "post"] | order(publishedAt desc) {
-          _id,
-          title,
-          slug,
-          mainImage,
-          publishedAt,
-          "excerpt": array::join(string::split((pt::text(body)), "")[0..120], "") + "..."
-        }`
-      )
-      .then((data) => {
-        setPosts(data);
+    async function fetchPosts() {
+      try {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('id, title, slug, main_image, published_at, excerpt')
+          .order('published_at', { ascending: false });
+
+        if (error) throw error;
+        setPosts(data || []);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      } finally {
         setLoading(false);
-      })
-      .catch(console.error);
+      }
+    }
+
+    fetchPosts();
   }, []);
 
   return (
@@ -43,14 +44,14 @@ export default function Blog() {
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
               <Link
-                key={post._id}
-                to={`/blog/${post.slug.current}`}
+                key={post.id}
+                to={`/blog/${post.slug}`}
                 className="card-surface group flex flex-col overflow-hidden rounded-2xl border border-slate-100 shadow-sm transition-all hover:shadow-xl"
               >
-                {post.mainImage && (
+                {post.main_image && (
                   <div className="aspect-video w-full overflow-hidden bg-slate-100">
                     <img
-                      src={urlFor(post.mainImage).url()}
+                      src={post.main_image}
                       alt={post.title}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
@@ -58,7 +59,7 @@ export default function Blog() {
                 )}
                 <div className="flex flex-1 flex-col p-6">
                   <p className="mb-2 text-xs font-medium text-brand-500">
-                    {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                    {new Date(post.published_at).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric',

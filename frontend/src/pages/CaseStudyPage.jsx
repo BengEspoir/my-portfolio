@@ -1,12 +1,44 @@
 import { useParams, Link } from "react-router-dom";
-import { FiArrowLeft, FiArrowRight, FiFigma, FiSmartphone, FiLayout, FiCompass, FiTarget, FiZap, FiPlay, FiDownload } from "react-icons/fi";
-import { projects } from "../data/projects";
+import { FiArrowLeft, FiFigma, FiSmartphone, FiLayout, FiCompass, FiTarget, FiZap, FiPlay, FiDownload } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { supabase, getPublicUrl } from "../utils/supabase";
 import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
 
 export default function CaseStudyPage() {
   const { slug } = useParams();
-  const project = projects.find((p) => p.slug === slug);
+  const [project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProject() {
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('slug', slug)
+          .eq('status', 'published')
+          .single();
+
+        if (error) throw error;
+        setProject(data);
+      } catch (error) {
+        console.error('Error fetching case study:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProject();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-500 border-t-transparent"></div>
+      </div>
+    );
+  }
 
   if (!project) {
     return (
@@ -31,9 +63,9 @@ export default function CaseStudyPage() {
           <div className="space-y-6">
             <div 
               className="inline-flex rounded-full px-4 py-1.5 text-sm font-bold text-white"
-              style={{ backgroundColor: project.brandColor || "#6366f1" }}
+              style={{ backgroundColor: project.brand_color || "#6366f1" }}
             >
-              {project.category}
+              {project.categories?.[0] || "Project"}
             </div>
             <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 lg:text-6xl">
               {project.title}
@@ -46,124 +78,71 @@ export default function CaseStudyPage() {
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">Role</h4>
                 <p className="mt-1 font-semibold text-slate-900">
-                  {project.category === "WEB DEV" ? "Full Stack Developer" : "Lead UI/UX Designer"}
+                  {project.role || (project.categories.includes("WEB DEV") ? "Full Stack Developer" : "Lead UI/UX Designer")}
                 </p>
               </div>
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">Tools / Stack</h4>
                 <p className="mt-1 font-semibold text-slate-900">
-                  {project.tags.slice(0, 3).join(", ")}
+                  {project.tools_tech?.slice(0, 3).join(", ") || "Design Tools"}
                 </p>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-4 pt-4">
-              {project.category === "WEB DEV" && project.liveUrl && (
+              {project.live_url && (
                 <Button 
-                  href={project.liveUrl} 
+                  href={project.live_url} 
                   target="_blank" 
                   variant="cta" 
                   className="gap-2"
-                  style={{ backgroundColor: project.brandColor || "#059669" }}
+                  style={{ backgroundColor: project.brand_color || "#059669" }}
                 >
                   <FiZap /> View Live Project
                 </Button>
               )}
 
-              {project.category === "UI/UX" && (
-                <>
-                  {project.prototypeUrl && (
-                    <Button 
-                      href={project.prototypeUrl} 
-                      target="_blank" 
-                      variant="cta" 
-                      className="gap-2"
-                      style={{ backgroundColor: project.brandColor || "#059669" }}
-                      onClick={(e) => {
-                        alert("trying to view protype flow will require figma User account permission, request access");
-                      }}
-                    >
-                      <FiFigma /> View Prototype Flow
-                    </Button>
-                  )}
-                  {project.videoUrl && (
-                    <Button 
-                      href={project.videoUrl} 
-                      target="_blank" 
-                      variant="cta" 
-                      className="gap-2"
-                      style={{ backgroundColor: project.brandColor || "#059669" }}
-                    >
-                      <FiPlay /> View Live Export Protype Video
-                    </Button>
-                  )}
-                  {project.figmaUrl && (
-                    <Button 
-                      href={project.figmaUrl} 
-                      target="_blank" 
-                      variant="cta" 
-                      className="gap-2"
-                      style={{ backgroundColor: project.brandColor || "#059669" }}
-                    >
-                      <FiFigma /> View Figma File
-                    </Button>
-                  )}
-                </>
-              )}
-
-              {project.category === "MOBILE DEV" && (
-                <>
-                  {project.prototypeUrl && (
-                    <Button 
-                      href={project.prototypeUrl} 
-                      target="_blank" 
-                      variant="cta" 
-                      className="gap-2"
-                      style={{ backgroundColor: project.brandColor || "#059669" }}
-                      onClick={(e) => {
-                        alert("trying to view protype flow will require figma User account permission, request access");
-                      }}
-                    >
-                      <FiFigma /> View Prototype Flow
-                    </Button>
-                  )}
-                  {project.videoUrl && (
-                    <Button 
-                      href={project.videoUrl} 
-                      target="_blank" 
-                      variant="cta" 
-                      className="gap-2"
-                      style={{ backgroundColor: project.brandColor || "#059669" }}
-                    >
-                      <FiPlay /> View Live Export Prototype Video
-                    </Button>
-                  )}
-                  {project.apkUrl !== undefined && (
-                    <Button 
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        alert("Project still in completion soon coming");
-                      }}
-                      variant="cta" 
-                      className="gap-2"
-                      style={{ backgroundColor: project.brandColor || "#059669" }}
-                    >
-                      <FiDownload /> Download APK file
-                    </Button>
-                  )}
-                </>
-              )}
-
-              {project.category === "GRAPHICS DESIGN" && project.downloadUrl && (
+              {project.prototype_url && (
                 <Button 
-                  href={project.downloadUrl} 
+                  href={project.prototype_url} 
                   target="_blank" 
                   variant="cta" 
                   className="gap-2"
-                  style={{ backgroundColor: project.brandColor || "#059669" }}
+                  style={{ backgroundColor: project.brand_color || "#059669" }}
                 >
-                  <FiDownload /> Download design file
+                  <FiFigma /> View Prototype Flow
+                </Button>
+              )}
+              {project.video_url && (
+                <Button 
+                  href={project.video_url} 
+                  target="_blank" 
+                  variant="cta" 
+                  className="gap-2"
+                  style={{ backgroundColor: project.brand_color || "#059669" }}
+                >
+                  <FiPlay /> View Prototype Video
+                </Button>
+              )}
+              {project.figma_url && (
+                <Button 
+                  href={project.figma_url} 
+                  target="_blank" 
+                  variant="cta" 
+                  className="gap-2"
+                  style={{ backgroundColor: project.brand_color || "#059669" }}
+                >
+                  <FiFigma /> View Figma File
+                </Button>
+              )}
+              {project.apk_url && (
+                <Button 
+                  href={project.apk_url}
+                  variant="cta" 
+                  className="gap-2"
+                  style={{ backgroundColor: project.brand_color || "#059669" }}
+                >
+                  <FiDownload /> Download APK
                 </Button>
               )}
             </div>
@@ -171,7 +150,7 @@ export default function CaseStudyPage() {
           
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-brand-100 shadow-2xl">
             <img 
-              src={project.image} 
+              src={getPublicUrl(project.image_url)} 
               alt={project.title} 
               className="h-full w-full object-cover"
             />
@@ -180,79 +159,93 @@ export default function CaseStudyPage() {
       </section>
 
       {/* Preview Screens Section */}
-      <section className="site-container">
-        <SectionTitle 
-          title="Preview Screens" 
-          description="A selection of high-fidelity screens showcasing the core user journey and interface layout."
-        />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-          {project.previewScreens.map((screen, idx) => (
-            <div key={idx} className="group relative aspect-[9/19] overflow-hidden rounded-2xl bg-slate-100 shadow-soft">
-              <img src={screen} alt={`Screen 0${idx + 1}`} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 p-4 text-xs font-bold text-white opacity-0 transition-opacity group-hover:opacity-100">
-                Screen 0{idx + 1}
+      {project.preview_screens?.length > 0 && (
+        <section className="site-container">
+          <SectionTitle 
+            title="Preview Screens" 
+            description="A selection of high-fidelity screens showcasing the core user journey and interface layout."
+          />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+            {project.preview_screens.map((screen, idx) => (
+              <div key={idx} className="group relative aspect-[9/19] overflow-hidden rounded-2xl bg-slate-100 shadow-soft">
+                <img src={getPublicUrl(screen)} alt={`Screen 0${idx + 1}`} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 p-4 text-xs font-bold text-white opacity-0 transition-opacity group-hover:opacity-100">
+                  Screen 0{idx + 1}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Background & Problem */}
-      <section className="site-container">
-        <div className="grid gap-16 lg:grid-cols-2">
-          <div className="space-y-6">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
-              <FiLayout size={24} />
-            </div>
-            <h2 className="text-3xl font-bold text-slate-900">Project Background</h2>
-            <p className="text-lg leading-relaxed text-slate-600 italic">
-              &quot;{project.projectBackground}&quot;
-            </p>
+      {(project.project_background || project.problem_statement) && (
+        <section className="site-container">
+          <div className="grid gap-16 lg:grid-cols-2">
+            {project.project_background && (
+              <div className="space-y-6">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+                  <FiLayout size={24} />
+                </div>
+                <h2 className="text-3xl font-bold text-slate-900">Project Background</h2>
+                <p className="text-lg leading-relaxed text-slate-600 italic">
+                  &quot;{project.project_background}&quot;
+                </p>
+              </div>
+            )}
+            {project.problem_statement && (
+              <div className="space-y-6">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-600">
+                  <FiTarget size={24} />
+                </div>
+                <h2 className="text-3xl font-bold text-slate-900">The Problem</h2>
+                <p className="text-lg leading-relaxed text-slate-600">
+                  {project.problem_statement}
+                </p>
+              </div>
+            )}
           </div>
-          <div className="space-y-6">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-600">
-              <FiTarget size={24} />
-            </div>
-            <h2 className="text-3xl font-bold text-slate-900">The Problem</h2>
-            <p className="text-lg leading-relaxed text-slate-600">
-              {project.problemStatement}
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Design Journey */}
-      <section className="site-container bg-slate-50 py-20 rounded-[3rem]">
-        <div className="site-container">
-          <SectionTitle title="UX Thinking & Design Journey" />
-          <div className="mx-auto max-w-4xl space-y-12">
-            <div className="flex gap-8">
-              <div className="hidden h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-500 text-white font-bold sm:flex">1</div>
-              <div className="space-y-3">
-                <h3 className="text-2xl font-bold text-slate-900">Research & Discovery</h3>
-                <p className="text-lg text-slate-600">{project.designJourney}</p>
-              </div>
-            </div>
-            <div className="flex gap-8">
-              <div className="hidden h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-500 text-white font-bold sm:flex">2</div>
-              <div className="space-y-3">
-                <h3 className="text-2xl font-bold text-slate-900">Challenges Encountered</h3>
-                <p className="text-lg text-slate-600">{project.challenges}</p>
-              </div>
+      {(project.design_journey || project.challenges) && (
+        <section className="site-container bg-slate-50 py-20 rounded-[3rem]">
+          <div className="site-container">
+            <SectionTitle title="UX Thinking & Design Journey" />
+            <div className="mx-auto max-w-4xl space-y-12">
+              {project.design_journey && (
+                <div className="flex gap-8">
+                  <div className="hidden h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-500 text-white font-bold sm:flex">1</div>
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-bold text-slate-900">Research & Discovery</h3>
+                    <p className="text-lg text-slate-600">{project.design_journey}</p>
+                  </div>
+                </div>
+              )}
+              {project.challenges && (
+                <div className="flex gap-8">
+                  <div className="hidden h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-500 text-white font-bold sm:flex">2</div>
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-bold text-slate-900">Challenges Encountered</h3>
+                    <p className="text-lg text-slate-600">{project.challenges}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* UX Flow Section */}
-      {project.uxFlow && (
+      {project.ux_flow?.length > 0 && (
         <section className="site-container">
           <SectionTitle 
             title="Experience Architecture" 
             description="A breakdown of the core platform modules and the UX strategy behind them."
           />
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {project.uxFlow.map((item, idx) => (
+            {project.ux_flow.map((item, idx) => (
               <div key={idx} className="card-surface p-8 space-y-4">
                 <div className="text-brand-600 font-bold text-xl flex items-center gap-3">
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-50 text-sm">
@@ -270,148 +263,72 @@ export default function CaseStudyPage() {
       )}
 
       {/* Solution & Outcome */}
-      <section className="site-container">
-        <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-          <div className="card-surface p-10 space-y-8">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 font-bold text-brand-600 uppercase tracking-widest text-xs">
-                <FiZap /> The Solution
-              </div>
-              <h2 className="text-3xl font-bold text-slate-900">Final Solution</h2>
-              <p className="text-lg leading-relaxed text-slate-600">
-                {project.solution}
-              </p>
+      {(project.solution || project.outcome) && (
+        <section className="site-container">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            <div className="card-surface p-10 space-y-8">
+              {project.solution && (
+                <div className="space-y-4">
+                  <div className="inline-flex items-center gap-2 font-bold text-brand-600 uppercase tracking-widest text-xs">
+                    <FiZap /> The Solution
+                  </div>
+                  <h2 className="text-3xl font-bold text-slate-900">Final Solution</h2>
+                  <p className="text-lg leading-relaxed text-slate-600">
+                    {project.solution}
+                  </p>
+                </div>
+              )}
+              
+              {project.outcome && (
+                <div className="space-y-4 pt-8 border-t border-slate-100">
+                  <div className="inline-flex items-center gap-2 font-bold text-emerald-600 uppercase tracking-widest text-xs">
+                    <FiCompass /> Impact & Reflection
+                  </div>
+                  <h2 className="text-3xl font-bold text-slate-900">Outcome</h2>
+                  <p className="text-lg leading-relaxed text-slate-600">
+                    {project.outcome}
+                  </p>
+                </div>
+              )}
             </div>
             
-            <div className="space-y-4 pt-8 border-t border-slate-100">
-              <div className="inline-flex items-center gap-2 font-bold text-emerald-600 uppercase tracking-widest text-xs">
-                <FiCompass /> Impact & Reflection
-              </div>
-              <h2 className="text-3xl font-bold text-slate-900">Outcome</h2>
-              <p className="text-lg leading-relaxed text-slate-600">
-                {project.outcome}
-              </p>
+            <div className="flex justify-center">
+              <FiSmartphone className="text-[240px] text-slate-200" />
             </div>
           </div>
-          
-          <div className="flex justify-center">
-            <FiSmartphone className="text-[240px] text-slate-200" />
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* CTA Bottom */}
       <section className="site-container">
         <div className="rounded-[2.5rem] bg-slate-900 p-12 text-center text-white lg:p-20">
           <h2 className="text-4xl font-bold lg:text-5xl">
-            {project.liveUrl ? "Experience the Live Platform" : "Explore the Prototype"}
+            {project.live_url ? "Experience the Live Platform" : "Explore the Prototype"}
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
-            {project.liveUrl 
-              ? "The AgriculNet ecosystem is currently live in its beta phase. You can explore the full B2B trade flow and verification system directly."
-              : "Interested in seeing the full interaction design and how the components work together? View the read-only Figma file below."
-            }
+            Interested in seeing the full interaction design and how the components work together? View the project links below.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            {project.category === "WEB DEV" && project.liveUrl && (
+            {project.live_url && (
               <Button 
-                href={project.liveUrl} 
+                href={project.live_url} 
                 target="_blank" 
                 variant="cta" 
                 className="gap-2"
-                style={{ backgroundColor: project.brandColor || "#059669" }}
+                style={{ backgroundColor: project.brand_color || "#059669" }}
               >
                 <FiZap /> View Live Project
               </Button>
             )}
 
-            {project.category === "UI/UX" && (
-              <>
-                {project.prototypeUrl && (
-                  <Button 
-                    href={project.prototypeUrl} 
-                    target="_blank" 
-                    variant="secondary" 
-                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
-                    onClick={(e) => {
-                      alert("trying to view protype flow will require figma User account permission, request access");
-                    }}
-                  >
-                    <FiFigma /> View Prototype Flow
-                  </Button>
-                )}
-                {project.videoUrl && (
-                  <Button 
-                    href={project.videoUrl} 
-                    target="_blank" 
-                    variant="secondary" 
-                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
-                  >
-                    <FiPlay /> View Live Export Protype Video
-                  </Button>
-                )}
-                {project.figmaUrl && (
-                  <Button 
-                    href={project.figmaUrl} 
-                    target="_blank" 
-                    variant="secondary" 
-                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
-                  >
-                    <FiFigma /> View Figma File
-                  </Button>
-                )}
-              </>
-            )}
-
-            {project.category === "MOBILE DEV" && (
-              <>
-                {project.prototypeUrl && (
-                  <Button 
-                    href={project.prototypeUrl} 
-                    target="_blank" 
-                    variant="secondary" 
-                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
-                    onClick={(e) => {
-                      alert("trying to view protype flow will require figma User account permission, request access");
-                    }}
-                  >
-                    <FiFigma /> View Prototype Flow
-                  </Button>
-                )}
-                {project.videoUrl && (
-                  <Button 
-                    href={project.videoUrl} 
-                    target="_blank" 
-                    variant="secondary" 
-                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
-                  >
-                    <FiPlay /> View Live Export Prototype Video
-                  </Button>
-                )}
-                {project.apkUrl !== undefined && (
-                  <Button 
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      alert("Project still in completion soon coming");
-                    }}
-                    variant="secondary" 
-                    className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
-                  >
-                    <FiDownload /> Download APK file
-                  </Button>
-                )}
-              </>
-            )}
-
-            {project.category === "GRAPHICS DESIGN" && project.downloadUrl && (
+            {project.prototype_url && (
               <Button 
-                href={project.downloadUrl} 
+                href={project.prototype_url} 
                 target="_blank" 
                 variant="secondary" 
                 className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
               >
-                <FiDownload /> Download design file
+                <FiFigma /> View Prototype Flow
               </Button>
             )}
 
@@ -423,7 +340,7 @@ export default function CaseStudyPage() {
       </section>
 
       {/* Interactive Prototype Section */}
-      {project.prototypeEmbed && (
+      {project.prototype_embed && (
         <section className="site-container">
           <SectionTitle 
             title="Interactive Prototype Flow" 
@@ -431,7 +348,7 @@ export default function CaseStudyPage() {
           />
           <div 
             className="overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-50 shadow-2xl"
-            dangerouslySetInnerHTML={{ __html: project.prototypeEmbed }}
+            dangerouslySetInnerHTML={{ __html: project.prototype_embed }}
           />
         </section>
       )}
