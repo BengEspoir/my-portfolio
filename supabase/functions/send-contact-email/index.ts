@@ -1,4 +1,4 @@
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY') // This is pulled from Supabase Secrets
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -19,11 +19,11 @@ Deno.serve(async (req) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Authorization': `Bearer ${RESEND_API_KEY}`, // Uses the secret set via CLI
       },
       body: JSON.stringify({
         from: 'Portfolio Site <onboarding@resend.dev>', // Replace with your verified domain
-        to: 'espoirbeng@gmail.com', // Your target email
+        to: 'mbengespoir@gmail.com', // CORRECTED: mbengespoir@gmail.com
         subject: `[Portfolio Inquiry] ${subject}`,
         html: `
           <div style="font-family: sans-serif; padding: 20px; color: #333;">

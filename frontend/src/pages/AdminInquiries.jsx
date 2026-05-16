@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
-import { FiMail, FiCheck, FiTrash2, FiClock, FiEye } from 'react-icons/fi';
+import { FiMail, FiCheck, FiTrash2, FiClock, FiEye, FiCopy } from 'react-icons/fi';
 import DashboardLayout from '../components/DashboardLayout';
 
 export default function AdminInquiries() {
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedInquiry, setSelectedInquiry] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetchInquiries();
@@ -57,6 +58,12 @@ export default function AdminInquiries() {
       setInquiries(prev => prev.filter(item => item.id !== id));
       if (selectedInquiry?.id === id) setSelectedInquiry(null);
     }
+  }
+
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
@@ -142,12 +149,28 @@ export default function AdminInquiries() {
                   </div>
                 </div>
 
-                <div className="flex justify-end pt-4">
+                <div className="flex justify-end items-center gap-4 pt-4">
+                  <button
+                    onClick={() => copyToClipboard(selectedInquiry.email)}
+                    className="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-brand-600 transition-colors"
+                  >
+                    {copied ? (
+                      <>
+                        <FiCheck className="text-emerald-500" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <FiCopy />
+                        Copy Email
+                      </>
+                    )}
+                  </button>
                   <a 
                     href={`mailto:${selectedInquiry.email}?subject=Re: ${selectedInquiry.subject}`}
                     className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-brand-900/20 hover:bg-brand-700 transition-all"
                   >
-                    <FiMail /> Reply to Inquiry
+                    <FiMail /> Reply via Email
                   </a>
                 </div>
               </div>
