@@ -6,6 +6,7 @@ import { supabase, getPublicUrl } from "../utils/supabase";
 import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
 import PageTransition from "../components/PageTransition";
+import TypewriterText from "../components/TypewriterText";
 
 export default function FullDesignPage() {
   const { slug } = useParams();
@@ -45,7 +46,12 @@ export default function FullDesignPage() {
   if (!project) {
     return (
       <div className="site-container py-20 text-center">
-        <h1 className="text-4xl font-bold">Project Not Found</h1>
+        <TypewriterText
+          as="h1"
+          text="Project Not Found"
+          startOnView={false}
+          className="text-4xl font-bold"
+        />
         <Link to="/portfolio" className="mt-4 inline-flex items-center gap-2 text-brand-600 hover:underline">
           <FiArrowLeft /> Back to Portfolio
         </Link>
@@ -73,9 +79,12 @@ export default function FullDesignPage() {
         
         <div className="space-y-8">
           <div className="space-y-4">
-            <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 lg:text-6xl">
-              {project.title}
-            </h1>
+            <TypewriterText
+              as="h1"
+              text={project.title}
+              startOnView={false}
+              className="text-5xl font-extrabold tracking-tight text-slate-900 lg:text-6xl"
+            />
             <div className="flex items-center gap-3">
               <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 uppercase tracking-widest">
                 Full Design Preview

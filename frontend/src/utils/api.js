@@ -35,3 +35,23 @@ export async function sendContactEmail(formData) {
     throw error;
   }
 }
+
+export async function sendBookingEmail(appointmentData) {
+  try {
+    // Invoke Edge Function to send booking confirmation emails
+    // Sends both admin notification and client confirmation email
+    const { data, error: fnError } = await supabase.functions.invoke('send-booking-email', {
+      body: appointmentData,
+    });
+
+    // Non-blocking: if email fails, appointment is already saved to DB
+    if (fnError) {
+      console.warn('Booking email notification failed, but appointment was saved to database:', fnError);
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Booking email submission error:', error);
+    throw error;
+  }
+}

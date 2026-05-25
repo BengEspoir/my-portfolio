@@ -3,6 +3,8 @@ import { revealUp, staggerContainer } from "../animations/motion";
 import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
 import SkillBar from "../components/SkillBar";
+import TestimonialHighway from "../components/TestimonialHighway";
+import TypewriterText from "../components/TypewriterText";
 import { quickFacts, skillCategories, toolSkills } from "../data/skills";
 import { getPublicUrl } from "../utils/supabase";
 
@@ -20,7 +22,12 @@ export default function About() {
     <div className="space-y-24 pb-24">
       <section className="bg-gradient-to-r from-brand-500 to-brand-600 py-24 text-white">
         <div className="site-container text-center">
-          <h1 className="text-4xl font-extrabold sm:text-5xl">About Me</h1>
+          <TypewriterText
+            as="h1"
+            text="About Me"
+            startOnView={false}
+            className="text-4xl font-extrabold sm:text-5xl"
+          />
           <p className="mx-auto mt-5 max-w-3xl text-lg text-brand-50">
             I&apos;m a UI/UX Designer and Software Engineering student passionate about building
             meaningful digital products and creating designs that inspire.
@@ -170,6 +177,8 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      <TestimonialHighway />
 
       <section className="site-container">
         <div className="rounded-3xl bg-white px-6 py-12 text-center shadow-card sm:px-10">

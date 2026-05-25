@@ -8,6 +8,7 @@ import About from "./pages/About";
 import Portfolio from "./pages/Portfolio";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
+import Booking from "./pages/Booking";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import CaseStudyPage from "./pages/CaseStudyPage";
@@ -19,6 +20,7 @@ import AdminProjectForm from "./pages/AdminProjectForm";
 import AdminBlog from "./pages/AdminBlog";
 import AdminBlogForm from "./pages/AdminBlogForm";
 import AdminTestimonials from "./pages/AdminTestimonials";
+import AdminAppointments from "./pages/AdminAppointments";
 import AdminInquiries from "./pages/AdminInquiries";
 import ProtectedRoute from "./components/ProtectedRoute";
 import useTheme from "./hooks/useTheme";
@@ -50,6 +52,7 @@ function AppRoutes() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/booking" element={<Booking />} />
 
         {/* Admin Routes */}
         <Route path="/p/admin-access" element={<AdminLogin />} />
@@ -62,6 +65,7 @@ function AppRoutes() {
           <Route path="/admin/blog/new" element={<AdminBlogForm />} />
           <Route path="/admin/blog/:id/edit" element={<AdminBlogForm />} />
           <Route path="/admin/testimonials" element={<AdminTestimonials />} />
+          <Route path="/admin/appointments" element={<AdminAppointments />} />
           <Route path="/admin/inquiries" element={<AdminInquiries />} />
         </Route>
       </Routes>
@@ -88,7 +92,7 @@ export default function App() {
       <ScrollToTop />
       <MotionInitializer />
       <Navbar theme={theme} onToggleTheme={toggleTheme} />
-      <main className="pt-20">
+      <main className="pb-24 pt-20 sm:pb-0">
         <AppRoutes />
       </main>
       <Footer />

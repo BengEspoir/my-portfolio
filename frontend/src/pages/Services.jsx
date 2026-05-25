@@ -3,7 +3,8 @@ import { FiChevronDown, FiChevronUp, FiLayout, FiPenTool, FiCode, FiMonitor } fr
 import Button from "../components/Button";
 import PricingCard from "../components/PricingCard";
 import SectionTitle from "../components/SectionTitle";
-import Testimonial from "../components/Testimonial";
+import TestimonialHighway from "../components/TestimonialHighway";
+import TypewriterText from "../components/TypewriterText";
 
 const services = [
   {
@@ -61,7 +62,7 @@ const pricingPlans = [
   },
   {
     title: "Professional",
-    price: "$50-$150",
+    price: "$150-$500",
     description: "Ideal for growing teams that need a complete and polished multi-page web presence.",
     features: [
       "Full website (5-7 pages)",
@@ -89,33 +90,6 @@ const pricingPlans = [
   }
 ];
 
-const testimonials = [
-  {
-    quote:
-      "Beng Espoir has shown remarkable growth as a designer. His ability to combine creativity with structured problem-solving makes his solutions stand out.",
-    name: "John A. Smith",
-    role: "Senior Product Designer, Google (Mentor)",
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=250&q=80"
-  },
-  {
-    quote:
-      "Very reliable and detail-oriented. He translated rough ideas into clear interface systems and interactive prototypes that were easy for our team to build.",
-    name: "Maria Ntui",
-    role: "Startup Founder",
-    avatar:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=250&q=80"
-  },
-  {
-    quote:
-      "His communication and delivery were excellent from planning to handoff. The final UI felt modern, lightweight, and very usable.",
-    name: "Frank Ojong",
-    role: "Frontend Developer",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=250&q=80"
-  }
-];
-
 const faqs = [
   {
     question: "How do I know which package is right for me?",
@@ -135,14 +109,18 @@ const faqs = [
 ];
 
 export default function Services() {
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [openFaq, setOpenFaq] = useState(0);
 
   return (
     <div className="space-y-24 pb-24">
       <section className="site-container pt-10">
         <div className="subtle-gradient mx-auto max-w-4xl rounded-[4rem] bg-white px-8 py-24 text-center shadow-soft">
-          <h1 className="text-4xl font-extrabold text-slate-900 sm:text-5xl">What I Can Do For You</h1>
+          <TypewriterText
+            as="h1"
+            text="What I Can Do For You"
+            startOnView={false}
+            className="text-4xl font-extrabold text-slate-900 sm:text-5xl"
+          />
           <p className="mx-auto mt-4 max-w-2xl text-xl text-slate-600">
             I help brands, startups, and individuals build sleek, functional, and engaging digital
             experiences.
@@ -187,7 +165,7 @@ export default function Services() {
             Not sure which package fits your project? Let&apos;s discuss and map the right scope.
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
-            <Button to="/contact">Book a Free Consultation</Button>
+            <Button to="/booking">Book a Free Consultation</Button>
             <Button to="/contact" variant="secondary">
               Contact Me Directly
             </Button>
@@ -195,28 +173,7 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="site-container">
-        <SectionTitle
-          title="What People Say About Me"
-          description="Feedback from clients, mentors, and peers I have worked with."
-        />
-
-        <Testimonial {...testimonials[activeTestimonial]} />
-        <div className="mt-5 flex justify-center gap-2">
-          {testimonials.map((item, index) => (
-            <button
-              key={item.name}
-              type="button"
-              aria-label={`Show testimonial ${index + 1}`}
-              onClick={() => setActiveTestimonial(index)}
-              className={[
-                "h-3 w-3 rounded-full transition-colors",
-                activeTestimonial === index ? "bg-brand-500" : "bg-slate-300"
-              ].join(" ")}
-            />
-          ))}
-        </div>
-      </section>
+      <TestimonialHighway />
 
       <section className="site-container">
         <div className="overflow-hidden rounded-2xl border border-brand-200 bg-white">

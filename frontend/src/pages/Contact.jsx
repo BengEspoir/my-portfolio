@@ -223,14 +223,11 @@ export default function Contact() {
             Pick a time that works best for you, and let&apos;s chat about your project.
           </p>
           <Button
-            href="https://calendly.com/app/scheduling/meeting_types/user/me"
-            target="_blank"
-            rel="noreferrer"
+            to="/booking"
             className="mt-5 gap-2"
           >
-            Open Calendar <FiCalendar />
-          </Button>
-        </div>
+            Book Consultation <FiCalendar />
+          </Button>        </div>
       </section>
 
       <section className="site-container">

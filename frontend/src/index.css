@@ -218,6 +218,75 @@
   opacity: 1;
 }
 
+.typewriter-text {
+  display: inline-grid;
+  max-width: 100%;
+  vertical-align: bottom;
+}
+
+.typewriter-text__sizer,
+.typewriter-text__visible {
+  grid-area: 1 / 1;
+  min-width: 0;
+  white-space: normal;
+}
+
+.typewriter-text__sizer {
+  visibility: hidden;
+}
+
+.typewriter-text__visible {
+  overflow-wrap: anywhere;
+}
+
+.typewriter-text__cursor {
+  display: inline-block;
+  width: 0.08em;
+  height: 0.9em;
+  margin-left: 0.1em;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translateY(0.08em);
+  animation: typewriterCursorBlink 1s steps(2, start) infinite;
+}
+
+.typewriter-text__cursor.is-typing {
+  animation-duration: 0.72s;
+}
+
+/* Premium Booking Styles */
+.premium-calendar {
+  @apply !border-none !font-sans !bg-transparent !w-full;
+}
+
+.premium-calendar .react-datepicker__header {
+  @apply !bg-transparent !border-b !border-slate-100 !pb-4;
+}
+
+.premium-calendar .react-datepicker__day--selected {
+  @apply !bg-brand-600 !rounded-xl !font-bold !text-white !shadow-lg !shadow-brand-200;
+}
+
+.premium-calendar .react-datepicker__day:hover {
+  @apply !bg-brand-50 !text-brand-600 !rounded-xl;
+}
+
+.premium-calendar .react-datepicker__day--disabled {
+  @apply !text-slate-300;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-slate-50 rounded-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 rounded-full hover:bg-brand-200 transition-colors;
+}
+
 @keyframes pageFade {
   from {
     opacity: 0;
@@ -226,6 +295,17 @@
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes typewriterCursorBlink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  46%,
+  100% {
+    opacity: 0;
   }
 }
 
@@ -246,6 +326,11 @@
   .motion-skill-fill {
     transition: none !important;
     transform: none !important;
+  }
+
+  .typewriter-text__cursor {
+    display: none !important;
+    animation: none !important;
   }
 }
 

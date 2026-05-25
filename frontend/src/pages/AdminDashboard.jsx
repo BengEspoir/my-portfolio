@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
-import { FiLayout, FiFileText, FiMail, FiUsers, FiTrendingUp, FiPlus, FiArrowRight, FiMessageSquare } from 'react-icons/fi';
+import { FiLayout, FiFileText, FiMail, FiTrendingUp, FiPlus, FiArrowRight, FiMessageSquare, FiCalendar } from 'react-icons/fi';
 import DashboardLayout from '../components/DashboardLayout';
 
 export default function AdminDashboard() {
@@ -9,7 +9,9 @@ export default function AdminDashboard() {
     projects: 0,
     blogPosts: 0,
     inquiries: 0,
-    unreadInquiries: 0
+    unreadInquiries: 0,
+    testimonials: 0,
+    pendingAppointments: 0
   });
   const [loading, setLoading] = useState(true);
 
@@ -20,13 +22,15 @@ export default function AdminDashboard() {
         { count: blogCount },
         { count: inquiriesCount },
         { count: unreadCount },
-        { count: testimonialsCount }
+        { count: testimonialsCount },
+        { count: pendingAppointmentsCount }
       ] = await Promise.all([
         supabase.from('projects').select('*', { count: 'exact', head: true }),
         supabase.from('blog_posts').select('*', { count: 'exact', head: true }),
         supabase.from('contacts').select('*', { count: 'exact', head: true }),
         supabase.from('contacts').select('*', { count: 'exact', head: true }).eq('is_read', false),
-        supabase.from('testimonials').select('*', { count: 'exact', head: true })
+        supabase.from('testimonials').select('*', { count: 'exact', head: true }),
+        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'pending')
       ]);
 
       setStats({
@@ -34,7 +38,8 @@ export default function AdminDashboard() {
         blogPosts: blogCount || 0,
         inquiries: inquiriesCount || 0,
         unreadInquiries: unreadCount || 0,
-        testimonials: testimonialsCount || 0
+        testimonials: testimonialsCount || 0,
+        pendingAppointments: pendingAppointmentsCount || 0
       });
       setLoading(false);
     }
@@ -45,7 +50,8 @@ export default function AdminDashboard() {
   const statCards = [
     { label: 'Total Projects', value: stats.projects, icon: FiLayout, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+2 this month' },
     { label: 'Blog Posts', value: stats.blogPosts, icon: FiFileText, color: 'text-fuchsia-600', bg: 'bg-fuchsia-50', trend: '+1 this month' },
-    { label: 'Testimonials', value: stats.testimonials, icon: FiMessageSquare, color: 'text-amber-600', bg: 'bg-amber-50', trend: 'Growing reputation' },
+    { label: 'Testimonials', value: stats.testimonials, icon: FiMessageSquare, color: 'text-indigo-600', bg: 'bg-indigo-50', trend: 'Publish-ready' },
+    { label: 'Pending Appointments', value: stats.pendingAppointments, icon: FiCalendar, color: 'text-rose-600', bg: 'bg-rose-50', trend: 'Schedule ready' },
     { label: 'Unread Messages', value: stats.unreadInquiries, icon: FiMail, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: 'Needs attention' },
   ];
 
@@ -57,7 +63,7 @@ export default function AdminDashboard() {
           <p className="text-slate-500">Welcome back! Here&apos;s what&apos;s happening with your portfolio.</p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {statCards.map((card) => {
             const Icon = card.icon;
             return (
@@ -84,7 +90,7 @@ export default function AdminDashboard() {
             <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
               <FiPlus className="text-brand-500" /> Quick Actions
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-4 sm:grid-cols-3">
               <Link 
                 to="/admin/projects/new"
                 className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-6 text-center transition-all hover:bg-brand-50 hover:border-brand-100 group"
@@ -102,6 +108,15 @@ export default function AdminDashboard() {
                   <FiFileText size={24} />
                 </div>
                 <span className="font-bold text-slate-900">New Blog Post</span>
+              </Link>
+              <Link 
+                to="/admin/testimonials?new=1"
+                className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-6 text-center transition-all hover:bg-indigo-50 hover:border-indigo-100 group"
+              >
+                <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center text-indigo-600 shadow-sm group-hover:scale-110 transition-transform">
+                  <FiMessageSquare size={24} />
+                </div>
+                <span className="font-bold text-slate-900">New Testimonial</span>
               </Link>
             </div>
           </div>

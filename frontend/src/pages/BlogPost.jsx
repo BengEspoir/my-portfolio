@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { FiArrowLeft } from 'react-icons/fi';
 import { supabase } from '../utils/supabase';
 import PageTransition from "../components/PageTransition";
+import TypewriterText from "../components/TypewriterText";
 
 export default function BlogPost() {
   const { slug } = useParams();
@@ -53,7 +54,12 @@ export default function BlogPost() {
   if (!post) {
     return (
       <div className="site-container py-32 text-center min-h-[60vh] flex flex-col items-center justify-center">
-        <h1 className="text-3xl font-bold text-slate-900 mb-6">Post not found</h1>
+        <TypewriterText
+          as="h1"
+          text="Post not found"
+          startOnView={false}
+          className="mb-6 text-3xl font-bold text-slate-900"
+        />
         <p className="text-slate-600 mb-8">The article you're looking for doesn't exist or has been removed.</p>
         <Link to="/blog" className="inline-flex items-center justify-center h-12 px-6 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-colors">
           <FiArrowLeft className="mr-2" /> Back to Blog
@@ -86,9 +92,12 @@ export default function BlogPost() {
             year: 'numeric',
           })}
         </p>
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15] mb-10">
-          {post.title}
-        </h1>
+        <TypewriterText
+          as="h1"
+          text={post.title}
+          startOnView={false}
+          className="mb-10 text-4xl font-extrabold leading-[1.15] tracking-tight text-slate-900 md:text-5xl lg:text-6xl"
+        />
         {post.author_name && (
           <div className="flex items-center justify-center gap-4">
             {post.author_image_url ? (

@@ -32,7 +32,9 @@ import ProjectCard from "../components/ProjectCard";
 import SectionTitle from "../components/SectionTitle";
 import SkillBar from "../components/SkillBar";
 import PageTransition from "../components/PageTransition";
-import Testimonials from "../components/Testimonials";
+import TestimonialHighway from "../components/TestimonialHighway";
+import BookingCTA from "../components/BookingCTA";
+import TypewriterText from "../components/TypewriterText";
 import { ProjectCardSkeleton } from "../components/Skeleton";
 import { revealUp, staggerContainer } from "../animations/motion";
 import { skillCategories, toolSkills } from "../data/skills";
@@ -248,16 +250,19 @@ export default function Home() {
               <span className="inline-flex rounded-full bg-brand-50 px-4 py-1 text-sm font-semibold text-brand-600">
                 Product Designer and Software Engineering Student
               </span>
-              <h1 className="text-4xl font-extrabold leading-tight text-slate-900 sm:text-5xl">
-                Hi I&apos;m Beng Espoir Nong
-              </h1>
+              <TypewriterText
+                as="h1"
+                text="Hi I'm Beng Espoir Nong"
+                startOnView={false}
+                className="text-4xl font-extrabold leading-tight text-slate-900 sm:text-5xl"
+              />
               <p className="max-w-xl text-lg text-slate-600">
                 I build meaningful digital products through UI/UX design, full-stack & mobile development,
                 and AI-powered system architecture.
               </p>
               <div className="flex flex-wrap gap-3">
-                <Button to="/portfolio" variant="cta" className="gap-2">
-                  View My Work <FiArrowRight />
+                <Button to="/booking" variant="cta" className="gap-2">
+                  Book a Consultation <FiArrowRight />
                 </Button>
                 <Button
                   href="/resume.pdf"
@@ -472,9 +477,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <Testimonials />
-
       <section className="site-container">
         <SectionTitle
           title="Experience"
@@ -538,9 +540,16 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <TestimonialHighway />
+
       <section className="site-container">
         <div className="subtle-gradient card-surface rounded-3xl px-6 py-12 sm:px-8 lg:px-10">
-          <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">Let&apos;s Work Together</h2>
+          <TypewriterText
+            as="h2"
+            text="Let's Work Together"
+            className="text-3xl font-bold text-slate-900 sm:text-4xl"
+          />
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
             Got a project, collaboration, or opportunity? I&apos;d love to hear from you.
           </p>
@@ -697,6 +706,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Booking CTA Section */}
+      <BookingCTA />
     </div>
   </PageTransition>
 );

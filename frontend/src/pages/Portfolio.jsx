@@ -119,7 +119,7 @@ export default function Portfolio() {
           <p className="mx-auto mt-4 max-w-2xl text-slate-600">
             Let&apos;s discuss how I can bring the same level of design and execution to your project.
           </p>
-          <Button to="/contact" className="mt-7">
+          <Button to="/booking" className="mt-7">
             Book a Consultation
           </Button>
         </div>

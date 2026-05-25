@@ -8,7 +8,8 @@ import {
   FiHome,
   FiMenu,
   FiX,
-  FiMessageSquare
+  FiMessageSquare,
+  FiCalendar
 } from 'react-icons/fi';
 import { useState } from 'react';
 
@@ -27,6 +28,7 @@ export default function DashboardLayout({ children }) {
     { label: 'Projects', path: '/admin/projects', icon: FiLayout },
     { label: 'Blog Posts', path: '/admin/blog', icon: FiFileText },
     { label: 'Testimonials', path: '/admin/testimonials', icon: FiMessageSquare },
+    { label: 'Appointments', path: '/admin/appointments', icon: FiCalendar },
     { label: 'Inquiries', path: '/admin/inquiries', icon: FiMail },
   ];
 

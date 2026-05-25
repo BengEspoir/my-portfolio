@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { 
   FiPlus, 
@@ -14,6 +15,7 @@ import DashboardLayout from '../components/DashboardLayout';
 import Button from '../components/Button';
 
 export default function AdminTestimonials() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +48,7 @@ export default function AdminTestimonials() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: name === 'rating' ? Number(value) : value }));
   };
 
   const handleFileUpload = async (e) => {
@@ -92,6 +94,13 @@ export default function AdminTestimonials() {
     }
     setIsModalOpen(true);
   };
+
+  useEffect(() => {
+    if (searchParams.get('new') === '1') {
+      openModal();
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -151,8 +160,17 @@ export default function AdminTestimonials() {
             testimonials.map((t) => (
               <div key={t.id} className="card-surface p-6 flex flex-col group">
                 <div className="flex justify-between items-start mb-4">
-                  <div className="flex gap-1 text-amber-400">
-                    {[...Array(t.rating)].map((_, i) => <FiStar key={i} fill="currentColor" size={14} />)}
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1 text-amber-400">
+                      {[...Array(Number(t.rating) || 0)].map((_, i) => <FiStar key={i} fill="currentColor" size={14} />)}
+                    </div>
+                    <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${
+                      t.status === 'published'
+                        ? 'bg-emerald-50 text-emerald-700'
+                        : 'bg-slate-100 text-slate-500'
+                    }`}>
+                      {t.status}
+                    </span>
                   </div>
                   <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => openModal(t)} className="p-1.5 text-slate-400 hover:text-brand-600 transition-colors"><FiEdit2 size={16} /></button>
