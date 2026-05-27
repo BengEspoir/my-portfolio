@@ -73,6 +73,7 @@ const quickItems = [
 
 const experiences = [
   {
+    company: "Nephus",
     title: "UI/UX and Web Development Intern - Nephus",
     period: "June 2024 - September 2024",
     description:
@@ -80,6 +81,7 @@ const experiences = [
     tags: ["Internship", "UI/UX", "Web Dev", "Git"]
   },
   {
+    company: "Freelance",
     title: "Freelance UI/UX Designer - Small Business Projects",
     period: "October 2024 - Present",
     description:
@@ -87,6 +89,7 @@ const experiences = [
     tags: ["Freelance", "Wireframing", "Branding", "Prototyping"]
   },
   {
+    company: "Academic",
     title: "Academic Software Engineering Collaborations",
     period: "2023 - Present",
     description:
@@ -94,6 +97,7 @@ const experiences = [
     tags: ["Teamwork", "React", "Agile", "Version Control"]
   },
   {
+    company: "Portfolio",
     title: "Design and Frontend Portfolio Development",
     period: "2024 - Present",
     description:
@@ -157,6 +161,7 @@ const toolColumns = [
 
 export default function Home() {
   const [activeExperience, setActiveExperience] = useState(0);
+  const [isAutoPlay, setIsAutoPlay] = useState(true);
   const activeExperienceItem = experiences[activeExperience];
   const [contactFormData, setContactFormData] = useState(contactInitialForm);
   const [contactErrors, setContactErrors] = useState({});
@@ -225,12 +230,13 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (!isAutoPlay) return;
     const intervalId = window.setInterval(() => {
       setActiveExperience((currentIndex) => (currentIndex + 1) % experiences.length);
     }, 5000);
 
     return () => window.clearInterval(intervalId);
-  }, []);
+  }, [isAutoPlay]);
 
   return (
     <PageTransition>
@@ -470,8 +476,12 @@ export default function Home() {
           </div>
         )}
 
-        <div className="text-center">
-          <Button to="/portfolio" variant="secondary" className="px-8">
+        <div className="text-center mt-16 md:mt-24">
+          <Button 
+            to="/portfolio" 
+            variant="secondary" 
+            className="px-8 !bg-brand-500/10 hover:!bg-brand-600 !text-brand-600 dark:!text-brand-300 hover:!text-white !border !border-brand-500/20 hover:!border-brand-600 transition-all duration-300 shadow-sm"
+          >
             View All Projects
           </Button>
         </div>
@@ -483,31 +493,61 @@ export default function Home() {
           description="Internships, freelance projects, collaborations, and academic work that shaped my journey."
         />
 
-        <article className="card-surface mx-auto max-w-4xl rounded-3xl p-8 text-center transition-all duration-700">
-          <div key={activeExperienceItem.title} className="transition-opacity duration-700">
-            <h3 className="text-xl font-bold text-slate-900">{activeExperienceItem.title}</h3>
-            <p className="mt-2 text-sm text-slate-500">{activeExperienceItem.period}</p>
-            <p className="mx-auto mt-4 max-w-2xl text-slate-600">{activeExperienceItem.description}</p>
-            <div className="mt-5 flex flex-wrap justify-center gap-2">
-              {activeExperienceItem.tags.map((item) => (
-                <span key={item} className="rounded-full bg-brand-50 px-3 py-1 text-sm text-brand-600">
-                  {item}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+          {/* Left Column: Tab list */}
+          <div className="md:col-span-1 flex md:flex-col overflow-x-auto md:overflow-x-visible border-b md:border-b-0 md:border-l border-slate-200 dark:border-slate-800 scrollbar-none gap-2 md:gap-0 pb-3 md:pb-0">
+            {experiences.map((experience, index) => {
+              const isActive = index === activeExperience;
+              return (
+                <button
+                  key={experience.company}
+                  type="button"
+                  onClick={() => {
+                    setActiveExperience(index);
+                    setIsAutoPlay(false); // Stop auto-slide on user interaction
+                  }}
+                  className={[
+                    "w-full text-left py-3.5 px-5 font-semibold text-sm transition-all duration-300 relative rounded-xl md:rounded-none md:rounded-r-xl",
+                    isActive
+                      ? "text-brand-600 dark:text-white bg-white/60 dark:bg-slate-800/40 shadow-soft md:shadow-none border-l-4 border-brand-500 md:-ml-[2.5px]"
+                      : "text-slate-500 dark:text-slate-400 border-l-4 border-transparent hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/40 dark:hover:bg-slate-800/20"
+                  ].join(" ")}
+                >
+                  {experience.company}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right Column: Experience Details */}
+          <div className="md:col-span-3 card-surface p-8 min-h-[280px] flex flex-col justify-between">
+            <div key={activeExperienceItem.title} className="space-y-4">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  {activeExperienceItem.title}
+                </h3>
+                <span className="text-sm font-semibold text-slate-500 shrink-0">
+                  {activeExperienceItem.period}
                 </span>
-              ))}
+              </div>
+              
+              <p className="text-brand-600 dark:text-brand-400 font-bold text-sm">
+                {activeExperienceItem.company}
+              </p>
+
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                {activeExperienceItem.description}
+              </p>
+
+              <div className="flex flex-wrap gap-2 pt-4">
+                {activeExperienceItem.tags.map((item) => (
+                  <span key={item} className="rounded-full bg-brand-50 dark:bg-brand-900/30 px-3 py-1 text-xs font-semibold text-brand-600 dark:text-brand-400 border border-brand-100/50 dark:border-brand-900/20">
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
-        </article>
-
-        <div className="mt-5 flex justify-center gap-2">
-          {experiences.map((experience, index) => (
-            <span
-              key={experience.title}
-              className={[
-                "h-2 w-2 rounded-full transition-all duration-500",
-                index === activeExperience ? "w-6 bg-brand-500" : "bg-slate-300"
-              ].join(" ")}
-            />
-          ))}
         </div>
       </section>
 
@@ -548,7 +588,7 @@ export default function Home() {
           <TypewriterText
             as="h2"
             text="Let's Work Together"
-            className="text-3xl font-bold text-slate-900 sm:text-4xl"
+            className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl"
           />
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
             Got a project, collaboration, or opportunity? I&apos;d love to hear from you.
@@ -593,7 +633,7 @@ export default function Home() {
               </div>
             </article>
 
-            <article className="card-surface rounded-2xl p-6 sm:p-8">
+            <article className="form-dynamic-bg border shadow-soft rounded-2xl p-6 sm:p-8">
               <h3 className="text-center text-3xl font-bold text-brand-500 lg:text-left">Got a Message For Me</h3>
 
               <form onSubmit={handleContactSubmit} className="mt-8 space-y-4" noValidate>

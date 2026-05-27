@@ -24,10 +24,10 @@ export default function SectionTitle({
         <TypewriterText
           as="h2"
           text={title}
-          className="text-3xl font-bold leading-tight sm:text-4xl"
+          className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl"
         />
       ) : (
-        <h2 className="text-3xl font-bold leading-tight sm:text-4xl">{title}</h2>
+        <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">{title}</h2>
       )}
       {supportingText ? (
         <p className="max-w-2xl text-base text-slate-600 sm:text-lg">{supportingText}</p>

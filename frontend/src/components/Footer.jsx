@@ -27,7 +27,7 @@ const mobileLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-slate-100 bg-white/80 backdrop-blur-xl">
+    <footer className="relative border-t border-slate-100 footer-dynamic-bg backdrop-blur-xl">
       <div className="site-container hidden py-10 sm:block">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_1.4fr_auto] lg:items-center">
           <div>

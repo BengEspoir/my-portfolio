@@ -208,7 +208,7 @@ export default function CaseStudyPage() {
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
                   <FiLayout size={24} />
                 </div>
-                <h2 className="text-3xl font-bold text-slate-900">Project Background</h2>
+                <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">Project Background</h2>
                 <p className="text-lg leading-relaxed text-slate-600 italic">
                   &quot;{project.project_background}&quot;
                 </p>
@@ -219,7 +219,7 @@ export default function CaseStudyPage() {
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-600">
                   <FiTarget size={24} />
                 </div>
-                <h2 className="text-3xl font-bold text-slate-900">The Problem</h2>
+                <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">The Problem</h2>
                 <p className="text-lg leading-relaxed text-slate-600">
                   {project.problem_statement}
                 </p>
@@ -293,7 +293,7 @@ export default function CaseStudyPage() {
                   <div className="inline-flex items-center gap-2 font-bold text-brand-600 uppercase tracking-widest text-xs">
                     <FiZap /> The Solution
                   </div>
-                  <h2 className="text-3xl font-bold text-slate-900">Final Solution</h2>
+                  <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">Final Solution</h2>
                   <p className="text-lg leading-relaxed text-slate-600">
                     {project.solution}
                   </p>
@@ -305,7 +305,7 @@ export default function CaseStudyPage() {
                   <div className="inline-flex items-center gap-2 font-bold text-emerald-600 uppercase tracking-widest text-xs">
                     <FiCompass /> Impact & Reflection
                   </div>
-                  <h2 className="text-3xl font-bold text-slate-900">Outcome</h2>
+                  <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">Outcome</h2>
                   <p className="text-lg leading-relaxed text-slate-600">
                     {project.outcome}
                   </p>
@@ -323,7 +323,7 @@ export default function CaseStudyPage() {
       {/* CTA Bottom */}
       <section className="site-container">
         <div className="rounded-[2.5rem] bg-slate-900 p-12 text-center text-white lg:p-20">
-          <h2 className="text-4xl font-bold lg:text-5xl">
+          <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">
             {project.live_url ? "Experience the Live Platform" : "Explore the Prototype"}
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">

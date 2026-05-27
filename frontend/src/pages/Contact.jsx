@@ -105,7 +105,7 @@ export default function Contact() {
           description="Have a project in mind, or want to collaborate? Feel free to reach out."
         />
 
-        <div className="mx-auto max-w-4xl rounded-3xl bg-white p-6 shadow-soft sm:p-8">
+        <div className="mx-auto max-w-4xl rounded-3xl form-dynamic-bg p-6 shadow-soft sm:p-8 border">
           <form onSubmit={handleSubmit} className="space-y-6" noValidate>
             {/* EmailJS placeholders to replace are in src/utils/emailjs.js, not these input placeholder texts. */}
             <div>
@@ -218,7 +218,7 @@ export default function Contact() {
 
       <section className="site-container">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-slate-900">Book a Free Consultation</h2>
+          <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">Book a Free Consultation</h2>
           <p className="mx-auto mt-3 max-w-2xl text-lg text-slate-600">
             Pick a time that works best for you, and let&apos;s chat about your project.
           </p>
@@ -261,7 +261,7 @@ export default function Contact() {
       </section>
 
       <section className="site-container text-center">
-        <h2 className="text-3xl font-bold text-slate-900">Get to Me on Social Media</h2>
+        <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">Get to Me on Social Media</h2>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-5">
           {socialLinks.map((social) => {
             const Icon = social.icon;

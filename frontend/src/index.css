@@ -334,3 +334,24 @@
   }
 }
 
+/* Dynamic backgrounds for Footer and Form Containers */
+.footer-dynamic-bg {
+  background-color: #f3f3f6; /* Matches light mode body background */
+  backdrop-filter: blur(24px);
+}
+
+html.dark .footer-dynamic-bg {
+  background-color: rgb(2 6 23) !important; /* Matches dark mode body background */
+}
+
+.form-dynamic-bg {
+  background-color: #f3f3f6; /* Matches light mode body background */
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html.dark .form-dynamic-bg {
+  background-color: rgb(2 6 23) !important; /* Matches dark mode body background */
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+

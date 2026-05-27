@@ -47,7 +47,7 @@ export default function About() {
           </div>
 
           <article className="space-y-5">
-            <h2 className="text-4xl font-bold text-slate-900">My Journey</h2>
+            <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">My Journey</h2>
             <p className="text-lg leading-relaxed text-slate-600">
               My journey into technology began with a passion for design and creativity, where I
               explored graphic design and visual storytelling.

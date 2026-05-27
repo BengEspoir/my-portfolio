@@ -115,7 +115,7 @@ export default function Portfolio() {
 
       <section className="site-container">
         <div className="rounded-3xl bg-white px-6 py-14 text-center shadow-card">
-          <h2 className="text-4xl font-bold text-slate-900">Want to see more?</h2>
+          <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">Want to see more?</h2>
           <p className="mx-auto mt-4 max-w-2xl text-slate-600">
             Let&apos;s discuss how I can bring the same level of design and execution to your project.
           </p>

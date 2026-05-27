@@ -193,7 +193,7 @@ export default function Booking() {
                     <Button to="/" variant="secondary">Return Home</Button>
                   </motion.div>
                 ) : (
-                  <form onSubmit={handleSubmit(onSubmit)} className="card-surface p-8 md:p-10 space-y-8">
+                  <form onSubmit={handleSubmit(onSubmit)} className="form-dynamic-bg p-8 md:p-10 space-y-8 rounded-3xl border shadow-soft">
                     {/* Stepper Header */}
                     <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
                       <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors ${step >= 1 ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-400'}`}>1</div>
@@ -217,7 +217,7 @@ export default function Booking() {
                             <input 
                               {...register("client_name")}
                               className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500 transition-colors"
-                              placeholder="John Doe"
+                              placeholder="Beng Espoir"
                             />
                             {errors.client_name && <p className="text-xs text-red-500 font-medium">{errors.client_name.message}</p>}
                           </div>
@@ -228,7 +228,7 @@ export default function Booking() {
                             <input 
                               {...register("client_email")}
                               className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500 transition-colors"
-                              placeholder="john@example.com"
+                              placeholder="beng@example.com"
                             />
                             {errors.client_email && <p className="text-xs text-red-500 font-medium">{errors.client_email.message}</p>}
                           </div>

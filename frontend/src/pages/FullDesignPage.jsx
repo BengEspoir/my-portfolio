@@ -153,7 +153,7 @@ export default function FullDesignPage() {
         <div className="rounded-[3rem] bg-brand-600 p-12 text-white lg:p-20" style={{ backgroundColor: project.brand_color }}>
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div className="space-y-6">
-              <h2 className="text-4xl font-bold">Design Notes & Logic</h2>
+              <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">Design Notes & Logic</h2>
               <p className="text-xl text-brand-50 leading-relaxed">
                 {project.solution}
               </p>
