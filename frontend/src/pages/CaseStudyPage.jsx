@@ -1,12 +1,34 @@
 import { useParams, Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { FiArrowLeft, FiFigma, FiSmartphone, FiLayout, FiCompass, FiTarget, FiZap, FiPlay, FiDownload } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import { supabase, getPublicUrl } from "../utils/supabase";
+import SEO from "../components/SEO";
+import { absoluteUrl, siteConfig } from "../config/site";
+import { isSupabaseConfigured, supabase, getPublicUrl } from "../utils/supabase";
 import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
 import PageTransition from "../components/PageTransition";
 import TypewriterText from "../components/TypewriterText";
+
+const allowedPrototypeHosts = new Set(["figma.com", "www.figma.com", "embed.figma.com"]);
+
+function extractEmbedUrl(value) {
+  if (!value) return "";
+  const iframeSrcMatch = String(value).match(/src=["']([^"']+)["']/i);
+  return iframeSrcMatch?.[1] || String(value).trim();
+}
+
+function getTrustedPrototypeUrl(project) {
+  const candidate = extractEmbedUrl(project.prototype_embed || project.prototype_url);
+  if (!candidate) return "";
+
+  try {
+    const url = new URL(candidate);
+    if (url.protocol !== "https:") return "";
+    return allowedPrototypeHosts.has(url.hostname) ? url.href : "";
+  } catch (error) {
+    return "";
+  }
+}
 
 export default function CaseStudyPage() {
   const { slug } = useParams();
@@ -15,6 +37,12 @@ export default function CaseStudyPage() {
 
   useEffect(() => {
     async function fetchProject() {
+      if (!isSupabaseConfigured) {
+        setProject(null);
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('projects')
@@ -59,16 +87,28 @@ export default function CaseStudyPage() {
     );
   }
 
+  const prototypeEmbedUrl = getTrustedPrototypeUrl(project);
+
   return (
     <PageTransition>
-      <Helmet>
-        <title>{`${project.title} | Case Study - Beng Espoir`}</title>
-        <meta name="description" content={project.description} />
-        <meta property="og:title" content={`${project.title} | Case Study - Beng Espoir`} />
-        <meta property="og:description" content={project.description} />
-        <meta property="og:image" content={getPublicUrl(project.image_url)} />
-        <meta name="twitter:card" content="summary_large_image" />
-      </Helmet>
+      <SEO
+        title={`${project.seo_title || project.title} | Case Study - Beng Espoir`}
+        description={project.seo_description || project.description || siteConfig.description}
+        path={`/projects/${project.slug}/case-study`}
+        image={getPublicUrl(project.image_url) || siteConfig.defaultImage}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          name: project.title,
+          description: project.description,
+          image: absoluteUrl(getPublicUrl(project.image_url) || siteConfig.defaultImage),
+          creator: {
+            "@type": "Person",
+            name: siteConfig.name
+          },
+          url: absoluteUrl(`/projects/${project.slug}/case-study`)
+        }}
+      />
 
       <div className="space-y-24 pb-24 pt-10">
       {/* Hero Section */}
@@ -361,16 +401,23 @@ export default function CaseStudyPage() {
       </section>
 
       {/* Interactive Prototype Section */}
-      {project.prototype_embed && (
+      {prototypeEmbedUrl && (
         <section className="site-container">
           <SectionTitle 
             title="Interactive Prototype Flow" 
             description="Explore the full user journey and interactive transitions directly within this live Figma embed."
           />
-          <div 
-            className="overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-50 shadow-2xl"
-            dangerouslySetInnerHTML={{ __html: project.prototype_embed }}
-          />
+          <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-50 shadow-2xl">
+            <iframe
+              src={prototypeEmbedUrl}
+              title={`${project.title} interactive prototype`}
+              className="h-[70vh] min-h-[520px] w-full"
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
+              sandbox="allow-forms allow-popups allow-same-origin allow-scripts"
+            />
+          </div>
         </section>
       )}
     </div>

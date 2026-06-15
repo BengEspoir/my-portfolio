@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { format, addDays, isSunday, startOfToday, isAfter, isBefore } from "date-fns";
+import { format, addDays, isSunday, startOfToday } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,6 +27,8 @@ import { sendBookingEmail } from "../utils/api";
 import PageTransition from "../components/PageTransition";
 import SectionTitle from "../components/SectionTitle";
 import Button from "../components/Button";
+import SEO from "../components/SEO";
+import Toast from "../components/Toast";
 
 const bookingSchema = z.object({
   client_name: z.string().min(2, "Name is required"),
@@ -48,16 +49,26 @@ const timeSlots = [
   "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"
 ];
 
+function getInitialMeetingDate() {
+  let date = addDays(startOfToday(), 1);
+  while (isSunday(date)) {
+    date = addDays(date, 1);
+  }
+  return date;
+}
+
 export default function Booking() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [toast, setToast] = useState(null);
   
   const { 
     register, 
     handleSubmit, 
     setValue, 
     watch, 
+    trigger,
     formState: { errors } 
   } = useForm({
     resolver: zodResolver(bookingSchema),
@@ -65,7 +76,7 @@ export default function Booking() {
       duration: "30 min",
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
       platform: "Google Meet",
-      meeting_date: addDays(startOfToday(), 1)
+      meeting_date: getInitialMeetingDate()
     }
   });
 
@@ -97,22 +108,27 @@ export default function Booking() {
 
       setIsSuccess(true);
     } catch (error) {
-      alert("Error booking appointment: " + error.message);
+      setToast({
+        type: "error",
+        message: `Error booking appointment: ${error.message}`
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const isDateDisabled = (date) => {
-    return isSunday(date);
+  const isDateSelectable = (date) => {
+    return !isSunday(date);
   };
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>Book a Consultation | Beng Espoir</title>
-        <meta name="description" content="Schedule a professional consultation for UI/UX design, web development, or software engineering projects." />
-      </Helmet>
+      <SEO
+        title="Book a Consultation | Beng Espoir"
+        description="Schedule a professional consultation for UI/UX design, web development, product strategy, or software engineering projects."
+        path="/booking"
+      />
+      <Toast toast={toast} onClose={() => setToast(null)} />
 
       <div className="site-container py-20">
         <SectionTitle 
@@ -275,10 +291,8 @@ export default function Booking() {
                             type="button" 
                             className="w-full justify-center gap-2"
                             onClick={async () => {
-                              const isValid = await handleSubmit(() => {})();
-                              // Only go to next step if manual validation passes for current fields
-                              // For simplicity in this implementation, we just check errors
-                              if (!errors.client_name && !errors.client_email && !errors.purpose) {
+                              const isValid = await trigger(["client_name", "client_email", "purpose"]);
+                              if (isValid) {
                                 setStep(2);
                               }
                             }}
@@ -300,11 +314,11 @@ export default function Booking() {
                             <label className="text-sm font-bold text-slate-700 block">Select Date</label>
                             <DatePicker
                               selected={selectedDate}
-                              onChange={(date) => setValue("meeting_date", date)}
+                              onChange={(date) => setValue("meeting_date", date, { shouldValidate: true })}
                               inline
                               minDate={addDays(startOfToday(), 1)}
                               maxDate={addDays(startOfToday(), 7)}
-                              filterDate={isDateDisabled}
+                              filterDate={isDateSelectable}
                               calendarClassName="premium-calendar"
                             />
                           </div>
@@ -316,7 +330,7 @@ export default function Booking() {
                                 <button
                                   key={time}
                                   type="button"
-                                  onClick={() => setValue("meeting_time", time)}
+                                  onClick={() => setValue("meeting_time", time, { shouldValidate: true })}
                                   className={`p-3 rounded-xl border text-sm font-bold transition-all ${
                                     watch("meeting_time") === time 
                                       ? 'bg-brand-600 border-brand-600 text-white shadow-lg shadow-brand-200' 

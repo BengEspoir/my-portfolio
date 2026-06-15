@@ -3,6 +3,7 @@ import { revealUp, staggerContainer } from "../animations/motion";
 import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
 import SkillBar from "../components/SkillBar";
+import SEO from "../components/SEO";
 import TestimonialHighway from "../components/TestimonialHighway";
 import TypewriterText from "../components/TypewriterText";
 import { quickFacts, skillCategories, toolSkills } from "../data/skills";
@@ -20,6 +21,11 @@ const skillGroupTone = {
 export default function About() {
   return (
     <div className="space-y-24 pb-24">
+      <SEO
+        title="About Beng Espoir | Product Designer & Software Engineer"
+        description="Learn about Beng Espoir Nong's product design, UI/UX, web development, software engineering, and AI-assisted system architecture background."
+        path="/about"
+      />
       <section className="bg-gradient-to-r from-brand-500 to-brand-600 py-24 text-white">
         <div className="site-container text-center">
           <TypewriterText
@@ -57,7 +63,7 @@ export default function About() {
               programming, UI/UX design, and web development.
             </p>
             <p className="text-lg leading-relaxed text-slate-600 font-medium text-slate-800">
-              Today, my strength in all development processes—be it web or mobile development with React Native—lies in AI-powered assistant development and system architecture understanding. We are now in the era of AI-powered development, and these capabilities form the core of my technical approach.
+              Today, my strength across development processes, whether web or mobile development with React Native, lies in AI-powered assistant development and system architecture understanding. We are now in the era of AI-powered development, and these capabilities form the core of my technical approach.
             </p>
             <p className="text-lg leading-relaxed text-slate-600">
               I blend my design eye with these engineering foundations to craft

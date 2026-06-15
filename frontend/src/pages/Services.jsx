@@ -3,6 +3,7 @@ import { FiChevronDown, FiChevronUp, FiLayout, FiPenTool, FiCode, FiMonitor } fr
 import Button from "../components/Button";
 import PricingCard from "../components/PricingCard";
 import SectionTitle from "../components/SectionTitle";
+import SEO from "../components/SEO";
 import TestimonialHighway from "../components/TestimonialHighway";
 import TypewriterText from "../components/TypewriterText";
 
@@ -113,6 +114,11 @@ export default function Services() {
 
   return (
     <div className="space-y-24 pb-24">
+      <SEO
+        title="Services | Beng Espoir"
+        description="Explore UI/UX design, web development, graphic design, programming support, design audits, and prototype testing services by Beng Espoir."
+        path="/services"
+      />
       <section className="site-container pt-10">
         <div className="subtle-gradient mx-auto max-w-4xl rounded-[4rem] bg-white px-8 py-24 text-center shadow-soft">
           <TypewriterText

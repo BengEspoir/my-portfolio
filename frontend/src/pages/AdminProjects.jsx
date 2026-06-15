@@ -12,12 +12,16 @@ import {
 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../components/DashboardLayout';
+import ConfirmDialog from '../components/ConfirmDialog';
+import Toast from '../components/Toast';
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [toast, setToast] = useState(null);
 
   const categories = ["All", "UI/UX", "WEB DEV", "MOBILE DEV", "GRAPHICS DESIGN", "PROGRAMMING"];
 
@@ -35,17 +39,20 @@ export default function AdminProjects() {
     setLoading(false);
   }
 
-  async function deleteProject(id) {
-    if (!window.confirm('Are you sure you want to delete this project? This will remove all associated data.')) return;
+  async function deleteProject() {
+    if (!deleteTarget) return;
 
     const { error } = await supabase
       .from('projects')
       .delete()
-      .eq('id', id);
+      .eq('id', deleteTarget.id);
 
     if (!error) {
-      setProjects(prev => prev.filter(p => p.id !== id));
+      setProjects(prev => prev.filter(p => p.id !== deleteTarget.id));
+    } else {
+      setToast({ type: 'error', message: `Project could not be deleted: ${error.message}` });
     }
+    setDeleteTarget(null);
   }
 
   const filteredProjects = projects.filter(project => {
@@ -165,7 +172,7 @@ export default function AdminProjects() {
                             <FiEdit2 size={18} />
                           </Link>
                           <button 
-                            onClick={() => deleteProject(project.id)}
+                            onClick={() => setDeleteTarget(project)}
                             className="p-2 text-slate-400 hover:text-red-500 transition-colors"
                             title="Delete"
                           >
@@ -181,6 +188,16 @@ export default function AdminProjects() {
           </div>
         </div>
       </div>
+      <ConfirmDialog
+        open={Boolean(deleteTarget)}
+        title="Delete project?"
+        message={deleteTarget ? `This will remove "${deleteTarget.title}" and its associated project data.` : ''}
+        confirmLabel="Delete project"
+        destructive
+        onConfirm={deleteProject}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <Toast toast={toast} onClose={() => setToast(null)} />
     </DashboardLayout>
   );
 }

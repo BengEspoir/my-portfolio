@@ -2,12 +2,16 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import { FiCalendar, FiClock, FiTrash2, FiEye, FiCheckCircle, FiXCircle, FiPhone, FiMail, FiBriefcase, FiVideo, FiGlobe, FiLink } from 'react-icons/fi';
 import DashboardLayout from '../components/DashboardLayout';
+import ConfirmDialog from '../components/ConfirmDialog';
+import Toast from '../components/Toast';
 import { format, parseISO } from 'date-fns';
 
 export default function AdminAppointments() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     fetchAppointments();
@@ -56,18 +60,21 @@ export default function AdminAppointments() {
     }
   }
 
-  async function deleteAppointment(id) {
-    if (!window.confirm('Are you sure you want to delete this appointment? This action cannot be undone.')) return;
+  async function deleteAppointment() {
+    if (!deleteTarget) return;
 
     const { error } = await supabase
       .from('appointments')
       .delete()
-      .eq('id', id);
+      .eq('id', deleteTarget.id);
 
     if (!error) {
-      setAppointments(prev => prev.filter(item => item.id !== id));
-      if (selectedAppointment?.id === id) setSelectedAppointment(null);
+      setAppointments(prev => prev.filter(item => item.id !== deleteTarget.id));
+      if (selectedAppointment?.id === deleteTarget.id) setSelectedAppointment(null);
+    } else {
+      setToast({ type: 'error', message: `Appointment could not be deleted: ${error.message}` });
     }
+    setDeleteTarget(null);
   }
 
   const getStatusColor = (status) => {
@@ -158,7 +165,7 @@ export default function AdminAppointments() {
                     </p>
                   </div>
                   <button 
-                    onClick={() => deleteAppointment(selectedAppointment.id)}
+                    onClick={() => setDeleteTarget(selectedAppointment)}
                     className="p-2 text-slate-400 hover:text-red-500 transition-colors"
                     title="Delete"
                   >
@@ -321,6 +328,16 @@ export default function AdminAppointments() {
           </div>
         </div>
       </div>
+      <ConfirmDialog
+        open={Boolean(deleteTarget)}
+        title="Delete appointment?"
+        message={deleteTarget ? `This will permanently delete the appointment with ${deleteTarget.client_name}.` : ''}
+        confirmLabel="Delete appointment"
+        destructive
+        onConfirm={deleteAppointment}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <Toast toast={toast} onClose={() => setToast(null)} />
     </DashboardLayout>
   );
 }

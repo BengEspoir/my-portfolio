@@ -28,9 +28,9 @@ import {
   FaYoutube
 } from "react-icons/fa6";
 import { useEffect, useRef, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router-dom";
 import Button from "../components/Button";
+import SEO from "../components/SEO";
 import ProjectCard from "../components/ProjectCard";
 import SectionTitle from "../components/SectionTitle";
 import SkillBar from "../components/SkillBar";
@@ -43,7 +43,8 @@ import { ProjectCardSkeleton } from "../components/Skeleton";
 import { revealUp, staggerContainer } from "../animations/motion";
 import { skillCategories, toolSkills } from "../data/skills";
 import { sendContactEmail } from "../utils/api";
-import { supabase, getPublicUrl } from "../utils/supabase";
+import { isSupabaseConfigured, supabase, getPublicUrl } from "../utils/supabase";
+import { buildPersonJsonLd, buildWebsiteJsonLd } from "../config/site";
 
 const services = [
   {
@@ -184,6 +185,12 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchHomeProjects() {
+      if (!isSupabaseConfigured) {
+        setHomeProjects([]);
+        setProjectsLoading(false);
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('projects')
@@ -299,13 +306,13 @@ export default function Home() {
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>Beng Espoir | Product Designer & Software Engineer</title>
-        <meta name="description" content="Portfolio of Beng Espoir Nong, a Product Designer and Software Engineering student specializing in UI/UX, Web, and Mobile development." />
-        <meta property="og:title" content="Beng Espoir | Product Designer & Software Engineer" />
-        <meta property="og:description" content="Explore the portfolio of Beng Espoir Nong - UI/UX Designer and Software Engineer." />
-        <meta property="og:image" content={getPublicUrl("images/portfolio-pic.jpg")} />
-      </Helmet>
+      <SEO
+        title="Beng Espoir | Product Designer & Software Engineer"
+        description="Portfolio of Beng Espoir Nong, a product designer and software engineering student specializing in UI/UX, web, mobile, and AI-assisted development."
+        path="/"
+        image="/images/portfolio-pic.jpg"
+        jsonLd={[buildPersonJsonLd(), buildWebsiteJsonLd()]}
+      />
 
       <div className="space-y-24 pb-24">
         <section className="site-container pt-10">
@@ -724,7 +731,7 @@ export default function Home() {
                       value={contactFormData.name}
                       onChange={handleContactChange}
                       type="text"
-                      placeholder="Enter your name............."
+                      placeholder="Enter your name"
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 outline-none transition focus:border-brand-400"
                     />
                     <FiUser className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -743,7 +750,7 @@ export default function Home() {
                       value={contactFormData.email}
                       onChange={handleContactChange}
                       type="email"
-                      placeholder="Enter Email............"
+                      placeholder="Enter your email"
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 outline-none transition focus:border-brand-400"
                     />
                     <FiMail className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -779,7 +786,7 @@ export default function Home() {
                     value={contactFormData.subject}
                     onChange={handleContactChange}
                     type="text"
-                    placeholder="Subject matter........"
+                    placeholder="Subject matter"
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-brand-400"
                   />
                   {contactErrors.subject ? <p className="mt-1 text-sm text-red-600">{contactErrors.subject}</p> : null}
@@ -794,7 +801,7 @@ export default function Home() {
                     name="message"
                     value={contactFormData.message}
                     onChange={handleContactChange}
-                    placeholder="Your Message.."
+                    placeholder="Your message"
                     rows={5}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-brand-400"
                   />

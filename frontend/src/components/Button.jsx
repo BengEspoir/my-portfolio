@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Link } from "react-router-dom";
 import { createMagneticHandlers, hoverLift, magneticButton } from "../animations/motion";
 
@@ -36,7 +37,7 @@ function chainHandlers(...handlers) {
   };
 }
 
-export default function Button({
+const Button = forwardRef(function Button({
   children,
   to,
   href,
@@ -53,7 +54,7 @@ export default function Button({
   onBlur,
   disabled = false,
   ...props
-}) {
+}, ref) {
   const useMagnetic = (variant === "primary" || variant === "cta") && !disabled;
   const magneticHandlers = createMagneticHandlers(useMagnetic);
   const classes = buildClassName(
@@ -75,7 +76,7 @@ export default function Button({
 
   if (to) {
     return (
-      <Link to={to} {...sharedProps}>
+      <Link to={to} ref={ref} {...sharedProps}>
         {children}
       </Link>
     );
@@ -83,15 +84,17 @@ export default function Button({
 
   if (href) {
     return (
-      <a href={href} {...sharedProps}>
+      <a href={href} ref={ref} {...sharedProps}>
         {children}
       </a>
     );
   }
 
   return (
-    <button type={type} disabled={disabled} {...sharedProps}>
+    <button type={type} disabled={disabled} ref={ref} {...sharedProps}>
       {children}
     </button>
   );
-}
+});
+
+export default Button;

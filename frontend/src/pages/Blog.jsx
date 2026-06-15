@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { FiCalendar, FiClock, FiArrowRight } from 'react-icons/fi';
-import { supabase } from '../utils/supabase';
+import SEO from '../components/SEO';
+import OptimizedImage from '../components/OptimizedImage';
+import { isSupabaseConfigured, supabase } from '../utils/supabase';
 import SectionTitle from '../components/SectionTitle';
 import PageTransition from '../components/PageTransition';
 import { BlogCardSkeleton } from '../components/Skeleton';
@@ -13,10 +14,17 @@ export default function Blog() {
 
   useEffect(() => {
     async function fetchPosts() {
+      if (!isSupabaseConfigured) {
+        setPosts([]);
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('blog_posts')
           .select('id, title, slug, cover_image_url, created_at, excerpt, category, reading_time')
+          .eq('status', 'published')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -33,10 +41,11 @@ export default function Blog() {
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>Blog | Beng Espoir</title>
-        <meta name="description" content="Insights on product design, software engineering, and the intersection of creativity and technology." />
-      </Helmet>
+      <SEO
+        title="Blog | Beng Espoir"
+        description="Insights on product design, software engineering, UI/UX systems, and practical technology delivery."
+        path="/blog"
+      />
 
       <div className="site-container py-12 md:py-20">
         <SectionTitle
@@ -57,7 +66,7 @@ export default function Blog() {
                 className="group flex flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-soft transition-all hover:border-brand-100 hover:shadow-xl"
               >
                 <Link to={`/blog/${post.slug}`} className="relative block aspect-[16/9] overflow-hidden">
-                  <img
+                  <OptimizedImage
                     src={post.cover_image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070&auto=format&fit=crop"}
                     alt={post.title}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"

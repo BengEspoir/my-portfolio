@@ -14,6 +14,7 @@ import {
 import { FiCalendar, FiCheckCircle, FiMail, FiMapPin, FiPhone, FiSend, FiUser } from "react-icons/fi";
 import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
+import SEO from "../components/SEO";
 import { sendContactEmail } from "../utils/api";
 
 const initialForm = {
@@ -99,6 +100,11 @@ export default function Contact() {
 
   return (
     <div className="space-y-24 pb-24 pt-10">
+      <SEO
+        title="Contact | Beng Espoir"
+        description="Contact Beng Espoir Nong for UI/UX design, frontend development, graphic design, portfolio work, or collaboration."
+        path="/contact"
+      />
       <section className="site-container">
         <SectionTitle
           title="Get in Touch"

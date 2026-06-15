@@ -1,8 +1,9 @@
 import { useParams, Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { FiArrowLeft, FiFigma, FiLayout, FiEye, FiInfo } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import { supabase, getPublicUrl } from "../utils/supabase";
+import SEO from "../components/SEO";
+import { absoluteUrl, siteConfig } from "../config/site";
+import { isSupabaseConfigured, supabase, getPublicUrl } from "../utils/supabase";
 import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
 import PageTransition from "../components/PageTransition";
@@ -17,6 +18,12 @@ export default function FullDesignPage() {
 
   useEffect(() => {
     async function fetchProject() {
+      if (!isSupabaseConfigured) {
+        setProject(null);
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('projects')
@@ -64,14 +71,24 @@ export default function FullDesignPage() {
   if (isGraphicDesignProject(project)) {
     return (
       <PageTransition>
-        <Helmet>
-          <title>{`${project.title} | Graphic Design - Beng Espoir`}</title>
-          <meta name="description" content={project.description} />
-          <meta property="og:title" content={`${project.title} | Graphic Design - Beng Espoir`} />
-          <meta property="og:description" content={project.description} />
-          <meta property="og:image" content={getPublicUrl(project.image_url)} />
-          <meta name="twitter:card" content="summary_large_image" />
-        </Helmet>
+        <SEO
+          title={`${project.seo_title || project.title} | Graphic Design - Beng Espoir`}
+          description={project.seo_description || project.description || siteConfig.description}
+          path={`/projects/${project.slug}/full-design`}
+          image={getPublicUrl(project.image_url) || siteConfig.defaultImage}
+          jsonLd={{
+            "@context": "https://schema.org",
+            "@type": "CreativeWork",
+            name: project.title,
+            description: project.description,
+            image: absoluteUrl(getPublicUrl(project.image_url) || siteConfig.defaultImage),
+            creator: {
+              "@type": "Person",
+              name: siteConfig.name
+            },
+            url: absoluteUrl(`/projects/${project.slug}/full-design`)
+          }}
+        />
         <GraphicDesignProjectDetail project={project} />
       </PageTransition>
     );
@@ -79,14 +96,24 @@ export default function FullDesignPage() {
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>{`${project.title} | Design Showcase - Beng Espoir`}</title>
-        <meta name="description" content={project.description} />
-        <meta property="og:title" content={`${project.title} | Design Showcase - Beng Espoir`} />
-        <meta property="og:description" content={project.description} />
-        <meta property="og:image" content={getPublicUrl(project.image_url)} />
-        <meta name="twitter:card" content="summary_large_image" />
-      </Helmet>
+      <SEO
+        title={`${project.seo_title || project.title} | Design Showcase - Beng Espoir`}
+        description={project.seo_description || project.description || siteConfig.description}
+        path={`/projects/${project.slug}/full-design`}
+        image={getPublicUrl(project.image_url) || siteConfig.defaultImage}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          name: project.title,
+          description: project.description,
+          image: absoluteUrl(getPublicUrl(project.image_url) || siteConfig.defaultImage),
+          creator: {
+            "@type": "Person",
+            name: siteConfig.name
+          },
+          url: absoluteUrl(`/projects/${project.slug}/full-design`)
+        }}
+      />
 
       <div className="space-y-24 pb-24 pt-10">
       {/* Hero / Cover */}

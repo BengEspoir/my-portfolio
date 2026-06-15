@@ -2,12 +2,16 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import { FiMail, FiCheck, FiTrash2, FiClock, FiEye, FiCopy } from 'react-icons/fi';
 import DashboardLayout from '../components/DashboardLayout';
+import ConfirmDialog from '../components/ConfirmDialog';
+import Toast from '../components/Toast';
 
 export default function AdminInquiries() {
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedInquiry, setSelectedInquiry] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     fetchInquiries();
@@ -46,18 +50,21 @@ export default function AdminInquiries() {
     }
   }
 
-  async function deleteInquiry(id) {
-    if (!window.confirm('Are you sure you want to delete this inquiry?')) return;
+  async function deleteInquiry() {
+    if (!deleteTarget) return;
 
     const { error } = await supabase
       .from('contacts')
       .delete()
-      .eq('id', id);
+      .eq('id', deleteTarget.id);
 
     if (!error) {
-      setInquiries(prev => prev.filter(item => item.id !== id));
-      if (selectedInquiry?.id === id) setSelectedInquiry(null);
+      setInquiries(prev => prev.filter(item => item.id !== deleteTarget.id));
+      if (selectedInquiry?.id === deleteTarget.id) setSelectedInquiry(null);
+    } else {
+      setToast({ type: 'error', message: `Inquiry could not be deleted: ${error.message}` });
     }
+    setDeleteTarget(null);
   }
 
   function copyToClipboard(text) {
@@ -125,7 +132,7 @@ export default function AdminInquiries() {
                   </div>
                   <div className="flex gap-2">
                     <button 
-                      onClick={() => deleteInquiry(selectedInquiry.id)}
+                      onClick={() => setDeleteTarget(selectedInquiry)}
                       className="p-2 text-slate-400 hover:text-red-500 transition-colors"
                       title="Delete"
                     >
@@ -183,6 +190,16 @@ export default function AdminInquiries() {
           </div>
         </div>
       </div>
+      <ConfirmDialog
+        open={Boolean(deleteTarget)}
+        title="Delete inquiry?"
+        message={deleteTarget ? `This will permanently delete the message from ${deleteTarget.name}.` : ''}
+        confirmLabel="Delete inquiry"
+        destructive
+        onConfirm={deleteInquiry}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <Toast toast={toast} onClose={() => setToast(null)} />
     </DashboardLayout>
   );
 }

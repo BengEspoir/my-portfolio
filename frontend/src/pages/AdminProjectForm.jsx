@@ -16,6 +16,8 @@ import {
 } from 'react-icons/fi';
 import DashboardLayout from '../components/DashboardLayout';
 import Button from '../components/Button';
+import Toast from '../components/Toast';
+import { createStorageFileName } from '../utils/files';
 
 const CATEGORIES = ["UI/UX", "WEB DEV", "MOBILE DEV", "GRAPHICS DESIGN", "PROGRAMMING"];
 
@@ -53,6 +55,7 @@ export default function AdminProjectForm() {
   const [activeTab, setActiveTab] = useState('basic');
   const [loading, setLoading] = useState(isEditing);
   const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -229,8 +232,7 @@ export default function AdminProjectForm() {
     if (!file) return;
 
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
+      const fileName = createStorageFileName(file);
       const filePath = `projects/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
@@ -263,7 +265,7 @@ export default function AdminProjectForm() {
         setFormData(prev => ({ ...prev, [fieldName]: publicUrl }));
       }
     } catch (error) {
-      alert('Error uploading file: ' + error.message);
+      setToast({ type: 'error', message: `Error uploading file: ${error.message}` });
     }
   };
 
@@ -279,7 +281,7 @@ export default function AdminProjectForm() {
       if (error) throw error;
       navigate('/admin/projects');
     } catch (error) {
-      alert('Error saving project: ' + error.message);
+      setToast({ type: 'error', message: `Error saving project: ${error.message}` });
     } finally {
       setSaving(false);
     }
@@ -298,6 +300,7 @@ export default function AdminProjectForm() {
 
   return (
     <DashboardLayout>
+      <Toast toast={toast} onClose={() => setToast(null)} />
       <form onSubmit={handleSubmit} className="space-y-8 max-w-5xl mx-auto pb-20">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">

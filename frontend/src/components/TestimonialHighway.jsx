@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { supabase } from "../utils/supabase";
+import { isSupabaseConfigured, supabase } from "../utils/supabase";
 import { motion } from "framer-motion";
 import TestimonialCard from "./TestimonialCard";
 import TypewriterText from "./TypewriterText";
@@ -13,6 +13,12 @@ export default function TestimonialHighway() {
 
   useEffect(() => {
     async function fetchTestimonials() {
+      if (!isSupabaseConfigured) {
+        setTestimonials([]);
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('testimonials')

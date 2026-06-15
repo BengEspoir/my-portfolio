@@ -11,11 +11,15 @@ import {
 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../components/DashboardLayout';
+import ConfirmDialog from '../components/ConfirmDialog';
+import Toast from '../components/Toast';
 
 export default function AdminBlog() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     fetchPosts();
@@ -31,17 +35,20 @@ export default function AdminBlog() {
     setLoading(false);
   }
 
-  async function deletePost(id) {
-    if (!window.confirm('Are you sure you want to delete this post?')) return;
+  async function deletePost() {
+    if (!deleteTarget) return;
 
     const { error } = await supabase
       .from('blog_posts')
       .delete()
-      .eq('id', id);
+      .eq('id', deleteTarget.id);
 
     if (!error) {
-      setPosts(prev => prev.filter(p => p.id !== id));
+      setPosts(prev => prev.filter(p => p.id !== deleteTarget.id));
+    } else {
+      setToast({ type: 'error', message: `Post could not be deleted: ${error.message}` });
     }
+    setDeleteTarget(null);
   }
 
   const filteredPosts = posts.filter(post => 
@@ -136,7 +143,7 @@ export default function AdminBlog() {
                             <FiEdit2 size={18} />
                           </Link>
                           <button 
-                            onClick={() => deletePost(post.id)}
+                            onClick={() => setDeleteTarget(post)}
                             className="p-2 text-slate-400 hover:text-red-500 transition-colors"
                             title="Delete"
                           >
@@ -152,6 +159,16 @@ export default function AdminBlog() {
           </div>
         </div>
       </div>
+      <ConfirmDialog
+        open={Boolean(deleteTarget)}
+        title="Delete post?"
+        message={deleteTarget ? `This will permanently delete "${deleteTarget.title}".` : ''}
+        confirmLabel="Delete post"
+        destructive
+        onConfirm={deletePost}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <Toast toast={toast} onClose={() => setToast(null)} />
     </DashboardLayout>
   );
 }

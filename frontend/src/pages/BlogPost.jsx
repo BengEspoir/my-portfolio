@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Helmet } from "react-helmet-async";
 import ReactMarkdown from 'react-markdown';
 import { FiArrowLeft } from 'react-icons/fi';
-import { supabase } from '../utils/supabase';
+import SEO from '../components/SEO';
+import OptimizedImage from '../components/OptimizedImage';
+import { absoluteUrl, siteConfig } from '../config/site';
+import { isSupabaseConfigured, supabase } from '../utils/supabase';
 import PageTransition from "../components/PageTransition";
 import TypewriterText from "../components/TypewriterText";
 
@@ -14,25 +16,22 @@ export default function BlogPost() {
 
   useEffect(() => {
     async function fetchPost() {
+      if (!isSupabaseConfigured) {
+        setPost(null);
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('blog_posts')
-          .where('slug', 'eq', slug)
+          .select('*')
+          .eq('slug', slug)
+          .eq('status', 'published')
           .single();
 
-        if (error) {
-          // Fallback if the .where chain isn't preferred by the client version
-          const { data: data2, error: error2 } = await supabase
-            .from('blog_posts')
-            .select('*')
-            .eq('slug', slug)
-            .single();
-          
-          if (error2) throw error2;
-          setPost(data2);
-        } else {
-          setPost(data);
-        }
+        if (error) throw error;
+        setPost(data);
       } catch (error) {
         console.error('Error fetching post:', error);
       } finally {
@@ -70,14 +69,31 @@ export default function BlogPost() {
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>{`${post.title} | Blog - Beng Espoir`}</title>
-        <meta name="description" content={post.excerpt} />
-        <meta property="og:title" content={`${post.title} | Blog - Beng Espoir`} />
-        <meta property="og:description" content={post.excerpt} />
-        <meta property="og:image" content={post.cover_image_url} />
-        <meta name="twitter:card" content="summary_large_image" />
-      </Helmet>
+      <SEO
+        title={`${post.seo_title || post.title} | Blog - Beng Espoir`}
+        description={post.seo_description || post.excerpt || siteConfig.description}
+        path={`/blog/${post.slug}`}
+        image={post.cover_image_url || siteConfig.defaultImage}
+        type="article"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: post.title,
+          description: post.excerpt,
+          image: absoluteUrl(post.cover_image_url || siteConfig.defaultImage),
+          datePublished: post.published_at || post.created_at,
+          dateModified: post.updated_at || post.published_at || post.created_at,
+          author: {
+            "@type": "Person",
+            name: post.author_name || siteConfig.name
+          },
+          publisher: {
+            "@type": "Person",
+            name: siteConfig.name
+          },
+          mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`)
+        }}
+      />
 
       <article className="pt-24 pb-32">
       {/* Header */}
@@ -101,7 +117,7 @@ export default function BlogPost() {
         {post.author_name && (
           <div className="flex items-center justify-center gap-4">
             {post.author_image_url ? (
-              <img 
+              <OptimizedImage
                 src={post.author_image_url} 
                 alt={post.author_name} 
                 className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"
@@ -123,10 +139,11 @@ export default function BlogPost() {
       {post.cover_image_url && (
         <div className="site-container max-w-5xl mb-20">
           <div className="aspect-[21/9] w-full rounded-3xl overflow-hidden shadow-2xl ring-1 ring-slate-900/5">
-            <img
+            <OptimizedImage
               src={post.cover_image_url}
               alt={post.title}
               className="w-full h-full object-cover"
+              priority
             />
           </div>
         </div>
@@ -155,7 +172,7 @@ export default function BlogPost() {
                 </pre>
               ),
               img: ({src, alt}) => (
-                <img src={src} alt={alt} className="my-10 rounded-2xl w-full object-cover shadow-md" />
+                <OptimizedImage src={src} alt={alt || ""} className="my-10 rounded-2xl w-full object-cover shadow-md" />
               )
             }}
           >

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import Button from '../components/Button';
-import { FiMail, FiLock, FiAlertCircle } from 'react-icons/fi';
+import SEO from '../components/SEO';
+import { FiLock, FiAlertCircle } from 'react-icons/fi';
 
 export default function AdminLogin() {
   const [email] = useState('mbengespoir@gmail.com'); // Hardcoded admin email
@@ -33,6 +34,7 @@ export default function AdminLogin() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
+      <SEO title="Admin Login | Beng Espoir" description="Private portfolio admin login." path="/p/admin-access" noindex />
       <div className="w-full max-w-md space-y-8 rounded-3xl bg-white p-8 shadow-soft sm:p-10">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-slate-900">

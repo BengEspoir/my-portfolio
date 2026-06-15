@@ -2,16 +2,88 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const disabledSupabaseError = new Error(
+  'Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in frontend/.env.local.'
+);
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('CRITICAL: Supabase credentials missing. The application will not be able to fetch data. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables.');
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+
+if (!isSupabaseConfigured) {
+  console.error(disabledSupabaseError.message);
 }
 
-// Create client with fallback values to prevent immediate crash if env vars are missing
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder-url.supabase.co', 
-  supabaseAnonKey || 'placeholder-key'
-);
+function createDisabledQuery() {
+  const query = {};
+  const result = { data: null, error: disabledSupabaseError };
+  const chain = () => query;
+
+  [
+    'select',
+    'insert',
+    'update',
+    'upsert',
+    'delete',
+    'eq',
+    'neq',
+    'gt',
+    'gte',
+    'lt',
+    'lte',
+    'is',
+    'in',
+    'contains',
+    'order',
+    'limit',
+    'range',
+    'single',
+    'maybeSingle',
+    'match',
+    'filter'
+  ].forEach((method) => {
+    query[method] = chain;
+  });
+
+  query.then = (resolve, reject) => Promise.resolve(result).then(resolve, reject);
+  query.catch = (reject) => Promise.resolve(result).catch(reject);
+  query.finally = (callback) => Promise.resolve(result).finally(callback);
+
+  return query;
+}
+
+function createDisabledSupabaseClient() {
+  return {
+    from: () => createDisabledQuery(),
+    channel: () => ({
+      on: () => ({
+        on: () => ({
+          subscribe: () => ({ unsubscribe: () => {} })
+        }),
+        subscribe: () => ({ unsubscribe: () => {} })
+      }),
+      subscribe: () => ({ unsubscribe: () => {} })
+    }),
+    removeChannel: () => {},
+    auth: {
+      getSession: async () => ({ data: { session: null }, error: disabledSupabaseError }),
+      onAuthStateChange: () => ({
+        data: { subscription: { unsubscribe: () => {} } }
+      }),
+      signInWithOtp: async () => ({ data: null, error: disabledSupabaseError }),
+      signInWithPassword: async () => ({ data: null, error: disabledSupabaseError }),
+      signOut: async () => ({ error: null })
+    },
+    storage: {
+      from: () => ({
+        upload: async () => ({ data: null, error: disabledSupabaseError }),
+        getPublicUrl: () => ({ data: { publicUrl: '' } })
+      })
+    }
+  };
+}
+
+export const supabase = isSupabaseConfigured
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : createDisabledSupabaseClient();
 
 /**
  * Returns the public URL for an image in Supabase Storage.
@@ -24,6 +96,8 @@ export function getPublicUrl(path, bucket = 'portfolio-assets') {
   
   // Remove leading slash if present
   const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+
+  if (!supabaseUrl) return `/${cleanPath}`;
   
   return `${supabaseUrl}/storage/v1/object/public/${bucket}/${cleanPath}`;
 }
@@ -33,6 +107,7 @@ export function getPublicUrl(path, bucket = 'portfolio-assets') {
  */
 export function getOptimizedUrl(path, options = {}, bucket = 'portfolio-assets') {
   if (!path) return '';
+  if (!supabaseUrl) return getPublicUrl(path, bucket);
   if (path.startsWith('http') && !path.includes(supabaseUrl)) return path;
 
   const { width, height, quality = 80, format = 'webp' } = options;

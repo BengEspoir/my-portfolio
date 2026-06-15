@@ -7,8 +7,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor': ['react', 'react-dom', 'react-router-dom', 'framer-motion', 'react-helmet-async'],
-          'icons': ['react-icons', 'react-icons/fi', 'react-icons/fa6']
+          react: ['react', 'react-dom', 'react-router-dom', 'react-helmet-async'],
+          motion: ['framer-motion'],
+          supabase: ['@supabase/supabase-js'],
+          booking: ['react-datepicker', 'react-hook-form', '@hookform/resolvers', 'zod', 'date-fns'],
+          markdown: ['react-markdown'],
+          icons: ['react-icons', 'react-icons/fi', 'react-icons/fa6']
         }
       }
     },

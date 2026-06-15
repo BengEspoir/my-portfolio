@@ -1,0 +1,9 @@
+{
+  "name": "Beng Espoir Portfolio",
+  "short_name": "Beng Espoir",
+  "description": "Product design, frontend systems, and practical software support from Yaounde.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6b57ea"
+}

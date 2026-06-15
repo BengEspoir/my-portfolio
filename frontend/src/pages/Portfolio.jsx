@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import Button from "../components/Button";
 import ProjectCard from "../components/ProjectCard";
 import SectionTitle from "../components/SectionTitle";
 import PageTransition from "../components/PageTransition";
+import SEO from "../components/SEO";
 import { ProjectCardSkeleton } from "../components/Skeleton";
-import { supabase } from "../utils/supabase";
+import { isSupabaseConfigured, supabase } from "../utils/supabase";
 
 const categories = [
   { id: "all", name: "All" },
@@ -23,6 +23,12 @@ export default function Portfolio() {
 
   useEffect(() => {
     async function fetchProjects() {
+      if (!isSupabaseConfigured) {
+        setProjects([]);
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('projects')
@@ -51,10 +57,11 @@ export default function Portfolio() {
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>Portfolio | Beng Espoir</title>
-        <meta name="description" content="Explore the diverse range of product design and software engineering projects by Beng Espoir." />
-      </Helmet>
+      <SEO
+        title="Portfolio | Beng Espoir"
+        description="Explore product design, UI/UX, frontend, mobile, graphic design, and programming projects by Beng Espoir."
+        path="/portfolio"
+      />
 
       <div className="site-container py-12 md:py-20">
         <SectionTitle

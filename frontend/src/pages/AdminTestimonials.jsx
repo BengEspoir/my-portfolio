@@ -14,6 +14,9 @@ import {
 } from 'react-icons/fi';
 import DashboardLayout from '../components/DashboardLayout';
 import Button from '../components/Button';
+import ConfirmDialog from '../components/ConfirmDialog';
+import Toast from '../components/Toast';
+import { createStorageFileName } from '../utils/files';
 
 const emptyForm = {
   client_name: '',
@@ -47,6 +50,8 @@ export default function AdminTestimonials() {
   const [saving, setSaving] = useState(false);
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'all');
   const [formData, setFormData] = useState(emptyForm);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     fetchTestimonials();
@@ -100,8 +105,7 @@ export default function AdminTestimonials() {
     if (!file) return;
 
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${globalThis.crypto?.randomUUID?.() || Math.random().toString(36).slice(2)}.${fileExt}`;
+      const fileName = createStorageFileName(file);
       const filePath = `testimonials/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
@@ -116,7 +120,7 @@ export default function AdminTestimonials() {
 
       setFormData((previous) => ({ ...previous, client_image: publicUrl }));
     } catch (error) {
-      alert('Error uploading file: ' + error.message);
+      setToast({ type: 'error', message: `Error uploading file: ${error.message}` });
     }
   };
 
@@ -166,7 +170,7 @@ export default function AdminTestimonials() {
       await fetchTestimonials();
       setIsModalOpen(false);
     } catch (error) {
-      alert('Error saving testimonial: ' + error.message);
+      setToast({ type: 'error', message: `Error saving testimonial: ${error.message}` });
     } finally {
       setSaving(false);
     }
@@ -185,17 +189,20 @@ export default function AdminTestimonials() {
     }
   }
 
-  async function deleteTestimonial(id) {
-    if (!window.confirm('Are you sure you want to delete this testimonial?')) return;
+  async function deleteTestimonial() {
+    if (!deleteTarget) return;
 
     const { error } = await supabase
       .from('testimonials')
       .delete()
-      .eq('id', id);
+      .eq('id', deleteTarget.id);
 
     if (!error) {
-      setTestimonials((previous) => previous.filter((item) => item.id !== id));
+      setTestimonials((previous) => previous.filter((item) => item.id !== deleteTarget.id));
+    } else {
+      setToast({ type: 'error', message: `Testimonial could not be deleted: ${error.message}` });
     }
+    setDeleteTarget(null);
   }
 
   return (
@@ -263,7 +270,7 @@ export default function AdminTestimonials() {
                     <button type="button" onClick={() => openModal(testimonial)} className="p-1.5 text-slate-400 transition-colors hover:text-brand-600" title="Edit">
                       <FiEdit2 size={16} />
                     </button>
-                    <button type="button" onClick={() => deleteTestimonial(testimonial.id)} className="p-1.5 text-slate-400 transition-colors hover:text-red-500" title="Delete">
+                    <button type="button" onClick={() => setDeleteTarget(testimonial)} className="p-1.5 text-slate-400 transition-colors hover:text-red-500" title="Delete">
                       <FiTrash2 size={16} />
                     </button>
                   </div>
@@ -370,6 +377,16 @@ export default function AdminTestimonials() {
           </div>
         </div>
       ) : null}
+      <ConfirmDialog
+        open={Boolean(deleteTarget)}
+        title="Delete testimonial?"
+        message={deleteTarget ? `This will permanently delete the testimonial from ${deleteTarget.client_name}.` : ''}
+        confirmLabel="Delete testimonial"
+        destructive
+        onConfirm={deleteTestimonial}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <Toast toast={toast} onClose={() => setToast(null)} />
     </DashboardLayout>
   );
 }
