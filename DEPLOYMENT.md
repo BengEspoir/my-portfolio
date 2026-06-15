@@ -1,65 +1,67 @@
 # Deployment Guide
 
 ## Overview
-This portfolio consists of:
-- **Frontend**: React + Vite + Tailwind CSS
-- **Backend**: Node.js + Express with secure email handling
 
-## Security Improvements Completed
-✅ Removed vulnerable EmailJS frontend dependency
-✅ Implemented secure backend API with rate limiting
-✅ Added input validation and sanitization
-✅ Configured CORS and security headers
+This portfolio is a React + Vite + Tailwind frontend backed by Supabase:
 
-## Deployment Options
+- Supabase Database for projects, blog posts, testimonials, contact inquiries, and appointments.
+- Supabase Storage bucket `portfolio-assets` for public portfolio images.
+- Supabase Auth for the admin dashboard.
+- Supabase Edge Functions for contact/booking email notifications and moderated testimonial submissions.
 
-### Option 1: Vercel (Frontend) + Render (Backend) - Recommended (100% Free)
+There is no active Express/Render backend in the current architecture.
 
-#### Backend Deployment (Render)
-1. Push your code to GitHub
-2. Go to [render.com](https://render.com) and create an account
-3. Click "New" -> "Web Service"
-4. Connect your GitHub repository and select your portfolio repo
-5. In settings, set the **Root Directory** to `backend`
-6. Set the **Build Command** to `npm install` and **Start Command** to `node server.js`
-7. Select the **Free** instance type
-8. Set environment variables:
-   - `EMAIL_USER`: Your Gmail address
-   - `EMAIL_PASS`: Your Gmail App Password
-   - `PORT`: 3001
-   - `FRONTEND_URL`: Your Vercel URL (Update this after you deploy your frontend)
-9. Deploy and copy the Render URL (e.g., `https://your-backend.onrender.com`)
-*Note: Render's free tier spins down after 15 minutes of inactivity. It may take ~50 seconds to wake up when someone uses your contact form for the first time.*
+## Frontend Deployment
 
-#### Frontend Deployment (Vercel)
-1. Go to [vercel.com](https://vercel.com)
-2. Connect your GitHub repository
-3. Set environment variable:
-   - `VITE_API_URL`: Your Render backend URL
-4. Deploy
+Deploy the `frontend` directory to Vercel or any static host that supports SPA rewrites.
 
-### Option 2: Vercel (Frontend) + Railway (Backend)
-*Note: Railway requires a credit card or offers a limited free trial.*
-Merge backend into the main project and use Vercel serverless functions.
+Required environment variables:
 
-## Email Setup (Required)
-1. Enable 2-factor authentication on your Gmail
-2. Generate App Password: https://myaccount.google.com/apppasswords
-3. Use the App Password as `EMAIL_PASS` (not your regular password)
+```env
+VITE_SUPABASE_URL=https://your-project-id.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-public-key
+```
+
+The Vercel rewrite is already configured in `frontend/vercel.json` so deep links such as `/portfolio`, `/testimonials/new`, and `/admin/dashboard` route back to `index.html`.
+
+## Supabase Setup
+
+Run the migrations in `supabase/migrations` in order. The latest migrations add:
+
+- Testimonial moderation with `pending`, `approved`, and `rejected` statuses.
+- Public testimonial submission through the homepage review modal and `submit-testimonial` Edge Function.
+- Graphic design project detail fields: `design_images` and `design_details`.
+- Admin email RLS policies restricted to `mbengespoir@gmail.com`.
+
+Create a public storage bucket named `portfolio-assets`. Public read access is intentional because portfolio images are rendered directly on public pages. Restrict direct write access to the authenticated admin; the testimonial submission function writes approved-upload candidates with the service role key and saves the testimonial as `pending`.
+
+## Edge Functions
+
+Set the Resend and site secrets in Supabase:
+
+```bash
+supabase secrets set RESEND_API_KEY=your-resend-key
+supabase secrets set RESEND_FROM_EMAIL="Portfolio Site <verified@your-domain.com>"
+supabase secrets set SITE_URL=https://your-domain.com
+supabase secrets set SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+Deploy both functions:
+
+```bash
+supabase functions deploy send-contact-email
+supabase functions deploy send-booking-email
+supabase functions deploy submit-testimonial
+```
+
+Use a Resend-verified domain for `RESEND_FROM_EMAIL` before production traffic.
 
 ## Post-Deployment Verification
-1. Test contact form on deployed site
-2. Check email delivery
-3. Verify rate limiting works (try 6 submissions quickly)
-4. Test CORS between frontend and backend
 
-## Domain Configuration
-After deployment:
-1. Add custom domain to both frontend and backend
-2. Update `FRONTEND_URL` in backend environment variables
-3. Configure SSL certificates (handled automatically by most platforms)
-
-## Monitoring
-- Backend includes `/api/health` endpoint for monitoring
-- Check logs for email delivery issues
-- Monitor rate limiting effectiveness
+1. Build the frontend with `npm --prefix frontend run build`.
+2. Confirm public pages load: `/`, `/portfolio`, `/testimonials/new`, `/booking`, `/contact`.
+3. Submit a contact inquiry and verify it appears in Admin Inquiries.
+4. Submit a testimonial and verify it appears in Admin Testimonials with `pending` status.
+5. Approve that testimonial and confirm it appears publicly.
+6. Create or edit a `GRAPHICS DESIGN` project with design images and confirm `/projects/:slug/full-design` uses the graphic design layout.
+7. Confirm non-graphic projects keep their existing case study or full design layouts.

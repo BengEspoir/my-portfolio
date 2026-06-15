@@ -19,6 +19,32 @@ import Button from '../components/Button';
 
 const CATEGORIES = ["UI/UX", "WEB DEV", "MOBILE DEV", "GRAPHICS DESIGN", "PROGRAMMING"];
 
+const defaultDesignDetails = {
+  designType: '',
+  clientName: '',
+  objective: '',
+  targetAudience: '',
+  colorPalette: [],
+  fonts: [],
+  fontWeights: [],
+  style: '',
+  toolsUsed: [],
+  copywriting: '',
+  layoutNotes: '',
+  notes: ''
+};
+
+function listToInput(value) {
+  return Array.isArray(value) ? value.join(', ') : (value || '');
+}
+
+function inputToList(value) {
+  return String(value || '')
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 export default function AdminProjectForm() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -67,7 +93,9 @@ export default function AdminProjectForm() {
     apk_url: '',
     download_url: '',
     brand_color: '#6366f1',
-    project_background: ''
+    project_background: '',
+    design_images: [],
+    design_details: defaultDesignDetails
   });
 
   useEffect(() => {
@@ -84,7 +112,19 @@ export default function AdminProjectForm() {
       .single();
 
     if (!error) {
-      setFormData(data);
+      setFormData((previous) => ({
+        ...previous,
+        ...data,
+        categories: data.categories || [],
+        tools_tech: data.tools_tech || [],
+        preview_screens: data.preview_screens || [],
+        ux_flow: data.ux_flow || [],
+        design_images: Array.isArray(data.design_images) ? data.design_images : [],
+        design_details: {
+          ...defaultDesignDetails,
+          ...(data.design_details || {})
+        }
+      }));
     } else {
       console.error('Error fetching project:', error);
       navigate('/admin/projects');
@@ -108,6 +148,37 @@ export default function AdminProjectForm() {
         : [...current, value];
       return { ...prev, [name]: updated };
     });
+  };
+
+  const handleDesignDetailsChange = (name, value) => {
+    setFormData(prev => ({
+      ...prev,
+      design_details: {
+        ...defaultDesignDetails,
+        ...(prev.design_details || {}),
+        [name]: value
+      }
+    }));
+  };
+
+  const handleDesignDetailsListChange = (name, value) => {
+    handleDesignDetailsChange(name, inputToList(value));
+  };
+
+  const updateDesignImageAlt = (index, alt) => {
+    setFormData(prev => ({
+      ...prev,
+      design_images: (prev.design_images || []).map((item, itemIndex) => (
+        itemIndex === index ? { ...item, alt } : item
+      ))
+    }));
+  };
+
+  const removeDesignImage = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      design_images: (prev.design_images || []).filter((_, itemIndex) => itemIndex !== index)
+    }));
   };
 
   const addTag = (e) => {
@@ -177,6 +248,17 @@ export default function AdminProjectForm() {
           ...prev,
           preview_screens: [...prev.preview_screens, publicUrl]
         }));
+      } else if (fieldName === 'design_images') {
+        setFormData(prev => ({
+          ...prev,
+          design_images: [
+            ...(prev.design_images || []),
+            {
+              src: publicUrl,
+              alt: `${prev.title || 'Graphic design'} preview ${(prev.design_images || []).length + 1}`
+            }
+          ]
+        }));
       } else {
         setFormData(prev => ({ ...prev, [fieldName]: publicUrl }));
       }
@@ -210,6 +292,7 @@ export default function AdminProjectForm() {
     { id: 'card', label: 'Card Config', icon: FiLayout },
     { id: 'case-study', label: 'Case Study', icon: FiType },
     { id: 'links', label: 'Links & Assets', icon: FiLink },
+    { id: 'graphic-design', label: 'Graphic Design', icon: FiImage },
     { id: 'seo', label: 'SEO & Meta', icon: FiMonitor }
   ];
 
@@ -598,6 +681,165 @@ export default function AdminProjectForm() {
                     <span className="text-[10px] font-bold text-slate-400 mt-2 uppercase">Add Photo</span>
                     <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'preview_screens')} className="hidden" />
                   </label>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* GRAPHIC DESIGN TAB */}
+          {activeTab === 'graphic-design' && (
+            <div className="space-y-8">
+              <div className="rounded-2xl border border-brand-100 bg-brand-50 p-4 text-sm text-brand-700">
+                Use this tab for projects categorized as GRAPHICS DESIGN. These fields power the large artwork-focused public detail layout.
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Design Images</label>
+                <p className="mb-4 text-sm text-slate-500">First image is used as the large main preview. Add variations, brochure pages, mockups, or back-side designs after it.</p>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {(formData.design_images || []).map((image, idx) => (
+                    <div key={`${image.src}-${idx}`} className="rounded-2xl border border-slate-100 bg-white p-3">
+                      <div className="aspect-[4/3] overflow-hidden rounded-xl bg-slate-100">
+                        <img src={image.src} alt={image.alt || ''} className="h-full w-full object-contain" />
+                      </div>
+                      <input
+                        type="text"
+                        value={image.alt || ''}
+                        onChange={(e) => updateDesignImageAlt(idx, e.target.value)}
+                        placeholder="Alt text"
+                        className="mt-3 w-full rounded-lg border border-slate-200 p-2 text-sm outline-none focus:border-brand-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeDesignImage(idx)}
+                        className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-red-500"
+                      >
+                        <FiTrash2 size={12} /> Remove
+                      </button>
+                    </div>
+                  ))}
+                  <label className="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 text-slate-400 transition hover:border-brand-400 hover:bg-brand-50">
+                    <FiPlus size={28} />
+                    <span className="mt-2 text-xs font-bold uppercase tracking-wide">Add Design Image</span>
+                    <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'design_images')} className="hidden" />
+                  </label>
+                </div>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Design Type</label>
+                  <input
+                    type="text"
+                    value={formData.design_details?.designType || ''}
+                    onChange={(e) => handleDesignDetailsChange('designType', e.target.value)}
+                    placeholder="Flyer, poster, brochure, logo..."
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Client / Brand Name</label>
+                  <input
+                    type="text"
+                    value={formData.design_details?.clientName || ''}
+                    onChange={(e) => handleDesignDetailsChange('clientName', e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Design Objective</label>
+                  <textarea
+                    value={formData.design_details?.objective || ''}
+                    onChange={(e) => handleDesignDetailsChange('objective', e.target.value)}
+                    rows="3"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Target Audience</label>
+                  <input
+                    type="text"
+                    value={formData.design_details?.targetAudience || ''}
+                    onChange={(e) => handleDesignDetailsChange('targetAudience', e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Color Palette</label>
+                  <input
+                    type="text"
+                    value={listToInput(formData.design_details?.colorPalette)}
+                    onChange={(e) => handleDesignDetailsListChange('colorPalette', e.target.value)}
+                    placeholder="#0F4C81, #F47B2A, #FFFFFF"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Design Style</label>
+                  <input
+                    type="text"
+                    value={formData.design_details?.style || ''}
+                    onChange={(e) => handleDesignDetailsChange('style', e.target.value)}
+                    placeholder="Modern, premium, bold"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Fonts Used</label>
+                  <input
+                    type="text"
+                    value={listToInput(formData.design_details?.fonts)}
+                    onChange={(e) => handleDesignDetailsListChange('fonts', e.target.value)}
+                    placeholder="Montserrat, Poppins"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Font Weights</label>
+                  <input
+                    type="text"
+                    value={listToInput(formData.design_details?.fontWeights)}
+                    onChange={(e) => handleDesignDetailsListChange('fontWeights', e.target.value)}
+                    placeholder="600, 700, 800"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Tools Used</label>
+                  <input
+                    type="text"
+                    value={listToInput(formData.design_details?.toolsUsed)}
+                    onChange={(e) => handleDesignDetailsListChange('toolsUsed', e.target.value)}
+                    placeholder="Photoshop, Illustrator, Canva, Figma"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Copywriting / Text Used</label>
+                  <textarea
+                    value={formData.design_details?.copywriting || ''}
+                    onChange={(e) => handleDesignDetailsChange('copywriting', e.target.value)}
+                    rows="3"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Layout / Design Notes</label>
+                  <textarea
+                    value={formData.design_details?.layoutNotes || ''}
+                    onChange={(e) => handleDesignDetailsChange('layoutNotes', e.target.value)}
+                    rows="4"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Important Notes</label>
+                  <textarea
+                    value={formData.design_details?.notes || ''}
+                    onChange={(e) => handleDesignDetailsChange('notes', e.target.value)}
+                    rows="3"
+                    className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500"
+                  />
                 </div>
               </div>
             </div>

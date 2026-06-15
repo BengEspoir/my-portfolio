@@ -1,77 +1,88 @@
-# Supabase Migration & Setup Guide
+# Supabase Setup Guide
 
-This guide explains how to set up your portfolio's new Supabase backend layer.
+This guide describes the current Supabase backend used by the portfolio.
 
-## 1. Create a Supabase Project
-1. Go to [supabase.com](https://supabase.com) and create a new project.
-2. Once the project is ready, go to **Project Settings** -> **API**.
-3. Copy your `Project URL` and `anon public` key.
+## 1. Project and Environment
 
-## 2. SQL Migration
-1. Go to the **SQL Editor** in your Supabase dashboard.
-2. Open the file `supabase/migrations/0001_portfolio_cms.sql` from this repository.
-3. Paste the entire content into the SQL Editor and click **Run**.
-   - This creates the `projects`, `blog_posts`, and `contacts` tables.
-   - It sets up Row Level Security (RLS) to protect your data.
-
-## 3. Storage Buckets
-1. Go to **Storage** in the Supabase dashboard.
-2. Create a new bucket named: `portfolio-assets`.
-3. Set the bucket to **Public** (so visitors can see your images).
-4. Add the following **RLS Policies** for the bucket:
-   - **Select**: Allow public access (Read).
-   - **Insert/Update/Delete**: Restrict to `authenticated` users only (Admin).
-
-## 4. Admin Authentication
-1. Go to **Authentication** -> **Users**.
-2. Click **Add User** -> **Create new user**.
-3. Enter your admin email and password.
-4. Use these credentials to log in at `/admin/login` on your site.
-
-## 5. Email Notifications (Edge Functions)
-We use **Resend** for reliable email delivery.
-1. Create a free account at [resend.com](https://resend.com).
-2. Get your **API Key**.
-3. Install the Supabase CLI on your computer if you haven't already.
-4. In your terminal, run:
-   ```bash
-   # Login to Supabase
-   supabase login
-   
-   # Initialize (if needed)
-   supabase init
-   
-   # Set the Resend Secret
-   supabase secrets set RESEND_API_KEY=
-   
-   # Deploy the function
-   supabase functions deploy send-contact-email
-   ```
-5. Note: In the Edge Function code (`supabase/functions/send-contact-email/index.ts`), the `from` address is set to `onboarding@resend.dev`. Once you verify a custom domain in Resend, update this to your own email.
-
-## 6. Environment Variables
-Add these to your local `.env` file and your **Vercel** deployment settings:
+Create a Supabase project, then copy the project URL and anon public key into `frontend/.env.local`:
 
 ```env
 VITE_SUPABASE_URL=https://your-project-id.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-public-key
 ```
 
-## 7. Populating Data
-1. Log in to your new dashboard at `yoursite.com/admin/login`.
-2. Go to **Projects** and start adding your work. 
-3. **Note**: You can copy descriptions and links from your old `src/data/projects.js` file.
-4. Once you have added all your data, you can safely delete the `src/data/projects.js` file and the `backend/` folder.
+Keep real values in `.env.local` only. `frontend/.env.example` must stay placeholder-only.
 
-## 8. Cleanup Old Backend
-After you verify everything is working:
-1. Delete the `backend/` folder.
-2. Delete the `studio/` (Sanity) folder.
-3. Remove the Render.com service for the backend.
-4. Update your Vercel settings to remove old `VITE_API_URL` variables.
+## 2. Database Migrations
 
-## Testing Instructions
-1. **Public Site**: Check that projects and blog posts only appear once set to `published`.
-2. **Admin**: Try creating a project with a "Latest" badge and verify it shows up on the home page.
-3. **Inquiries**: Submit a test message on the contact form and check if it appears in the **Inquiries** tab in the admin dashboard (in real-time!).
-4. **Emails**: Check your inbox for the inquiry notification.
+Run the files in `supabase/migrations` in order. They create and update:
+
+- `projects` for portfolio cards, case studies, and graphic design detail data.
+- `blog_posts` for the blog CMS.
+- `contacts` for public contact inquiries.
+- `testimonials` for Edge Function submission and admin approval.
+- `appointments` for consultation booking.
+
+The active testimonial workflow uses:
+
+- `pending`: submitted publicly and awaiting admin review.
+- `approved`: visible on public testimonial sections/pages.
+- `rejected`: retained in the dashboard but hidden publicly.
+
+The graphic design project layout uses:
+
+- `design_images`: JSON array of `{ "src": "...", "alt": "..." }`.
+- `design_details`: JSON object containing design type, client or brand, objective, audience, color palette, fonts, font weights, style, tools, copywriting, layout notes, and notes.
+
+## 3. Storage
+
+Create a public Supabase Storage bucket:
+
+```txt
+portfolio-assets
+```
+
+Use it for project images, graphic design previews, blog covers, and testimonial photos. Public read access is required for current frontend rendering. Restrict direct upload/update/delete access to the authenticated admin; public testimonial image uploads are handled by the `submit-testimonial` Edge Function with the service role secret.
+
+## 4. Admin Authentication
+
+Create the admin user in Supabase Auth with this email:
+
+```txt
+mbengespoir@gmail.com
+```
+
+The latest RLS policies use the authenticated JWT email to allow admin management of projects, blog posts, contacts, testimonials, and appointments.
+
+## 5. Edge Functions and Email
+
+The contact and booking flows save records in the database first, then invoke Edge Functions for email notifications. Public testimonial reviews are submitted through the `submit-testimonial` Edge Function so profile image upload and pending moderation happen server-side.
+
+Set the Resend and site secrets:
+
+```bash
+supabase secrets set RESEND_API_KEY=your-resend-key
+supabase secrets set RESEND_FROM_EMAIL="Portfolio Site <verified@your-domain.com>"
+supabase secrets set SITE_URL=https://your-domain.com
+supabase secrets set SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+Deploy:
+
+```bash
+supabase functions deploy send-contact-email
+supabase functions deploy send-booking-email
+supabase functions deploy submit-testimonial
+```
+
+Use a Resend-verified domain for `RESEND_FROM_EMAIL` before production traffic.
+
+## 6. Verification Checklist
+
+1. Run `npm --prefix frontend run build`.
+2. Log in at `/p/admin-access`.
+3. Create and publish a project.
+4. Create a `GRAPHICS DESIGN` project, add design images/details, and confirm its full design page uses the graphic design layout.
+5. Submit a public testimonial from `/?review=1`; confirm it is saved as `pending`.
+6. Approve the testimonial in `/admin/testimonials`; confirm it appears publicly.
+7. Submit contact and booking forms; confirm database records and email function behavior.

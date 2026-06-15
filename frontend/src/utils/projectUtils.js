@@ -7,7 +7,8 @@ export function getProjectCtaLink(project) {
   
   // Handle both snake_case (direct from DB) and camelCase (mapped in components)
   const type = cta_type || ctaType;
-  const link = cta_link || ctaLink;
+  const rawLink = cta_link || ctaLink;
+  const link = typeof rawLink === 'string' && rawLink.includes('PLACEHOLDER-LINK') ? '' : rawLink;
   const projectSlug = slug;
 
   if (!projectSlug) return link || '';
@@ -23,4 +24,11 @@ export function getProjectCtaLink(project) {
   }
 
   return link || '';
+}
+
+export function isGraphicDesignProject(project) {
+  return (project?.categories || []).some((category) => {
+    const normalized = String(category).trim().toUpperCase();
+    return normalized === 'GRAPHICS DESIGN' || normalized === 'GRAPHIC DESIGN';
+  });
 }

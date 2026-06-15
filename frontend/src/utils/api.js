@@ -55,3 +55,20 @@ export async function sendBookingEmail(appointmentData) {
     throw error;
   }
 }
+
+export async function submitTestimonial(formData) {
+  try {
+    const { data, error } = await supabase.functions.invoke('submit-testimonial', {
+      body: formData,
+    });
+
+    if (error) {
+      throw new Error(error.message || 'Testimonial submission failed.');
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Testimonial submission error:', error);
+    throw error;
+  }
+}

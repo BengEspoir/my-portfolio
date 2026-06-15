@@ -11,6 +11,7 @@ export default function AdminDashboard() {
     inquiries: 0,
     unreadInquiries: 0,
     testimonials: 0,
+    pendingTestimonials: 0,
     pendingAppointments: 0
   });
   const [loading, setLoading] = useState(true);
@@ -23,6 +24,7 @@ export default function AdminDashboard() {
         { count: inquiriesCount },
         { count: unreadCount },
         { count: testimonialsCount },
+        { count: pendingTestimonialsCount },
         { count: pendingAppointmentsCount }
       ] = await Promise.all([
         supabase.from('projects').select('*', { count: 'exact', head: true }),
@@ -30,6 +32,7 @@ export default function AdminDashboard() {
         supabase.from('contacts').select('*', { count: 'exact', head: true }),
         supabase.from('contacts').select('*', { count: 'exact', head: true }).eq('is_read', false),
         supabase.from('testimonials').select('*', { count: 'exact', head: true }),
+        supabase.from('testimonials').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'pending')
       ]);
 
@@ -39,6 +42,7 @@ export default function AdminDashboard() {
         inquiries: inquiriesCount || 0,
         unreadInquiries: unreadCount || 0,
         testimonials: testimonialsCount || 0,
+        pendingTestimonials: pendingTestimonialsCount || 0,
         pendingAppointments: pendingAppointmentsCount || 0
       });
       setLoading(false);
@@ -50,7 +54,7 @@ export default function AdminDashboard() {
   const statCards = [
     { label: 'Total Projects', value: stats.projects, icon: FiLayout, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+2 this month' },
     { label: 'Blog Posts', value: stats.blogPosts, icon: FiFileText, color: 'text-fuchsia-600', bg: 'bg-fuchsia-50', trend: '+1 this month' },
-    { label: 'Testimonials', value: stats.testimonials, icon: FiMessageSquare, color: 'text-indigo-600', bg: 'bg-indigo-50', trend: 'Publish-ready' },
+    { label: 'Testimonials', value: stats.testimonials, icon: FiMessageSquare, color: 'text-indigo-600', bg: 'bg-indigo-50', trend: `${stats.pendingTestimonials} pending` },
     { label: 'Pending Appointments', value: stats.pendingAppointments, icon: FiCalendar, color: 'text-rose-600', bg: 'bg-rose-50', trend: 'Schedule ready' },
     { label: 'Unread Messages', value: stats.unreadInquiries, icon: FiMail, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: 'Needs attention' },
   ];
@@ -84,6 +88,21 @@ export default function AdminDashboard() {
             );
           })}
         </div>
+
+        {stats.pendingTestimonials > 0 && (
+          <Link
+            to="/admin/testimonials?status=pending"
+            className="flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-900 transition hover:border-amber-300 hover:bg-amber-100 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <p className="font-bold">New testimonial pending approval</p>
+              <p className="text-sm">Pending testimonials: {stats.pendingTestimonials}</p>
+            </div>
+            <span className="inline-flex items-center gap-2 text-sm font-bold">
+              Review now <FiArrowRight />
+            </span>
+          </Link>
+        )}
 
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="card-surface p-6">

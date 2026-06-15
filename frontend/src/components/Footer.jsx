@@ -7,13 +7,14 @@ import {
   FiMail,
   FiSend
 } from "react-icons/fi";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const desktopLinks = [
   { label: "Home", to: "/" },
   { label: "About", to: "/about" },
   { label: "Portfolio", to: "/portfolio" },
   { label: "Services", to: "/services" },
+  { label: "Leave a Review", to: "/?review=1", review: true },
   { label: "Contact", to: "/contact" }
 ];
 
@@ -41,18 +42,28 @@ export default function Footer() {
 
           <nav className="flex flex-wrap items-center gap-x-5 gap-y-3 lg:justify-center" aria-label="Footer">
             {desktopLinks.map((link) => (
-              <NavLink
-                key={`footer-${link.to}`}
-                to={link.to}
-                className={({ isActive }) =>
-                  [
-                    "text-sm font-semibold transition-colors duration-200",
-                    isActive ? "text-brand-500" : "text-slate-600 hover:text-brand-500"
-                  ].join(" ")
-                }
-              >
-                {link.label}
-              </NavLink>
+              link.review ? (
+                <Link
+                  key={`footer-${link.to}`}
+                  to={link.to}
+                  className="text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-brand-500"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <NavLink
+                  key={`footer-${link.to}`}
+                  to={link.to}
+                  className={({ isActive }) =>
+                    [
+                      "text-sm font-semibold transition-colors duration-200",
+                      isActive ? "text-brand-500" : "text-slate-600 hover:text-brand-500"
+                    ].join(" ")
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              )
             ))}
           </nav>
 

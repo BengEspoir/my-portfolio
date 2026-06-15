@@ -7,6 +7,8 @@ import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
 import PageTransition from "../components/PageTransition";
 import TypewriterText from "../components/TypewriterText";
+import GraphicDesignProjectDetail from "../components/GraphicDesignProjectDetail";
+import { isGraphicDesignProject } from "../utils/projectUtils";
 
 export default function FullDesignPage() {
   const { slug } = useParams();
@@ -56,6 +58,22 @@ export default function FullDesignPage() {
           <FiArrowLeft /> Back to Portfolio
         </Link>
       </div>
+    );
+  }
+
+  if (isGraphicDesignProject(project)) {
+    return (
+      <PageTransition>
+        <Helmet>
+          <title>{`${project.title} | Graphic Design - Beng Espoir`}</title>
+          <meta name="description" content={project.description} />
+          <meta property="og:title" content={`${project.title} | Graphic Design - Beng Espoir`} />
+          <meta property="og:description" content={project.description} />
+          <meta property="og:image" content={getPublicUrl(project.image_url)} />
+          <meta name="twitter:card" content="summary_large_image" />
+        </Helmet>
+        <GraphicDesignProjectDetail project={project} />
+      </PageTransition>
     );
   }
 

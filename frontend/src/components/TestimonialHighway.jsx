@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import TestimonialCard from "./TestimonialCard";
 import TypewriterText from "./TypewriterText";
 import { FiMessageSquare } from "react-icons/fi";
+import Button from "./Button";
 
 export default function TestimonialHighway() {
   const [testimonials, setTestimonials] = useState([]);
@@ -16,7 +17,7 @@ export default function TestimonialHighway() {
         const { data, error } = await supabase
           .from('testimonials')
           .select('*')
-          .eq('status', 'published')
+          .eq('status', 'approved')
           .order('created_at', { ascending: false });
 
         if (error) {
@@ -68,6 +69,9 @@ export default function TestimonialHighway() {
           <p className="text-lg text-slate-600 leading-relaxed">
             Real feedback from partners and clients who have navigated digital transformations with me.
           </p>
+          <Button to="/?review=1" variant="secondary" className="mt-4">
+            Have we worked together? Leave a review
+          </Button>
         </div>
       </div>
 

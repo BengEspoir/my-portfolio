@@ -1,4 +1,6 @@
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
+const FROM_EMAIL = Deno.env.get('RESEND_FROM_EMAIL') || 'Portfolio Bookings <onboarding@resend.dev>'
+const SITE_URL = Deno.env.get('SITE_URL') || 'https://bengespoir.com'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -27,7 +29,7 @@ Deno.serve(async (req) => {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Portfolio Bookings <onboarding@resend.dev>',
+        from: FROM_EMAIL,
         to: 'mbengespoir@gmail.com',
         subject: `[New Booking] Consultation with ${client_name}`,
         html: `
@@ -80,7 +82,7 @@ Deno.serve(async (req) => {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Portfolio Bookings <onboarding@resend.dev>',
+        from: FROM_EMAIL,
         to: client_email,
         subject: 'Your Consultation Booking Confirmed',
         html: `
@@ -125,7 +127,7 @@ Deno.serve(async (req) => {
               <p style="margin: 0; color: #666; font-size: 13px;">
                 Best regards,<br>
                 <strong>Beng Espoir</strong><br>
-                <a href="https://your-portfolio.com" style="color: #6366f1; text-decoration: none;">portfolio.dev</a>
+                <a href="${SITE_URL}" style="color: #6366f1; text-decoration: none;">${SITE_URL}</a>
               </p>
             </div>
           </div>

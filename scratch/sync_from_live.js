@@ -1,21 +1,31 @@
 const fs = require('fs')
-const URL = 'https://racxzkmrhkkjoqcpggko.supabase.co'
-const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhY3h6a21yaGtram9xY3BnZ2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1OTMwMzEsImV4cCI6MjA5NDE2OTAzMX0.FjKoqQkZDBBiB9nkrvHkaeeb3Kf1Hlr5VbOhe1O-wns'
+const path = require('path')
+
+const URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL
+const KEY = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+const OUTPUT_FILE = path.resolve(__dirname, '..', 'projects.json')
+
+if (!URL || !KEY) {
+  console.error('Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY before running this script.')
+  process.exit(1)
+}
 
 async function sync() {
   try {
     const res = await fetch(`${URL}/rest/v1/projects?select=*`, {
       headers: {
-        'apikey': KEY,
-        'Authorization': `Bearer ${KEY}`
+        apikey: KEY,
+        Authorization: `Bearer ${KEY}`
       }
     })
+
+    if (!res.ok) {
+      throw new Error(`Supabase request failed: ${res.status} ${await res.text()}`)
+    }
+
     const data = await res.json()
-    const cleanedData = data.map(p => ({
-      ...p
-    }))
-    fs.writeFileSync('c:/Users/PC/Desktop/Porfolio/projects.json', JSON.stringify(cleanedData, null, 2), 'utf-8')
-    console.log('Sync complete!')
+    fs.writeFileSync(OUTPUT_FILE, JSON.stringify(data, null, 2), 'utf-8')
+    console.log(`Sync complete: ${OUTPUT_FILE}`)
   } catch (err) {
     console.error(err)
     process.exit(1)

@@ -7,11 +7,13 @@ import {
   FiLayers,
   FiMail,
   FiMapPin,
+  FiMessageSquare,
   FiPenTool,
   FiPhone,
   FiSend,
   FiUser,
-  FiUsers
+  FiUsers,
+  FiX
 } from "react-icons/fi";
 import {
   FaBehance,
@@ -25,14 +27,16 @@ import {
   FaXTwitter,
   FaYoutube
 } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { useSearchParams } from "react-router-dom";
 import Button from "../components/Button";
 import ProjectCard from "../components/ProjectCard";
 import SectionTitle from "../components/SectionTitle";
 import SkillBar from "../components/SkillBar";
 import PageTransition from "../components/PageTransition";
 import TestimonialHighway from "../components/TestimonialHighway";
+import TestimonialSubmissionModal from "../components/TestimonialSubmissionModal";
 import BookingCTA from "../components/BookingCTA";
 import TypewriterText from "../components/TypewriterText";
 import { ProjectCardSkeleton } from "../components/Skeleton";
@@ -160,6 +164,8 @@ const toolColumns = [
 ];
 
 export default function Home() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const reviewPromptRef = useRef(null);
   const [activeExperience, setActiveExperience] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
   const activeExperienceItem = experiences[activeExperience];
@@ -169,6 +175,12 @@ export default function Home() {
   const [contactStatus, setContactStatus] = useState({ type: "", message: "" });
   const [homeProjects, setHomeProjects] = useState([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [showReviewPrompt, setShowReviewPrompt] = useState(false);
+  const [isReviewPromptDismissed, setIsReviewPromptDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.sessionStorage.getItem("testimonialReviewPromptDismissed") === "true";
+  });
 
   useEffect(() => {
     async function fetchHomeProjects() {
@@ -191,6 +203,53 @@ export default function Home() {
 
     fetchHomeProjects();
   }, []);
+
+  useEffect(() => {
+    setIsReviewModalOpen(searchParams.get("review") === "1");
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (isReviewPromptDismissed || showReviewPrompt) return undefined;
+
+    const promptNode = reviewPromptRef.current;
+    if (!promptNode) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowReviewPrompt(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 }
+    );
+
+    observer.observe(promptNode);
+    return () => observer.disconnect();
+  }, [isReviewPromptDismissed, showReviewPrompt]);
+
+  const openReviewModal = () => {
+    const nextSearchParams = new URLSearchParams(searchParams);
+    nextSearchParams.set("review", "1");
+    setSearchParams(nextSearchParams);
+    setShowReviewPrompt(false);
+    setIsReviewModalOpen(true);
+  };
+
+  const closeReviewModal = () => {
+    const nextSearchParams = new URLSearchParams(searchParams);
+    nextSearchParams.delete("review");
+    setSearchParams(nextSearchParams, { replace: true });
+    setIsReviewModalOpen(false);
+  };
+
+  const dismissReviewPrompt = () => {
+    setShowReviewPrompt(false);
+    setIsReviewPromptDismissed(true);
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem("testimonialReviewPromptDismissed", "true");
+    }
+  };
 
   const handleContactChange = (event) => {
     const { name, value } = event.target;
@@ -551,7 +610,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="site-container">
+      <section ref={reviewPromptRef} className="site-container">
         <SectionTitle
           title="Services I Offer"
           description="How I can help transform your ideas into clean and engaging digital products."
@@ -582,6 +641,23 @@ export default function Home() {
 
       {/* Testimonials Section */}
       <TestimonialHighway />
+
+      <section className="site-container -mt-12">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-5 rounded-3xl border border-brand-100 bg-white/70 px-6 py-8 text-center shadow-soft backdrop-blur-md sm:px-8 lg:flex-row lg:justify-between lg:text-left">
+          <div>
+            <p className="text-sm font-semibold uppercase text-brand-500">Worked with me before?</p>
+            <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl">
+              Share a quick review for the portfolio.
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+              Your review goes into my dashboard first, then appears publicly only after I approve it.
+            </p>
+          </div>
+          <Button type="button" onClick={openReviewModal} className="shrink-0 gap-2">
+            Leave a review <FiMessageSquare />
+          </Button>
+        </div>
+      </section>
 
       <section className="site-container">
         <div className="subtle-gradient card-surface rounded-3xl px-6 py-12 sm:px-8 lg:px-10">
@@ -750,6 +826,40 @@ export default function Home() {
       {/* Booking CTA Section */}
       <BookingCTA />
     </div>
+
+    {showReviewPrompt && !isReviewModalOpen ? (
+      <div className="fixed inset-x-4 bottom-24 z-40 mx-auto max-w-3xl rounded-2xl border border-brand-100 bg-white/95 p-4 shadow-2xl shadow-slate-900/10 backdrop-blur-md sm:bottom-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+              <FiMessageSquare />
+            </div>
+            <div>
+              <p className="font-bold text-slate-900">Have we worked together?</p>
+              <p className="mt-1 text-sm leading-5 text-slate-600">
+                Leave a review and I will approve it before it appears publicly.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 sm:shrink-0">
+            <Button type="button" size="sm" onClick={openReviewModal} className="gap-2">
+              Leave a review <FiMessageSquare />
+            </Button>
+            <button
+              type="button"
+              onClick={dismissReviewPrompt}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:text-slate-900"
+              aria-label="Dismiss review prompt"
+            >
+              <FiX />
+            </button>
+          </div>
+        </div>
+      </div>
+    ) : null}
+
+    <TestimonialSubmissionModal isOpen={isReviewModalOpen} onClose={closeReviewModal} />
   </PageTransition>
 );
 }

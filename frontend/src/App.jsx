@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -51,6 +51,8 @@ function AppRoutes() {
         <Route path="/services" element={<Services />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/testimonials" element={<Navigate to="/?review=1" replace />} />
+        <Route path="/testimonials/new" element={<Navigate to="/?review=1" replace />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/booking" element={<Booking />} />
 

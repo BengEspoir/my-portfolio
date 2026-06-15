@@ -1,4 +1,4 @@
--- Idempotent Seed Migration for 45 Portfolio Projects
+﻿-- Idempotent Seed Migration for 45 Portfolio Projects
 -- Generated from projects.json
 
 -- Cleanup projects with missing slugs to avoid duplicates during update
@@ -45,8 +45,8 @@ INSERT INTO public.projects (
   'https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80', -- image_url
   'prototype', -- cta_type
   'View Prototype', -- cta_label
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- cta_link
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -74,7 +74,7 @@ INSERT INTO public.projects (
   'full-design', -- cta_type
   'View Full Design', -- cta_label
   '/projects/healthcare-dashboard/full-design', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -102,7 +102,7 @@ INSERT INTO public.projects (
   'full-design', -- cta_type
   'View Full Design', -- cta_label
   '/projects/food-delivery-flow/full-design', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -158,7 +158,7 @@ INSERT INTO public.projects (
   'case-study', -- cta_type
   'View Case Study', -- cta_label
   '/projects/elearning-platform/case-study', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -185,8 +185,8 @@ INSERT INTO public.projects (
   'https://images.unsplash.com/photo-1518773553398-650c184e0bb3?auto=format&fit=crop&w=1200&q=80', -- image_url
   'prototype', -- cta_type
   'View Prototype', -- cta_label
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- cta_link
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -214,7 +214,7 @@ INSERT INTO public.projects (
   'case-study', -- cta_type
   'View Case Study', -- cta_label
   '/projects/real-estate-portal/case-study', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -242,7 +242,7 @@ INSERT INTO public.projects (
   'full-design', -- cta_type
   'View Full Design', -- cta_label
   '/projects/fintech-onboarding/full-design', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -270,7 +270,7 @@ INSERT INTO public.projects (
   'full-design', -- cta_type
   'View Full Design', -- cta_label
   '/projects/saas-admin-panel/full-design', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -298,7 +298,7 @@ INSERT INTO public.projects (
   'case-study', -- cta_type
   'View Case Study', -- cta_label
   '/projects/portfolio-case-study/case-study', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -326,7 +326,7 @@ INSERT INTO public.projects (
   'full-design', -- cta_type
   'View Full Design', -- cta_label
   '/projects/event-booking/full-design', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -382,7 +382,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -410,7 +410,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -438,7 +438,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -466,7 +466,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -494,7 +494,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -522,7 +522,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -550,7 +550,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -578,7 +578,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -606,7 +606,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -634,7 +634,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -662,7 +662,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -690,7 +690,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -718,7 +718,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -746,7 +746,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -774,7 +774,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -802,7 +802,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -830,7 +830,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -858,7 +858,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -886,7 +886,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -914,7 +914,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -942,7 +942,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -970,7 +970,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -998,7 +998,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -1026,7 +1026,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -1054,7 +1054,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -1082,7 +1082,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -1110,7 +1110,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -1138,7 +1138,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -1166,7 +1166,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -1194,7 +1194,7 @@ INSERT INTO public.projects (
   'default', -- cta_type
   'View Project', -- cta_label
   '/portfolio', -- cta_link
-  'https://figma.com/proto/PLACEHOLDER-LINK', -- prototype_url
+  '', -- prototype_url
   NULL, -- prototype_embed
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1586892478025-2b5472316f22?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1512070679279-f7ee42e7e1d1?auto=format&fit=crop&w=900&q=80', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80']::text[], -- preview_screens
   'This project focuses on delivering a seamless and intuitive user experience through careful research and iterative design cycles.', -- project_background
@@ -1213,7 +1213,7 @@ INSERT INTO public.projects (
 ),
 (
   '41fb5140-e9b3-4225-bd69-d13ac4643670', -- id
-  'AgriculNet â€” B2B Agricultural Trade Ecosystem', -- title
+  'AgriculNet - B2B Agricultural Trade Ecosystem', -- title
   'agriculnet', -- slug
   'An enterprise-grade B2B marketplace bringing structured onboarding, verified identity, protected payments, and real-time order tracking to agricultural trade.', -- description
   ARRAY['WEB DEV']::text[], -- categories
@@ -1231,7 +1231,7 @@ INSERT INTO public.projects (
   'The primary challenge was balancing the verification bottleneck with user conversion. We implemented progressive onboarding that converts users before asking for heavy KYC, using real-time status tracking.', -- challenges
   'We built a Trust & Verification layer with semantic badges (Verified, Export Ready), inquiry heat indicators, and protected payment rails supporting mobile money and card settlements.', -- solution
   'AgriculNet demonstrates end-to-end product thinking for marketplace UX, showing a 25% increase in task completion speed during initial school project testing phases and improved trade visibility.', -- outcome
-  '[{"title": "Landing & Discovery", "content": "HeroSection anchors on three value props\u00e2\u20ac\u201dverified supply, protected payments, export readiness. Includes a trust strip with CountUp animations for real platform metrics."}, {"title": "Progressive Onboarding", "content": "A step-gated verification pipeline (Registration \u00e2\u2020\u2019 Role selection \u00e2\u2020\u2019 Email/Phone OTP \u00e2\u2020\u2019 Identity upload \u00e2\u2020\u2019 Admin review) with TierBadge status indicators."}, {"title": "Trust & Verification Layer", "content": "A 3-tier hierarchy (Green/Blue/Amber) and SellerTrustBar combining star ratings, verification status, and inquiry heat demand signals."}, {"title": "Listing & Farmer Surfaces", "content": "Alibaba-style density model crop cards with standalone ''Send Inquiry'' CTAs, status badges, and export readiness indicators."}, {"title": "Order Management & Tracking", "content": "State-machine workflow with visual status badges (pending_payment \u00e2\u2020\u2019 confirmed \u00e2\u2020\u2019 in_transit \u00e2\u2020\u2019 delivered) and vertical timeline tracking."}, {"title": "Messaging & Context", "content": "ListingContextBanner surfaces trade context (crop, quantity, location) inline within chat to eliminate discovery friction."}, {"title": "Admin Moderation UI", "content": "Decision velocity workspace with KPI cards, filterable user lists, and a split-pane review system for identity verification."}]'::jsonb, -- ux_flow
+  '[{"title": "Landing & Discovery", "content": "HeroSection anchors on three value props-verified supply, protected payments, export readiness. Includes a trust strip with CountUp animations for real platform metrics."}, {"title": "Progressive Onboarding", "content": "A step-gated verification pipeline (Registration -> Role selection -> Email/Phone OTP -> Identity upload -> Admin review) with TierBadge status indicators."}, {"title": "Trust & Verification Layer", "content": "A 3-tier hierarchy (Green/Blue/Amber) and SellerTrustBar combining star ratings, verification status, and inquiry heat demand signals."}, {"title": "Listing & Farmer Surfaces", "content": "Alibaba-style density model crop cards with standalone ''Send Inquiry'' CTAs, status badges, and export readiness indicators."}, {"title": "Order Management & Tracking", "content": "State-machine workflow with visual status badges (pending_payment -> confirmed -> in_transit -> delivered) and vertical timeline tracking."}, {"title": "Messaging & Context", "content": "ListingContextBanner surfaces trade context (crop, quantity, location) inline within chat to eliminate discovery friction."}, {"title": "Admin Moderation UI", "content": "Decision velocity workspace with KPI cards, filterable user lists, and a split-pane review system for identity verification."}]'::jsonb, -- ux_flow
   ARRAY['Next.js', 'B2B Marketplace', 'Fintech', 'UX Design']::text[], -- tools_tech
   NULL, -- apk_url
   '#01931e', -- brand_color
@@ -1241,7 +1241,7 @@ INSERT INTO public.projects (
 ),
 (
   'c51aa146-5230-4aea-9263-556f774acfdf', -- id
-  'Motherly ” Indigenous Language Preservation"', -- title
+  'Motherly - Indigenous Language Preservation"', -- title
   'motherly', -- slug
   'A culturally-rooted mobile language learning platform focused on preserving Cameroonian indigenous languages through gamification and native audio.', -- description
   ARRAY['MOBILE DEV', 'UI/UX']::text[], -- categories
@@ -1253,13 +1253,13 @@ INSERT INTO public.projects (
   'https://www.figma.com/proto/xZ8dTNlHZZkCEt0zfv8ZIz/motherly-app-maternal-language-app?node-id=25-492&p=f&viewport=190%2C371%2C0.11&t=ImaIPknrGoVU9YoP-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=25%3A75&page-id=0%3A1', -- prototype_url
   '<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="100%" height="600" src="https://embed.figma.com/proto/xZ8dTNlHZZkCEt0zfv8ZIz/motherly-app-maternal-language-app?node-id=25-492&p=f&viewport=190%2C371%2C0.11&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=25%3A75&page-id=0%3A1&embed-host=share" allowfullscreen></iframe>', -- prototype_embed
   ARRAY['https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.3332977305114283.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.7530046406732033.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.5290168989380959.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.3031813385522134.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.6015081128076019.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.57811924311666.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.9900214637268681.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.6132241233838256.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.722354401197794.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.7387437378953983.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.9019043313217203.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.411520093424686.png', 'https://racxzkmrhkkjoqcpggko.supabase.co/storage/v1/object/public/portfolio-assets/projects/0.16830484260532474.png']::text[], -- preview_screens
-  'Motherly is a culturally-rooted mobile language learning platform that replaces passive cultural drift with an active, gamified preservation engine â€” bringing structured lessons, native audio, and verified content to Cameroonian indigenous languages including Duala, Ewondo, Nso, Bafut, and Makon.', -- project_background
+  'Motherly is a culturally-rooted mobile language learning platform that replaces passive cultural drift with an active, gamified preservation engine - bringing structured lessons, native audio, and verified content to Cameroonian indigenous languages including Duala, Ewondo, Nso, Bafut, and Makon.', -- project_background
   'Cameroonian indigenous languages are in rapid decline, with younger generations and diaspora communities losing access to their mother tongues. Existing platforms serve global languages exclusively, leaving 20M+ speakers without dedicated digital tools.', -- problem_statement
-  'The experience architecture prioritises cultural familiarity and low-friction learning. It features a role-gated onboarding flow (Learner vs. Lecturer) and a three-tier content governance pipeline (Lecturer â†’ Content Moderator â†’ Publication). We addressed content quality with a split-panel review interface ensuring every word is verified by a native expert.', -- design_journey
+  'The experience architecture prioritises cultural familiarity and low-friction learning. It features a role-gated onboarding flow (Learner vs. Lecturer) and a three-tier content governance pipeline (Lecturer -> Content Moderator -> Publication). We addressed content quality with a split-panel review interface ensuring every word is verified by a native expert.', -- design_journey
   'The main challenge was balancing dense data presentation with a minimalist aesthetic, ensuring that expert users have all tools at hand without overwhelming new users.', -- challenges
-  'We built a three-layer trust and quality architecture â€” Lecturer creates, Content Moderator approves, System Admin oversees â€” ensuring every lesson on Motherly carries genuine linguistic expertise. Roots in a warm, culturally-grounded UI deliver a learning experience that feels like a homecoming.', -- solution
+  'We built a three-layer trust and quality architecture - Lecturer creates, Content Moderator approves, System Admin oversees - ensuring every lesson on Motherly carries genuine linguistic expertise. Roots in a warm, culturally-grounded UI deliver a learning experience that feels like a homecoming.', -- solution
   'Motherly demonstrates end-to-end product thinking for cultural preservation. Initial concept testing showed strong emotional resonance with the cultural identity elements and high intent-to-use scores for the daily streak mechanic.', -- outcome
-  '[{"title": "Splash & Onboarding", "content": "Culturally immersive entry with a golden-brown brand palette and African textile-inspired textures. Converts users emotionally before account creation."}, {"title": "Role-Based Authentication", "content": "Step-gated auth (Registration \u00e2\u2020\u2019 Verification \u00e2\u2020\u2019 Role Selection). Role selection gates the entire experience\u00e2\u20ac\u201dLearner or Lecturer."}, {"title": "Learning Engine", "content": "Daily challenge cards, streak mechanics, and a lesson player supporting Listening, Translation, and Vocabulary Matching with animated feedback."}, {"title": "Gamification Layer", "content": "Streak flames, XP accumulation, three-tier star ratings, and podium-style leaderboards designed to build daily learning habits."}, {"title": "Lecturer Content Studio", "content": "A mobile-first lesson creation wizard with in-app audio recording and waveform previews for non-technical educators."}, {"title": "Moderator Dashboard", "content": "A split-panel review workspace (Web) covering linguistic accuracy and pedagogical soundness, scoped per language expert."}, {"title": "System Oversight", "content": "Full-platform admin dashboard with DAU/MAU analytics, feature flag control, and a complete audit log for system administrators."}]'::jsonb, -- ux_flow
+  '[{"title": "Splash & Onboarding", "content": "Culturally immersive entry with a golden-brown brand palette and African textile-inspired textures. Converts users emotionally before account creation."}, {"title": "Role-Based Authentication", "content": "Step-gated auth (Registration -> Verification -> Role Selection). Role selection gates the entire experience-Learner or Lecturer."}, {"title": "Learning Engine", "content": "Daily challenge cards, streak mechanics, and a lesson player supporting Listening, Translation, and Vocabulary Matching with animated feedback."}, {"title": "Gamification Layer", "content": "Streak flames, XP accumulation, three-tier star ratings, and podium-style leaderboards designed to build daily learning habits."}, {"title": "Lecturer Content Studio", "content": "A mobile-first lesson creation wizard with in-app audio recording and waveform previews for non-technical educators."}, {"title": "Moderator Dashboard", "content": "A split-panel review workspace (Web) covering linguistic accuracy and pedagogical soundness, scoped per language expert."}, {"title": "System Oversight", "content": "Full-platform admin dashboard with DAU/MAU analytics, feature flag control, and a complete audit log for system administrators."}]'::jsonb, -- ux_flow
   ARRAY['React Native', 'Google Stitch', 'EdTech', 'Cultural Preservation']::text[], -- tools_tech
   '#', -- apk_url
   '#e0720b', -- brand_color
