@@ -22,6 +22,7 @@ Run the files in `supabase/migrations` in order. They create and update:
 - `contacts` for public contact inquiries.
 - `testimonials` for Edge Function submission and admin approval.
 - `appointments` for consultation booking.
+- `experiences` for the homepage experience section managed from the admin dashboard.
 
 The active testimonial workflow uses:
 
@@ -52,19 +53,46 @@ Create the admin user in Supabase Auth with this email:
 mbengespoir@gmail.com
 ```
 
-The latest RLS policies use the authenticated JWT email to allow admin management of projects, blog posts, contacts, testimonials, and appointments.
+The latest RLS policies use the authenticated JWT email to allow admin management of projects, experiences, blog posts, contacts, testimonials, and appointments.
 
-## 5. Edge Functions and Email
+## 5. Edge Functions, Email, and Dashboard AI
 
 The contact and booking flows save records in the database first, then invoke Edge Functions for email notifications. Public testimonial reviews are submitted through the `submit-testimonial` Edge Function so profile image upload and pending moderation happen server-side.
 
-Set the Resend and site secrets:
+The admin dashboard also uses the `extract-dashboard-content` Edge Function for the "Quick Import with AI Assistant" workflow. It accepts raw pasted notes, validates the authenticated admin user, calls Gemini or Groq using function-only secrets, and returns JSON for the dashboard forms to review before saving.
+
+The assistant supports `project`, `blog`, `testimonial`, and `experience` content types. It accepts both one-shot extraction and chat-style refinement:
+
+```json
+{
+  "mode": "extract",
+  "contentType": "experience",
+  "rawText": "Paste rough notes here",
+  "instruction": "Optional instruction",
+  "messages": [],
+  "currentDraft": {}
+}
+```
+
+The function responds with `assistantMessage` plus a `result` draft object. The frontend only applies that draft when the admin clicks "Apply to Form"; it never saves or publishes automatically.
+
+Set the Resend, site, and AI assistant secrets:
 
 ```bash
 supabase secrets set RESEND_API_KEY=your-resend-key
 supabase secrets set RESEND_FROM_EMAIL="Portfolio Site <verified@your-domain.com>"
 supabase secrets set SITE_URL=https://your-domain.com
 supabase secrets set SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+supabase secrets set ADMIN_EMAIL=mbengespoir@gmail.com
+
+# Default provider is Gemini. Use AI_EXTRACT_PROVIDER=groq to switch.
+supabase secrets set AI_EXTRACT_PROVIDER=gemini
+supabase secrets set GEMINI_API_KEY=your-google-ai-studio-key
+supabase secrets set GEMINI_MODEL=gemini-1.5-flash
+
+# Optional Groq fallback/provider switch.
+supabase secrets set GROQ_API_KEY=your-groq-key
+supabase secrets set GROQ_MODEL=llama-3.3-70b-versatile
 ```
 
 Deploy:
@@ -73,9 +101,11 @@ Deploy:
 supabase functions deploy send-contact-email
 supabase functions deploy send-booking-email
 supabase functions deploy submit-testimonial
+supabase functions deploy extract-dashboard-content
 ```
 
 Use a Resend-verified domain for `RESEND_FROM_EMAIL` before production traffic.
+Keep AI provider keys in Supabase secrets only. Do not add them to `frontend/.env.local`, `.env.example`, or any Vite-exposed variable.
 
 ## 6. Verification Checklist
 
@@ -86,3 +116,5 @@ Use a Resend-verified domain for `RESEND_FROM_EMAIL` before production traffic.
 5. Submit a public testimonial from `/?review=1`; confirm it is saved as `pending`.
 6. Approve the testimonial in `/admin/testimonials`; confirm it appears publicly.
 7. Submit contact and booking forms; confirm database records and email function behavior.
+8. Create, edit, publish, draft, and archive an experience in `/admin/experiences`; confirm the homepage uses published rows and falls back to local copy if Supabase is unavailable.
+9. Log in as the admin, paste rough notes into each "Quick Import with AI Assistant" form, chat with an instruction, and confirm the suggested draft only populates fields after "Apply to Form".

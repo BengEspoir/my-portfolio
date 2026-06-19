@@ -8,6 +8,7 @@ import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
 import PageTransition from "../components/PageTransition";
 import TypewriterText from "../components/TypewriterText";
+import { useI18n } from "../i18n";
 
 const allowedPrototypeHosts = new Set(["figma.com", "www.figma.com", "embed.figma.com"]);
 
@@ -32,6 +33,8 @@ function getTrustedPrototypeUrl(project) {
 
 export default function CaseStudyPage() {
   const { slug } = useParams();
+  const { localizedPath, t } = useI18n();
+  const pageCopy = t("projectDetail");
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -76,12 +79,12 @@ export default function CaseStudyPage() {
       <div className="site-container py-20 text-center">
         <TypewriterText
           as="h1"
-          text="Project Not Found"
+          text={pageCopy.notFound}
           startOnView={false}
           className="text-4xl font-bold"
         />
-        <Link to="/portfolio" className="mt-4 inline-flex items-center gap-2 text-brand-600 hover:underline">
-          <FiArrowLeft /> Back to Portfolio
+        <Link to={localizedPath("/portfolio")} className="mt-4 inline-flex items-center gap-2 text-brand-600 hover:underline">
+          <FiArrowLeft /> {t("common.backToPortfolio")}
         </Link>
       </div>
     );
@@ -106,15 +109,15 @@ export default function CaseStudyPage() {
             "@type": "Person",
             name: siteConfig.name
           },
-          url: absoluteUrl(`/projects/${project.slug}/case-study`)
+          url: absoluteUrl(localizedPath(`/projects/${project.slug}/case-study`))
         }}
       />
 
       <div className="space-y-24 pb-24 pt-10">
       {/* Hero Section */}
       <section className="site-container">
-        <Link to="/portfolio" className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition-colors hover:text-brand-600">
-          <FiArrowLeft /> BACK TO PORTFOLIO
+        <Link to={localizedPath("/portfolio")} className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition-colors hover:text-brand-600">
+          <FiArrowLeft /> {t("common.backToPortfolio")}
         </Link>
         
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
@@ -123,7 +126,7 @@ export default function CaseStudyPage() {
               className="inline-flex rounded-full px-4 py-1.5 text-sm font-bold text-white"
               style={{ backgroundColor: project.brand_color || "#6366f1" }}
             >
-              {project.categories?.[0] || "Project"}
+              {project.categories?.[0] || t("common.project")}
             </div>
             <TypewriterText
               as="h1"
@@ -137,15 +140,15 @@ export default function CaseStudyPage() {
             
             <div className="grid grid-cols-2 gap-8 border-t border-slate-100 pt-8">
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">Role</h4>
+                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">{pageCopy.role}</h4>
                 <p className="mt-1 font-semibold text-slate-900">
-                  {project.role || (project.categories.includes("WEB DEV") ? "Full Stack Developer" : "Lead UI/UX Designer")}
+                  {project.role || (project.categories?.includes("WEB DEV") ? pageCopy.fullStackDeveloper : pageCopy.leadDesigner)}
                 </p>
               </div>
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">Tools / Stack</h4>
+                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">{pageCopy.toolsStack}</h4>
                 <p className="mt-1 font-semibold text-slate-900">
-                  {project.tools_tech?.slice(0, 3).join(", ") || "Design Tools"}
+                  {project.tools_tech?.slice(0, 3).join(", ") || pageCopy.designTools}
                 </p>
               </div>
             </div>
@@ -159,7 +162,7 @@ export default function CaseStudyPage() {
                   className="gap-2"
                   style={{ backgroundColor: project.brand_color || "#059669" }}
                 >
-                  <FiZap /> View Live Project
+                  <FiZap /> {pageCopy.viewLive}
                 </Button>
               )}
 
@@ -171,7 +174,7 @@ export default function CaseStudyPage() {
                   className="gap-2"
                   style={{ backgroundColor: project.brand_color || "#059669" }}
                 >
-                  <FiFigma /> View Prototype Flow
+                  <FiFigma /> {pageCopy.viewPrototype}
                 </Button>
               )}
               {project.video_url && (
@@ -182,7 +185,7 @@ export default function CaseStudyPage() {
                   className="gap-2"
                   style={{ backgroundColor: project.brand_color || "#059669" }}
                 >
-                  <FiPlay /> View Prototype Video
+                  <FiPlay /> {pageCopy.viewVideo}
                 </Button>
               )}
               {project.figma_url && (
@@ -193,7 +196,7 @@ export default function CaseStudyPage() {
                   className="gap-2"
                   style={{ backgroundColor: project.brand_color || "#059669" }}
                 >
-                  <FiFigma /> View Figma File
+                  <FiFigma /> {pageCopy.viewFigma}
                 </Button>
               )}
               {project.apk_url && (
@@ -203,7 +206,7 @@ export default function CaseStudyPage() {
                   className="gap-2"
                   style={{ backgroundColor: project.brand_color || "#059669" }}
                 >
-                  <FiDownload /> Download APK
+                  <FiDownload /> {pageCopy.downloadApk}
                 </Button>
               )}
             </div>
@@ -223,15 +226,15 @@ export default function CaseStudyPage() {
       {project.preview_screens?.length > 0 && (
         <section className="site-container">
           <SectionTitle 
-            title="Preview Screens" 
-            description="A selection of high-fidelity screens showcasing the core user journey and interface layout."
+            title={pageCopy.previewScreens}
+            description={pageCopy.previewDescription}
           />
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {project.preview_screens.map((screen, idx) => (
               <div key={idx} className="group relative aspect-[9/19] overflow-hidden rounded-2xl bg-slate-100 shadow-soft">
                 <img src={getPublicUrl(screen)} alt={`Screen 0${idx + 1}`} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 p-4 text-xs font-bold text-white opacity-0 transition-opacity group-hover:opacity-100">
-                  Screen 0{idx + 1}
+                  {pageCopy.screen} 0{idx + 1}
                 </div>
               </div>
             ))}
@@ -248,7 +251,7 @@ export default function CaseStudyPage() {
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
                   <FiLayout size={24} />
                 </div>
-                <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">Project Background</h2>
+                <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">{pageCopy.projectBackground}</h2>
                 <p className="text-lg leading-relaxed text-slate-600 italic">
                   &quot;{project.project_background}&quot;
                 </p>
@@ -259,7 +262,7 @@ export default function CaseStudyPage() {
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-600">
                   <FiTarget size={24} />
                 </div>
-                <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">The Problem</h2>
+                <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">{pageCopy.problem}</h2>
                 <p className="text-lg leading-relaxed text-slate-600">
                   {project.problem_statement}
                 </p>
@@ -273,13 +276,13 @@ export default function CaseStudyPage() {
       {(project.design_journey || project.challenges) && (
         <section className="site-container bg-slate-50 py-20 rounded-[3rem]">
           <div className="site-container">
-            <SectionTitle title="UX Thinking & Design Journey" />
+            <SectionTitle title={pageCopy.journey} />
             <div className="mx-auto max-w-4xl space-y-12">
               {project.design_journey && (
                 <div className="flex gap-8">
                   <div className="hidden h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-500 text-white font-bold sm:flex">1</div>
                   <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-slate-900">Research & Discovery</h3>
+                    <h3 className="text-2xl font-bold text-slate-900">{pageCopy.research}</h3>
                     <p className="text-lg text-slate-600">{project.design_journey}</p>
                   </div>
                 </div>
@@ -288,7 +291,7 @@ export default function CaseStudyPage() {
                 <div className="flex gap-8">
                   <div className="hidden h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-500 text-white font-bold sm:flex">2</div>
                   <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-slate-900">Challenges Encountered</h3>
+                    <h3 className="text-2xl font-bold text-slate-900">{pageCopy.challenges}</h3>
                     <p className="text-lg text-slate-600">{project.challenges}</p>
                   </div>
                 </div>
@@ -302,8 +305,8 @@ export default function CaseStudyPage() {
       {project.ux_flow?.length > 0 && (
         <section className="site-container">
           <SectionTitle 
-            title="Experience Architecture" 
-            description="A breakdown of the core platform modules and the UX strategy behind them."
+            title={pageCopy.architecture}
+            description={pageCopy.architectureDescription}
           />
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {project.ux_flow.map((item, idx) => (
@@ -331,9 +334,9 @@ export default function CaseStudyPage() {
               {project.solution && (
                 <div className="space-y-4">
                   <div className="inline-flex items-center gap-2 font-bold text-brand-600 uppercase tracking-widest text-xs">
-                    <FiZap /> The Solution
+                    <FiZap /> {pageCopy.solutionLabel}
                   </div>
-                  <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">Final Solution</h2>
+                  <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">{pageCopy.finalSolution}</h2>
                   <p className="text-lg leading-relaxed text-slate-600">
                     {project.solution}
                   </p>
@@ -343,9 +346,9 @@ export default function CaseStudyPage() {
               {project.outcome && (
                 <div className="space-y-4 pt-8 border-t border-slate-100">
                   <div className="inline-flex items-center gap-2 font-bold text-emerald-600 uppercase tracking-widest text-xs">
-                    <FiCompass /> Impact & Reflection
+                    <FiCompass /> {pageCopy.impact}
                   </div>
-                  <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">Outcome</h2>
+                  <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">{pageCopy.outcome}</h2>
                   <p className="text-lg leading-relaxed text-slate-600">
                     {project.outcome}
                   </p>
@@ -364,10 +367,10 @@ export default function CaseStudyPage() {
       <section className="site-container">
         <div className="rounded-[2.5rem] bg-slate-900 p-12 text-center text-white lg:p-20">
           <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">
-            {project.live_url ? "Experience the Live Platform" : "Explore the Prototype"}
+            {project.live_url ? pageCopy.livePlatform : pageCopy.prototype}
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
-            Interested in seeing the full interaction design and how the components work together? View the project links below.
+            {pageCopy.bottomBody}
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             {project.live_url && (
@@ -378,7 +381,7 @@ export default function CaseStudyPage() {
                 className="gap-2"
                 style={{ backgroundColor: project.brand_color || "#059669" }}
               >
-                <FiZap /> View Live Project
+                <FiZap /> {pageCopy.viewLive}
               </Button>
             )}
 
@@ -389,12 +392,12 @@ export default function CaseStudyPage() {
                 variant="secondary" 
                 className="gap-2 !bg-white/10 !border-white/20 !text-white hover:!bg-white/20"
               >
-                <FiFigma /> View Prototype Flow
+                <FiFigma /> {pageCopy.viewPrototype}
               </Button>
             )}
 
             <Button to="/contact" variant="secondary" className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20">
-              Start a Similar Project
+              {pageCopy.similar}
             </Button>
           </div>
         </div>
@@ -404,8 +407,8 @@ export default function CaseStudyPage() {
       {prototypeEmbedUrl && (
         <section className="site-container">
           <SectionTitle 
-            title="Interactive Prototype Flow" 
-            description="Explore the full user journey and interactive transitions directly within this live Figma embed."
+            title={pageCopy.prototypeFlow}
+            description={pageCopy.prototypeFlowDescription}
           />
           <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-50 shadow-2xl">
             <iframe

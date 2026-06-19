@@ -21,6 +21,8 @@ const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminProjects = lazy(() => import("./pages/AdminProjects"));
 const AdminProjectForm = lazy(() => import("./pages/AdminProjectForm"));
+const AdminExperiences = lazy(() => import("./pages/AdminExperiences"));
+const AdminExperienceForm = lazy(() => import("./pages/AdminExperienceForm"));
 const AdminBlog = lazy(() => import("./pages/AdminBlog"));
 const AdminBlogForm = lazy(() => import("./pages/AdminBlogForm"));
 const AdminTestimonials = lazy(() => import("./pages/AdminTestimonials"));
@@ -56,17 +58,29 @@ function AppRoutes() {
         <Routes location={location} key={location.pathname}>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
+          <Route path="/fr" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/fr/about" element={<About />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/fr/portfolio" element={<Portfolio />} />
           <Route path="/projects/:slug/case-study" element={<CaseStudyPage />} />
+          <Route path="/fr/projects/:slug/case-study" element={<CaseStudyPage />} />
           <Route path="/projects/:slug/full-design" element={<FullDesignPage />} />
+          <Route path="/fr/projects/:slug/full-design" element={<FullDesignPage />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/fr/services" element={<Services />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/fr/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/fr/blog/:slug" element={<BlogPost />} />
           <Route path="/testimonials" element={<Navigate to="/?review=1" replace />} />
           <Route path="/testimonials/new" element={<Navigate to="/?review=1" replace />} />
+          <Route path="/fr/testimonials" element={<Navigate to="/fr?review=1" replace />} />
+          <Route path="/fr/testimonials/new" element={<Navigate to="/fr?review=1" replace />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/fr/contact" element={<Contact />} />
           <Route path="/booking" element={<Booking />} />
+          <Route path="/fr/booking" element={<Booking />} />
 
           {/* Admin Routes */}
           <Route path="/p/admin-access" element={<AdminLogin />} />
@@ -75,6 +89,9 @@ function AppRoutes() {
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/projects/new" element={<AdminProjectForm />} />
             <Route path="/admin/projects/:id/edit" element={<AdminProjectForm />} />
+            <Route path="/admin/experiences" element={<AdminExperiences />} />
+            <Route path="/admin/experiences/new" element={<AdminExperienceForm />} />
+            <Route path="/admin/experiences/:id/edit" element={<AdminExperienceForm />} />
             <Route path="/admin/blog" element={<AdminBlog />} />
             <Route path="/admin/blog/new" element={<AdminBlogForm />} />
             <Route path="/admin/blog/:id/edit" element={<AdminBlogForm />} />

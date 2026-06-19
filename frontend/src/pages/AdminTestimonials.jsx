@@ -15,6 +15,7 @@ import {
 import DashboardLayout from '../components/DashboardLayout';
 import Button from '../components/Button';
 import ConfirmDialog from '../components/ConfirmDialog';
+import QuickImportAssistant from '../components/QuickImportAssistant';
 import Toast from '../components/Toast';
 import { createStorageFileName } from '../utils/files';
 
@@ -122,6 +123,20 @@ export default function AdminTestimonials() {
     } catch (error) {
       setToast({ type: 'error', message: `Error uploading file: ${error.message}` });
     }
+  };
+
+  const handleQuickImport = (result) => {
+    const rating = Number(result.rating);
+    setFormData((previous) => ({
+      ...previous,
+      client_name: String(result.client_name || '').trim() || previous.client_name,
+      client_role: String(result.client_role || '').trim() || previous.client_role,
+      client_company: String(result.client_company || '').trim() || previous.client_company,
+      content: String(result.content || '').trim() || previous.content,
+      rating: Number.isFinite(rating) ? Math.max(1, Math.min(5, Math.round(rating))) : previous.rating,
+      status: 'approved'
+    }));
+    setToast({ type: 'success', message: 'AI assistant populated the testimonial draft. Review before saving.' });
   };
 
   const openModal = (testimonial = null) => {
@@ -322,6 +337,13 @@ export default function AdminTestimonials() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6 overflow-y-auto p-6">
+              <QuickImportAssistant
+                contentType="testimonial"
+                currentDraft={formData}
+                onApply={handleQuickImport}
+                placeholder="Paste raw client feedback, a message thread excerpt, or notes from a collaboration..."
+              />
+
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <label className="mb-2 block text-sm font-bold text-slate-700">Client Name</label>

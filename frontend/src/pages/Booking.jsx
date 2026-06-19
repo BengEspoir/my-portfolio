@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -29,20 +29,23 @@ import SectionTitle from "../components/SectionTitle";
 import Button from "../components/Button";
 import SEO from "../components/SEO";
 import Toast from "../components/Toast";
+import { useI18n } from "../i18n";
 
-const bookingSchema = z.object({
-  client_name: z.string().min(2, "Name is required"),
-  client_email: z.string().email("Invalid email address"),
+function createBookingSchema(messages) {
+  return z.object({
+  client_name: z.string().min(2, messages.name),
+  client_email: z.string().email(messages.email),
   client_phone: z.string().optional(),
   company_name: z.string().optional(),
-  purpose: z.string().min(10, "Please provide more details about your goals"),
-  meeting_date: z.date({ required_error: "Please select a date" }),
-  meeting_time: z.string().min(1, "Please select a time"),
+  purpose: z.string().min(10, messages.purpose),
+  meeting_date: z.date({ required_error: messages.date }),
+  meeting_time: z.string().min(1, messages.time),
   duration: z.string(),
   timezone: z.string(),
   platform: z.enum(["Google Meet", "Zoom"]),
-  meeting_link: z.string().url("Invalid URL format").optional().or(z.literal("")),
-});
+  meeting_link: z.string().url(messages.url).optional().or(z.literal("")),
+  });
+}
 
 const timeSlots = [
   "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", 
@@ -58,6 +61,9 @@ function getInitialMeetingDate() {
 }
 
 export default function Booking() {
+  const { t } = useI18n();
+  const pageCopy = t("booking");
+  const bookingSchema = useMemo(() => createBookingSchema(pageCopy.errors), [pageCopy.errors]);
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -110,7 +116,7 @@ export default function Booking() {
     } catch (error) {
       setToast({
         type: "error",
-        message: `Error booking appointment: ${error.message}`
+        message: pageCopy.errors.submit.replace("{message}", error.message)
       });
     } finally {
       setIsSubmitting(false);
@@ -124,16 +130,16 @@ export default function Booking() {
   return (
     <PageTransition>
       <SEO
-        title="Book a Consultation | Beng Espoir"
-        description="Schedule a professional consultation for UI/UX design, web development, product strategy, or software engineering projects."
+        title={t("seo.booking.title")}
+        description={t("seo.booking.description")}
         path="/booking"
       />
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       <div className="site-container py-20">
         <SectionTitle 
-          title="Schedule a Consultation"
-          subtitle="Direct and efficient strategy sessions to map out your digital roadmap."
+          title={pageCopy.title}
+          subtitle={pageCopy.subtitle}
           align="center"
         />
 
@@ -143,7 +149,7 @@ export default function Booking() {
             <div className="space-y-6">
               <div className="card-surface p-8 space-y-6">
                 <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                  <FiInfo className="text-brand-500" /> Meeting Details
+                  <FiInfo className="text-brand-500" /> {pageCopy.detailsTitle}
                 </h3>
                 
                 <div className="space-y-5">
@@ -152,8 +158,8 @@ export default function Booking() {
                       <FiClock />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm">Duration</h4>
-                      <p className="text-slate-500 text-xs">Flexible 30 - 60 min slots</p>
+                      <h4 className="font-bold text-slate-900 text-sm">{pageCopy.durationTitle}</h4>
+                      <p className="text-slate-500 text-xs">{pageCopy.durationBody}</p>
                     </div>
                   </div>
 
@@ -162,8 +168,8 @@ export default function Booking() {
                       <FiVideo />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm">Platform</h4>
-                      <p className="text-slate-500 text-xs">Google Meet or Zoom</p>
+                      <h4 className="font-bold text-slate-900 text-sm">{pageCopy.platformTitle}</h4>
+                      <p className="text-slate-500 text-xs">{pageCopy.platformBody}</p>
                     </div>
                   </div>
 
@@ -172,7 +178,7 @@ export default function Booking() {
                       <FiGlobe />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm">Timezone</h4>
+                      <h4 className="font-bold text-slate-900 text-sm">{pageCopy.timezoneTitle}</h4>
                       <p className="text-slate-500 text-xs truncate max-w-[150px]">{watch("timezone")}</p>
                     </div>
                   </div>
@@ -181,8 +187,8 @@ export default function Booking() {
 
               <div className="card-surface p-8 bg-slate-900 text-white relative overflow-hidden">
                 <div className="relative z-10">
-                  <h3 className="text-lg font-bold mb-2">Booking Window</h3>
-                  <p className="text-slate-400 text-sm">Appointments can be booked up to 7 days in advance. Sundays are strictly closed for family and rest.</p>
+                  <h3 className="text-lg font-bold mb-2">{pageCopy.windowTitle}</h3>
+                  <p className="text-slate-400 text-sm">{pageCopy.windowBody}</p>
                 </div>
                 <div className="absolute top-0 right-0 h-20 w-20 bg-brand-500/10 rounded-full -mr-10 -mt-10 blur-2xl" />
               </div>
@@ -201,12 +207,12 @@ export default function Booking() {
                       <FiCheckCircle size={48} />
                     </div>
                     <div className="space-y-2">
-                      <h2 className="text-3xl font-extrabold text-slate-900">Booking Confirmed!</h2>
+                      <h2 className="text-3xl font-extrabold text-slate-900">{pageCopy.successTitle}</h2>
                       <p className="text-slate-600 max-w-md mx-auto">
-                        Thank you for scheduling a session. A confirmation email with meeting details will be sent to you shortly.
+                        {pageCopy.successBody}
                       </p>
                     </div>
-                    <Button to="/" variant="secondary">Return Home</Button>
+                    <Button to="/" variant="secondary">{pageCopy.returnHome}</Button>
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit(onSubmit)} className="form-dynamic-bg p-8 md:p-10 space-y-8 rounded-3xl border shadow-soft">
@@ -228,7 +234,7 @@ export default function Booking() {
                         <div className="grid gap-6 md:grid-cols-2">
                           <div className="space-y-2">
                             <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                              <FiUser size={14} className="text-brand-500" /> Full Name
+                              <FiUser size={14} className="text-brand-500" /> {pageCopy.fields.fullName}
                             </label>
                             <input 
                               {...register("client_name")}
@@ -239,7 +245,7 @@ export default function Booking() {
                           </div>
                           <div className="space-y-2">
                             <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                              <FiMail size={14} className="text-brand-500" /> Email Address
+                              <FiMail size={14} className="text-brand-500" /> {pageCopy.fields.email}
                             </label>
                             <input 
                               {...register("client_email")}
@@ -253,7 +259,7 @@ export default function Booking() {
                         <div className="grid gap-6 md:grid-cols-2">
                           <div className="space-y-2">
                             <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                              <FiPhone size={14} className="text-brand-500" /> Phone (Optional)
+                              <FiPhone size={14} className="text-brand-500" /> {pageCopy.fields.phone}
                             </label>
                             <input 
                               {...register("client_phone")}
@@ -263,7 +269,7 @@ export default function Booking() {
                           </div>
                           <div className="space-y-2">
                             <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                              <FiBriefcase size={14} className="text-brand-500" /> Company (Optional)
+                              <FiBriefcase size={14} className="text-brand-500" /> {pageCopy.fields.company}
                             </label>
                             <input 
                               {...register("company_name")}
@@ -275,13 +281,13 @@ export default function Booking() {
 
                         <div className="space-y-2">
                           <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                            <FiMessageSquare size={14} className="text-brand-500" /> Consultation Purpose
+                            <FiMessageSquare size={14} className="text-brand-500" /> {pageCopy.fields.purpose}
                           </label>
                           <textarea 
                             {...register("purpose")}
                             rows="4"
                             className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-brand-500 transition-colors"
-                            placeholder="Tell me about your project or goals..."
+                            placeholder={pageCopy.fields.purposePlaceholder}
                           />
                           {errors.purpose && <p className="text-xs text-red-500 font-medium">{errors.purpose.message}</p>}
                         </div>
@@ -297,7 +303,7 @@ export default function Booking() {
                               }
                             }}
                           >
-                            Choose Date & Time <FiArrowRight />
+                            {pageCopy.fields.chooseDateTime} <FiArrowRight />
                           </Button>
                         </div>
                       </motion.div>
@@ -311,7 +317,7 @@ export default function Booking() {
                       >
                         <div className="grid gap-8 md:grid-cols-2">
                           <div className="space-y-3">
-                            <label className="text-sm font-bold text-slate-700 block">Select Date</label>
+                            <label className="text-sm font-bold text-slate-700 block">{pageCopy.fields.selectDate}</label>
                             <DatePicker
                               selected={selectedDate}
                               onChange={(date) => setValue("meeting_date", date, { shouldValidate: true })}
@@ -324,7 +330,7 @@ export default function Booking() {
                           </div>
                           
                           <div className="space-y-4">
-                            <label className="text-sm font-bold text-slate-700 block">Select Time</label>
+                            <label className="text-sm font-bold text-slate-700 block">{pageCopy.fields.selectTime}</label>
                             <div className="grid grid-cols-2 gap-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                               {timeSlots.map((time) => (
                                 <button
@@ -348,7 +354,7 @@ export default function Booking() {
                         <div className="space-y-6 pt-6 border-t border-slate-100">
                           <div className="grid gap-6 md:grid-cols-2">
                             <div className="space-y-2">
-                              <label className="text-sm font-bold text-slate-700">Preferred Platform</label>
+                              <label className="text-sm font-bold text-slate-700">{pageCopy.fields.preferredPlatform}</label>
                               <div className="grid grid-cols-2 gap-3">
                                 {["Google Meet", "Zoom"].map((p) => (
                                   <button
@@ -367,12 +373,12 @@ export default function Booking() {
                               </div>
                             </div>
                             <div className="space-y-2">
-                              <label className="text-sm font-bold text-slate-700">Meeting Link (Optional)</label>
+                              <label className="text-sm font-bold text-slate-700">{pageCopy.fields.meetingLink}</label>
                               <div className="relative">
                                 <input 
                                   {...register("meeting_link")}
                                   className="w-full rounded-xl border border-slate-200 p-3 pl-10 outline-none focus:border-brand-500 transition-colors"
-                                  placeholder={`Paste your ${selectedPlatform} link`}
+                                  placeholder={pageCopy.fields.meetingLinkPlaceholder.replace("{platform}", selectedPlatform)}
                                 />
                                 <FiLink className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                               </div>
@@ -388,14 +394,14 @@ export default function Booking() {
                             className="flex-1 justify-center"
                             onClick={() => setStep(1)}
                           >
-                            Back
+                            {pageCopy.fields.back}
                           </Button>
                           <Button 
                             type="submit" 
                             className="flex-1 justify-center gap-2"
                             disabled={isSubmitting || !watch("meeting_time")}
                           >
-                            {isSubmitting ? "Processing..." : "Confirm Booking"} <FiCheckCircle />
+                            {isSubmitting ? pageCopy.fields.processing : pageCopy.fields.confirm} <FiCheckCircle />
                           </Button>
                         </div>
                       </motion.div>

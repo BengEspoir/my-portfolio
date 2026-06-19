@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
-import { FiLayout, FiFileText, FiMail, FiTrendingUp, FiPlus, FiArrowRight, FiMessageSquare, FiCalendar } from 'react-icons/fi';
+import { FiLayout, FiFileText, FiMail, FiTrendingUp, FiPlus, FiArrowRight, FiMessageSquare, FiCalendar, FiBriefcase } from 'react-icons/fi';
 import DashboardLayout from '../components/DashboardLayout';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
     projects: 0,
     blogPosts: 0,
+    experiences: 0,
     inquiries: 0,
     unreadInquiries: 0,
     testimonials: 0,
@@ -21,6 +22,7 @@ export default function AdminDashboard() {
       const [
         { count: projectsCount },
         { count: blogCount },
+        { count: experiencesCount },
         { count: inquiriesCount },
         { count: unreadCount },
         { count: testimonialsCount },
@@ -29,6 +31,7 @@ export default function AdminDashboard() {
       ] = await Promise.all([
         supabase.from('projects').select('*', { count: 'exact', head: true }),
         supabase.from('blog_posts').select('*', { count: 'exact', head: true }),
+        supabase.from('experiences').select('*', { count: 'exact', head: true }),
         supabase.from('contacts').select('*', { count: 'exact', head: true }),
         supabase.from('contacts').select('*', { count: 'exact', head: true }).eq('is_read', false),
         supabase.from('testimonials').select('*', { count: 'exact', head: true }),
@@ -39,6 +42,7 @@ export default function AdminDashboard() {
       setStats({
         projects: projectsCount || 0,
         blogPosts: blogCount || 0,
+        experiences: experiencesCount || 0,
         inquiries: inquiriesCount || 0,
         unreadInquiries: unreadCount || 0,
         testimonials: testimonialsCount || 0,
@@ -53,6 +57,7 @@ export default function AdminDashboard() {
 
   const statCards = [
     { label: 'Total Projects', value: stats.projects, icon: FiLayout, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+2 this month' },
+    { label: 'Experiences', value: stats.experiences, icon: FiBriefcase, color: 'text-cyan-600', bg: 'bg-cyan-50', trend: 'Homepage ready' },
     { label: 'Blog Posts', value: stats.blogPosts, icon: FiFileText, color: 'text-fuchsia-600', bg: 'bg-fuchsia-50', trend: '+1 this month' },
     { label: 'Testimonials', value: stats.testimonials, icon: FiMessageSquare, color: 'text-indigo-600', bg: 'bg-indigo-50', trend: `${stats.pendingTestimonials} pending` },
     { label: 'Pending Appointments', value: stats.pendingAppointments, icon: FiCalendar, color: 'text-rose-600', bg: 'bg-rose-50', trend: 'Schedule ready' },
@@ -67,7 +72,7 @@ export default function AdminDashboard() {
           <p className="text-slate-500">Welcome back! Here&apos;s what&apos;s happening with your portfolio.</p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {statCards.map((card) => {
             const Icon = card.icon;
             return (
@@ -109,7 +114,7 @@ export default function AdminDashboard() {
             <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
               <FiPlus className="text-brand-500" /> Quick Actions
             </h3>
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <Link 
                 to="/admin/projects/new"
                 className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-6 text-center transition-all hover:bg-brand-50 hover:border-brand-100 group"
@@ -118,6 +123,15 @@ export default function AdminDashboard() {
                   <FiLayout size={24} />
                 </div>
                 <span className="font-bold text-slate-900">New Project</span>
+              </Link>
+              <Link 
+                to="/admin/experiences/new"
+                className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-6 text-center transition-all hover:bg-cyan-50 hover:border-cyan-100 group"
+              >
+                <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center text-cyan-600 shadow-sm group-hover:scale-110 transition-transform">
+                  <FiBriefcase size={24} />
+                </div>
+                <span className="font-bold text-slate-900">New Experience</span>
               </Link>
               <Link 
                 to="/admin/blog/new"

@@ -7,8 +7,11 @@ import { isSupabaseConfigured, supabase } from '../utils/supabase';
 import SectionTitle from '../components/SectionTitle';
 import PageTransition from '../components/PageTransition';
 import { BlogCardSkeleton } from '../components/Skeleton';
+import { useI18n } from '../i18n';
 
 export default function Blog() {
+  const { locale, localizedPath, t } = useI18n();
+  const pageCopy = t("blog");
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,15 +45,15 @@ export default function Blog() {
   return (
     <PageTransition>
       <SEO
-        title="Blog | Beng Espoir"
-        description="Insights on product design, software engineering, UI/UX systems, and practical technology delivery."
+        title={t("seo.blog.title")}
+        description={t("seo.blog.description")}
         path="/blog"
       />
 
       <div className="site-container py-12 md:py-20">
         <SectionTitle
-          title="Insights & Articles"
-          subtitle="Sharing my thoughts on design systems, frontend development, and product strategy."
+          title={pageCopy.title}
+          subtitle={pageCopy.subtitle}
           align="center"
         />
 
@@ -65,7 +68,7 @@ export default function Blog() {
                 key={post.id}
                 className="group flex flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-soft transition-all hover:border-brand-100 hover:shadow-xl"
               >
-                <Link to={`/blog/${post.slug}`} className="relative block aspect-[16/9] overflow-hidden">
+                <Link to={localizedPath(`/blog/${post.slug}`)} className="relative block aspect-[16/9] overflow-hidden">
                   <OptimizedImage
                     src={post.cover_image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070&auto=format&fit=crop"}
                     alt={post.title}
@@ -82,16 +85,16 @@ export default function Blog() {
                   <div className="mb-3 flex items-center gap-4 text-xs text-slate-500">
                     <div className="flex items-center gap-1">
                       <FiCalendar />
-                      <span>{new Date(post.created_at).toLocaleDateString()}</span>
+                      <span>{new Date(post.created_at).toLocaleDateString(locale === "fr" ? "fr-FR" : undefined)}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <FiClock />
-                      <span>{post.reading_time || "5 min"} read</span>
+                      <span>{post.reading_time || "5 min"} {t("common.read")}</span>
                     </div>
                   </div>
 
                   <h3 className="mb-3 text-xl font-bold text-slate-900 transition-colors group-hover:text-brand-600">
-                    <Link to={`/blog/${post.slug}`}>{post.title}</Link>
+                    <Link to={localizedPath(`/blog/${post.slug}`)}>{post.title}</Link>
                   </h3>
 
                   <p className="mb-6 line-clamp-3 flex-1 text-slate-600">
@@ -99,10 +102,10 @@ export default function Blog() {
                   </p>
 
                   <Link
-                    to={`/blog/${post.slug}`}
+                    to={localizedPath(`/blog/${post.slug}`)}
                     className="mt-auto inline-flex items-center gap-2 font-semibold text-brand-600 transition-gap hover:gap-3"
                   >
-                    Read Article <FiArrowRight />
+                    {pageCopy.readArticle} <FiArrowRight />
                   </Link>
                 </div>
               </article>
@@ -110,7 +113,7 @@ export default function Blog() {
           </div>
         ) : (
           <div className="flex h-60 items-center justify-center rounded-3xl border-2 border-dashed border-slate-100 bg-slate-50 text-center">
-            <p className="text-lg text-slate-500">No articles published yet. Check back soon!</p>
+            <p className="text-lg text-slate-500">{pageCopy.empty}</p>
           </div>
         )}
       </div>

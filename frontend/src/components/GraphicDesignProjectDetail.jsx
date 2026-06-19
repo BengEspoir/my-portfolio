@@ -4,6 +4,7 @@ import Button from "./Button";
 import SectionTitle from "./SectionTitle";
 import TypewriterText from "./TypewriterText";
 import { getPublicUrl } from "../utils/supabase";
+import { useI18n } from "../i18n";
 
 function normalizeDesignImages(project) {
   const explicitImages = Array.isArray(project.design_images) ? project.design_images : [];
@@ -53,6 +54,8 @@ function DetailItem({ icon: Icon, label, value }) {
 }
 
 export default function GraphicDesignProjectDetail({ project }) {
+  const { localizedPath, t } = useI18n();
+  const pageCopy = t("projectDetail");
   const details = project.design_details || {};
   const designImages = normalizeDesignImages(project);
   const [mainImage, ...additionalImages] = designImages;
@@ -64,14 +67,14 @@ export default function GraphicDesignProjectDetail({ project }) {
   return (
     <div className="space-y-20 pb-24 pt-10">
       <section className="site-container">
-        <Link to="/portfolio" className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition-colors hover:text-brand-600">
-          <FiArrowLeft /> BACK TO PORTFOLIO
+        <Link to={localizedPath("/portfolio")} className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition-colors hover:text-brand-600">
+          <FiArrowLeft /> {t("common.backToPortfolio")}
         </Link>
 
         <div className="space-y-8">
           <div className="max-w-4xl space-y-4">
             <span className="inline-flex rounded-full bg-brand-50 px-4 py-1.5 text-sm font-bold text-brand-600">
-              Graphic Design
+              {pageCopy.graphicDesign}
             </span>
             <TypewriterText
               as="h1"
@@ -103,8 +106,8 @@ export default function GraphicDesignProjectDetail({ project }) {
       {additionalImages.length > 0 ? (
         <section className="site-container">
           <SectionTitle
-            title="Design Previews"
-            subtitle="Additional variations, pages, mockups, or supporting visual assets."
+            title={pageCopy.designPreviews}
+            subtitle={pageCopy.designPreviewsSubtitle}
           />
           <div className="grid gap-8 md:grid-cols-2">
             {additionalImages.map((image, index) => (
@@ -125,24 +128,24 @@ export default function GraphicDesignProjectDetail({ project }) {
 
       <section className="site-container">
         <SectionTitle
-          title="Design Details"
-          subtitle="Creative direction, design choices, production notes, and technical setup."
+          title={pageCopy.designDetails}
+          subtitle={pageCopy.designDetailsSubtitle}
         />
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          <DetailItem icon={FiLayers} label="Design Type" value={details.designType || details.design_type || project.project_type} />
-          <DetailItem icon={FiBriefcase} label="Client / Brand" value={details.clientName || details.client_name || project.client_company} />
-          <DetailItem icon={FiTarget} label="Objective" value={details.objective} />
-          <DetailItem icon={FiPenTool} label="Target Audience" value={details.targetAudience || details.target_audience} />
-          <DetailItem icon={FiType} label="Fonts" value={fontList.map((font) => typeof font === "string" ? font : `${font.name}${font.weights?.length ? ` (${font.weights.join(", ")})` : ""}`)} />
-          <DetailItem icon={FiType} label="Font Weights" value={fontWeights} />
-          <DetailItem icon={FiFileText} label="Style" value={details.style} />
-          <DetailItem icon={FiPenTool} label="Tools Used" value={toolsUsed} />
+          <DetailItem icon={FiLayers} label={pageCopy.detailLabels.designType} value={details.designType || details.design_type || project.project_type} />
+          <DetailItem icon={FiBriefcase} label={pageCopy.detailLabels.clientBrand} value={details.clientName || details.client_name || project.client_company} />
+          <DetailItem icon={FiTarget} label={pageCopy.detailLabels.objective} value={details.objective} />
+          <DetailItem icon={FiPenTool} label={pageCopy.detailLabels.targetAudience} value={details.targetAudience || details.target_audience} />
+          <DetailItem icon={FiType} label={pageCopy.detailLabels.fonts} value={fontList.map((font) => typeof font === "string" ? font : `${font.name}${font.weights?.length ? ` (${font.weights.join(", ")})` : ""}`)} />
+          <DetailItem icon={FiType} label={pageCopy.detailLabels.fontWeights} value={fontWeights} />
+          <DetailItem icon={FiFileText} label={pageCopy.detailLabels.style} value={details.style} />
+          <DetailItem icon={FiPenTool} label={pageCopy.detailLabels.toolsUsed} value={toolsUsed} />
         </div>
 
         {colorPalette.length > 0 ? (
           <div className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-card">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400">Color Palette</h3>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400">{pageCopy.detailLabels.colorPalette}</h3>
             <div className="mt-4 flex flex-wrap gap-3">
               {colorPalette.map((color) => (
                 <div key={color} className="flex items-center gap-2 rounded-full border border-slate-100 bg-slate-50 py-2 pl-2 pr-4">
@@ -155,14 +158,14 @@ export default function GraphicDesignProjectDetail({ project }) {
         ) : null}
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <DetailItem icon={FiFileText} label="Copywriting / Text" value={details.copywriting} />
-          <DetailItem icon={FiLayout} label="Layout Decisions" value={details.layoutNotes || details.layout_notes} />
-          <DetailItem icon={FiFileText} label="Important Notes" value={details.notes} />
+          <DetailItem icon={FiFileText} label={pageCopy.detailLabels.copywriting} value={details.copywriting} />
+          <DetailItem icon={FiLayout} label={pageCopy.detailLabels.layoutDecisions} value={details.layoutNotes || details.layout_notes} />
+          <DetailItem icon={FiFileText} label={pageCopy.detailLabels.notes} value={details.notes} />
         </div>
 
         <div className="mt-10 flex flex-wrap justify-center gap-3">
-          {project.figma_url ? <Button href={project.figma_url} target="_blank">View Source Design</Button> : null}
-          <Button to="/contact" variant="secondary">Start a Similar Project</Button>
+          {project.figma_url ? <Button href={project.figma_url} target="_blank">{pageCopy.viewSource}</Button> : null}
+          <Button to="/contact" variant="secondary">{pageCopy.similar}</Button>
         </div>
       </section>
     </div>

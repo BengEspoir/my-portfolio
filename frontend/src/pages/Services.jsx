@@ -6,6 +6,7 @@ import SectionTitle from "../components/SectionTitle";
 import SEO from "../components/SEO";
 import TestimonialHighway from "../components/TestimonialHighway";
 import TypewriterText from "../components/TypewriterText";
+import { useI18n } from "../i18n";
 
 const services = [
   {
@@ -110,35 +111,41 @@ const faqs = [
 ];
 
 export default function Services() {
+  const { t } = useI18n();
+  const pageCopy = t("services");
+  const serviceIcons = [FiPenTool, FiMonitor, FiLayout, FiCode, FiLayout, FiPenTool];
+  const localizedServices = pageCopy.items.map((service, index) => ({
+    ...service,
+    icon: serviceIcons[index]
+  }));
   const [openFaq, setOpenFaq] = useState(0);
 
   return (
     <div className="space-y-24 pb-24">
       <SEO
-        title="Services | Beng Espoir"
-        description="Explore UI/UX design, web development, graphic design, programming support, design audits, and prototype testing services by Beng Espoir."
+        title={t("seo.services.title")}
+        description={t("seo.services.description")}
         path="/services"
       />
       <section className="site-container pt-10">
         <div className="subtle-gradient mx-auto max-w-4xl rounded-[4rem] bg-white px-8 py-24 text-center shadow-soft">
           <TypewriterText
             as="h1"
-            text="What I Can Do For You"
+            text={pageCopy.heroTitle}
             startOnView={false}
             className="text-4xl font-extrabold text-slate-900 sm:text-5xl"
           />
           <p className="mx-auto mt-4 max-w-2xl text-xl text-slate-600">
-            I help brands, startups, and individuals build sleek, functional, and engaging digital
-            experiences.
+            {pageCopy.heroBody}
           </p>
         </div>
       </section>
 
       <section className="site-container">
-        <SectionTitle title="Services" />
+        <SectionTitle title={pageCopy.sectionTitle} />
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {services.map((service) => {
+          {localizedServices.map((service) => {
             const Icon = service.icon;
             return (
               <article key={service.title + service.description} className="card-surface p-7">
@@ -156,24 +163,24 @@ export default function Services() {
 
       <section className="site-container">
         <SectionTitle
-          title="Let's Tailor Your Needs"
-          description="Flexible packages designed to fit your stage, budget, and delivery timeline."
+          title={pageCopy.tailorTitle}
+          description={pageCopy.tailorBody}
         />
 
         <div className="grid gap-6 lg:grid-cols-3">
-          {pricingPlans.map((plan) => (
-            <PricingCard key={plan.title} {...plan} />
+          {pageCopy.plans.map((plan) => (
+            <PricingCard key={plan.title} {...plan} popularLabel={pageCopy.popular} />
           ))}
         </div>
 
         <div className="mt-10 text-center">
           <p className="text-lg text-slate-600">
-            Not sure which package fits your project? Let&apos;s discuss and map the right scope.
+            {pageCopy.unsure}
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
-            <Button to="/booking">Book a Free Consultation</Button>
+            <Button to="/booking">{pageCopy.book}</Button>
             <Button to="/contact" variant="secondary">
-              Contact Me Directly
+              {pageCopy.contact}
             </Button>
           </div>
         </div>
@@ -183,7 +190,7 @@ export default function Services() {
 
       <section className="site-container">
         <div className="overflow-hidden rounded-2xl border border-brand-200 bg-white">
-          {faqs.map((faq, index) => {
+          {pageCopy.faqs.map((faq, index) => {
             const isOpen = openFaq === index;
             return (
               <article

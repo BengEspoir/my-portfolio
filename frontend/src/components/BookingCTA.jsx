@@ -2,8 +2,11 @@ import { motion } from 'framer-motion';
 import Button from './Button';
 import TypewriterText from './TypewriterText';
 import { FiCalendar } from 'react-icons/fi';
+import { useI18n } from '../i18n';
 
 export default function BookingCTA() {
+  const { t } = useI18n();
+
   return (
     <section className="site-container py-20">
       <motion.div
@@ -44,7 +47,7 @@ export default function BookingCTA() {
             >
               <TypewriterText
                 as="h2"
-                text="Ready to Transform Your Digital Future?"
+                text={t("bookingCta.title")}
                 className="text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl"
               />
             </motion.div>
@@ -57,7 +60,7 @@ export default function BookingCTA() {
               viewport={{ once: true }}
               className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed"
             >
-              Schedule a direct consultation to discuss your project, goals, and how I can help bring your vision to life. Let&apos;s create something extraordinary together.
+              {t("bookingCta.body")}
             </motion.p>
 
             {/* CTA Button */}
@@ -74,7 +77,7 @@ export default function BookingCTA() {
                 className="inline-flex items-center gap-2 text-lg px-8 py-4 font-bold hover:scale-105 transition-transform"
               >
                 <FiCalendar size={20} />
-                Book a Consultation
+                {t("bookingCta.cta")}
               </Button>
             </motion.div>
 
@@ -86,7 +89,7 @@ export default function BookingCTA() {
               viewport={{ once: true }}
               className="text-white/70 text-sm md:text-base mt-8"
             >
-              ✨ Available 7 days in advance • 30-60 min sessions • Google Meet or Zoom
+              {t("bookingCta.support")}
             </motion.p>
           </div>
         </div>

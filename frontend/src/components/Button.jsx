@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import { Link } from "react-router-dom";
 import { createMagneticHandlers, hoverLift, magneticButton } from "../animations/motion";
+import { useI18n } from "../i18n";
 
 const variantStyles = {
   primary: "bg-brand-500 text-white hover:bg-brand-600",
@@ -55,6 +56,7 @@ const Button = forwardRef(function Button({
   disabled = false,
   ...props
 }, ref) {
+  const { localizedPath } = useI18n();
   const useMagnetic = (variant === "primary" || variant === "cta") && !disabled;
   const magneticHandlers = createMagneticHandlers(useMagnetic);
   const classes = buildClassName(
@@ -76,7 +78,7 @@ const Button = forwardRef(function Button({
 
   if (to) {
     return (
-      <Link to={to} ref={ref} {...sharedProps}>
+      <Link to={typeof to === "string" ? localizedPath(to) : to} ref={ref} {...sharedProps}>
         {children}
       </Link>
     );

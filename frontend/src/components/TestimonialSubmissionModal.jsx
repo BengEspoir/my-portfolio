@@ -12,6 +12,7 @@ import {
 } from "react-icons/fi";
 import Button from "./Button";
 import { submitTestimonial } from "../utils/api";
+import { useI18n } from "../i18n";
 
 const initialForm = {
   client_name: "",
@@ -24,28 +25,28 @@ const initialForm = {
 const maxImageSize = 2 * 1024 * 1024;
 const allowedImageTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
-function validateForm(formData, imageFile) {
+function validateForm(formData, imageFile, messages) {
   const errors = {};
   const messageWords = formData.content.trim().split(/\s+/).filter(Boolean);
 
-  if (!formData.client_name.trim()) errors.client_name = "Your name is required.";
-  if (!formData.client_role.trim()) errors.client_role = "Your role or relationship is required.";
+  if (!formData.client_name.trim()) errors.client_name = messages.name;
+  if (!formData.client_role.trim()) errors.client_role = messages.role;
   if (!formData.content.trim()) {
-    errors.content = "Please write your review.";
+    errors.content = messages.content;
   } else if (messageWords.length < 6) {
-    errors.content = "Please share a little more detail about the work.";
+    errors.content = messages.contentLength;
   }
 
   const rating = Number(formData.rating);
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
-    errors.rating = "Choose a rating between 1 and 5.";
+    errors.rating = messages.rating;
   }
 
   if (imageFile) {
     if (!allowedImageTypes.includes(imageFile.type)) {
-      errors.profile_image = "Upload a JPG, PNG, WEBP, or GIF image.";
+      errors.profile_image = messages.imageType;
     } else if (imageFile.size > maxImageSize) {
-      errors.profile_image = "Image must be 2 MB or smaller.";
+      errors.profile_image = messages.imageSize;
     }
   }
 
@@ -53,6 +54,7 @@ function validateForm(formData, imageFile) {
 }
 
 export default function TestimonialSubmissionModal({ isOpen, onClose }) {
+  const { t } = useI18n();
   const [formData, setFormData] = useState(initialForm);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
@@ -145,7 +147,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const validationErrors = validateForm(formData, imageFile);
+    const validationErrors = validateForm(formData, imageFile, t("review.errors"));
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -170,13 +172,12 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
       setImageFile(null);
       setStatus({
         type: "success",
-        message:
-          "Thank you for sharing your review. It has been submitted and may take some time to review and approve before it appears on the website."
+        message: t("review.success")
       });
     } catch (error) {
       setStatus({
         type: "error",
-        message: error.message || "Your review could not be submitted right now. Please try again later."
+        message: error.message || t("review.error")
       });
     } finally {
       setSubmitting(false);
@@ -188,7 +189,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
       <button
         type="button"
         className="absolute inset-0 cursor-default"
-        aria-label="Close review form"
+        aria-label={t("review.closeForm")}
         onClick={onClose}
       />
 
@@ -201,19 +202,19 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
       >
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-5 py-5 sm:px-8">
           <div>
-            <p className="text-sm font-semibold uppercase text-brand-500">Review submission</p>
+            <p className="text-sm font-semibold uppercase text-brand-500">{t("review.modalEyebrow")}</p>
             <h2 id="testimonial-modal-title" className="mt-1 text-2xl font-extrabold text-slate-900 sm:text-3xl">
-              Have we worked together?
+              {t("review.modalHeadline")}
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-              Share your experience. I review every submission before it appears publicly.
+              {t("review.modalBody")}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:text-slate-900"
-            aria-label="Close review form"
+            aria-label={t("review.closeForm")}
           >
             <FiX size={20} />
           </button>
@@ -225,7 +226,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
               <div className="grid gap-5 md:grid-cols-2">
                 <div>
                   <label htmlFor="testimonial-client-name" className="mb-2 block text-sm font-bold text-slate-700">
-                    Client / collaborator name
+                    {t("review.fields.name")}
                   </label>
                   <div className="relative">
                     <input
@@ -250,7 +251,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
 
                 <div>
                   <label htmlFor="testimonial-client-role" className="mb-2 block text-sm font-bold text-slate-700">
-                    Role / relationship
+                    {t("review.fields.role")}
                   </label>
                   <div className="relative">
                     <input
@@ -259,7 +260,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
                       value={formData.client_role}
                       onChange={handleChange}
                       maxLength={120}
-                      placeholder="Client, Mentor, Peer"
+                      placeholder={t("review.fields.rolePlaceholder")}
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 outline-none transition focus:border-brand-500 focus:bg-white"
                       aria-invalid={Boolean(errors.client_role)}
                       aria-describedby={errors.client_role ? "testimonial-client-role-error" : undefined}
@@ -276,7 +277,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
 
               <div>
                 <label htmlFor="testimonial-client-company" className="mb-2 block text-sm font-bold text-slate-700">
-                  Company / project name <span className="font-normal text-slate-400">(Optional)</span>
+                  {t("review.fields.company")} <span className="font-normal text-slate-400">({t("common.optional")})</span>
                 </label>
                 <input
                   id="testimonial-client-company"
@@ -284,14 +285,14 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
                   value={formData.client_company}
                   onChange={handleChange}
                   maxLength={160}
-                  placeholder="Project, company, class, or team"
+                  placeholder={t("review.fields.companyPlaceholder")}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-brand-500 focus:bg-white"
                 />
               </div>
 
               <div>
                 <label htmlFor="testimonial-content" className="mb-2 block text-sm font-bold text-slate-700">
-                  Testimonial text
+                  {t("review.fields.content")}
                 </label>
                 <textarea
                   id="testimonial-content"
@@ -300,7 +301,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
                   onChange={handleChange}
                   maxLength={1200}
                   rows={7}
-                  placeholder="What was it like working together?"
+                  placeholder={t("review.fields.contentPlaceholder")}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-brand-500 focus:bg-white"
                   aria-invalid={Boolean(errors.content)}
                   aria-describedby={errors.content ? "testimonial-content-error" : undefined}
@@ -320,8 +321,8 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
 
             <aside className="space-y-5">
               <div>
-                <span className="mb-2 block text-sm font-bold text-slate-700">Rating</span>
-                <div className="flex gap-2" role="radiogroup" aria-label="Testimonial rating">
+                <span className="mb-2 block text-sm font-bold text-slate-700">{t("review.fields.rating")}</span>
+                <div className="flex gap-2" role="radiogroup" aria-label={t("review.fields.rating")}>
                   {[1, 2, 3, 4, 5].map((rating) => {
                     const isSelected = Number(formData.rating) >= rating;
                     return (
@@ -349,13 +350,13 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
 
               <div>
                 <label htmlFor="testimonial-profile-image" className="mb-2 block text-sm font-bold text-slate-700">
-                  Profile image <span className="font-normal text-slate-400">(Optional)</span>
+                  {t("review.fields.profileImage")} <span className="font-normal text-slate-400">({t("common.optional")})</span>
                 </label>
                 <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
                   <div className="flex items-center gap-4">
                     <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white text-slate-300 ring-1 ring-slate-200">
                       {imagePreview ? (
-                        <img src={imagePreview} alt="Selected profile preview" className="h-full w-full object-cover" />
+                        <img src={imagePreview} alt={t("review.fields.selectedPreviewAlt")} className="h-full w-full object-cover" />
                       ) : (
                         <FiImage size={28} />
                       )}
@@ -366,7 +367,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
                         className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-card transition hover:text-brand-600"
                       >
                         <FiUpload />
-                        Upload image
+                        {t("review.fields.uploadImage")}
                       </label>
                       <input
                         id="testimonial-profile-image"
@@ -376,7 +377,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
                         className="sr-only"
                         aria-describedby={errors.profile_image ? "testimonial-profile-image-error" : undefined}
                       />
-                      <p className="mt-2 text-xs text-slate-500">JPG, PNG, WEBP, or GIF. Max 2 MB.</p>
+                      <p className="mt-2 text-xs text-slate-500">{t("review.fields.imageHelp")}</p>
                     </div>
                   </div>
                   {imageFile ? (
@@ -385,7 +386,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
                       onClick={clearImage}
                       className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-red-600"
                     >
-                      <FiTrash2 /> Remove image
+                      <FiTrash2 /> {t("review.fields.removeImage")}
                     </button>
                   ) : null}
                   {errors.profile_image ? (
@@ -396,12 +397,12 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-brand-100 bg-brand-50/70 p-4 text-sm leading-6 text-slate-700">
-                <div className="mb-2 inline-flex items-center gap-2 font-bold text-brand-600">
-                  <FiCheckCircle /> Moderated review
+              <div className="rounded-2xl border border-brand-100 bg-brand-50/70 p-4 text-sm leading-6 text-slate-700 dark:border-brand-500/30 dark:bg-indigo-950/30 dark:text-slate-300">
+                <div className="mb-2 inline-flex items-center gap-2 font-bold text-brand-600 dark:text-brand-300">
+                  <FiCheckCircle /> {t("review.fields.moderatedTitle")}
                 </div>
                 <p>
-                  Your review is saved as pending first. It only joins the public testimonial section after dashboard approval.
+                  {t("review.fields.moderatedBody")}
                 </p>
               </div>
             </aside>
@@ -421,10 +422,10 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
 
           <div className="mt-6 flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-end">
             <Button type="button" variant="secondary" onClick={onClose}>
-              Close
+              {t("common.close")}
             </Button>
             <Button type="submit" className="gap-2" disabled={submitting}>
-              {submitting ? "Submitting..." : "Submit review"} <FiSend />
+              {submitting ? t("review.submitting") : t("review.submit")} <FiSend />
             </Button>
           </div>
         </form>

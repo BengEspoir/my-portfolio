@@ -16,8 +16,10 @@ import {
 } from 'react-icons/fi';
 import DashboardLayout from '../components/DashboardLayout';
 import Button from '../components/Button';
+import QuickImportAssistant from '../components/QuickImportAssistant';
 import Toast from '../components/Toast';
 import { createStorageFileName } from '../utils/files';
+import { slugify } from '../utils/text';
 
 const CATEGORIES = ["UI/UX", "WEB DEV", "MOBILE DEV", "GRAPHICS DESIGN", "PROGRAMMING"];
 
@@ -166,6 +168,29 @@ export default function AdminProjectForm() {
 
   const handleDesignDetailsListChange = (name, value) => {
     handleDesignDetailsChange(name, inputToList(value));
+  };
+
+  const handleQuickImport = (result) => {
+    const title = String(result.title || '').trim();
+    const description = String(result.description || '').trim();
+    const caseStudyContent = String(result.case_study_content || '').trim();
+    const tags = Array.isArray(result.tags)
+      ? result.tags.map((tag) => String(tag).trim()).filter(Boolean)
+      : [];
+
+    setFormData((previous) => ({
+      ...previous,
+      title: title || previous.title,
+      slug: previous.slug || slugify(title),
+      description: description || previous.description,
+      case_study_title: title || previous.case_study_title,
+      project_background: caseStudyContent || description || previous.project_background,
+      tools_tech: tags.length > 0 ? tags : previous.tools_tech,
+      seo_title: title ? `${title} | Project Case Study` : previous.seo_title,
+      seo_description: description || previous.seo_description
+    }));
+    setActiveTab('basic');
+    setToast({ type: 'success', message: 'AI assistant populated the project draft. Review before saving.' });
   };
 
   const updateDesignImageAlt = (index, alt) => {
@@ -328,6 +353,13 @@ export default function AdminProjectForm() {
             </Button>
           </div>
         </div>
+
+        <QuickImportAssistant
+          contentType="project"
+          currentDraft={formData}
+          onApply={handleQuickImport}
+          placeholder="Paste a project debrief, client notes, case study draft, or rough product description..."
+        />
 
         {/* Tab Navigation */}
         <div className="flex border-b border-slate-200">

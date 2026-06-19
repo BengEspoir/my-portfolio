@@ -8,35 +8,39 @@ import {
   FiSend
 } from "react-icons/fi";
 import { Link, NavLink } from "react-router-dom";
+import LanguageToggle from "./LanguageToggle";
+import { useI18n } from "../i18n";
 
 const desktopLinks = [
-  { label: "Home", to: "/" },
-  { label: "About", to: "/about" },
-  { label: "Portfolio", to: "/portfolio" },
-  { label: "Services", to: "/services" },
-  { label: "Leave a Review", to: "/?review=1", review: true },
-  { label: "Contact", to: "/contact" }
+  { labelKey: "nav.home", to: "/" },
+  { labelKey: "nav.about", to: "/about" },
+  { labelKey: "nav.portfolio", to: "/portfolio" },
+  { labelKey: "nav.services", to: "/services" },
+  { labelKey: "footer.review", to: "/?review=1", review: true },
+  { labelKey: "nav.contact", to: "/contact" }
 ];
 
 const mobileLinks = [
-  { label: "Home", to: "/", icon: FiHome },
-  { label: "Portfolio", to: "/portfolio", icon: FiBriefcase },
-  { label: "Services", to: "/services", icon: FiLayers },
-  { label: "Contact", to: "/contact", icon: FiMail },
-  { label: "Book", to: "/booking", icon: FiCalendar, cta: true }
+  { labelKey: "nav.home", to: "/", icon: FiHome },
+  { labelKey: "nav.portfolio", to: "/portfolio", icon: FiBriefcase },
+  { labelKey: "nav.services", to: "/services", icon: FiLayers },
+  { labelKey: "nav.contact", to: "/contact", icon: FiMail },
+  { labelKey: "nav.book", to: "/booking", icon: FiCalendar, cta: true }
 ];
 
 export default function Footer() {
+  const { localizedPath, t } = useI18n();
+
   return (
     <footer className="relative border-t border-slate-100 footer-dynamic-bg backdrop-blur-xl">
       <div className="site-container hidden py-10 sm:block">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_1.4fr_auto] lg:items-center">
           <div>
-            <NavLink to="/" className="text-lg font-extrabold text-slate-900">
+            <NavLink to={localizedPath("/")} className="text-lg font-extrabold text-slate-900" translate="no">
               Beng Espoir Nong
             </NavLink>
             <p className="mt-2 max-w-sm text-sm leading-6 text-slate-600">
-              Product design, frontend systems, and practical software support from Yaounde.
+              {t("footer.tagline")}
             </p>
           </div>
 
@@ -45,15 +49,16 @@ export default function Footer() {
               link.review ? (
                 <Link
                   key={`footer-${link.to}`}
-                  to={link.to}
+                  to={localizedPath(link.to)}
                   className="text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-brand-500"
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               ) : (
                 <NavLink
                   key={`footer-${link.to}`}
-                  to={link.to}
+                  to={localizedPath(link.to)}
+                  end={link.to === "/"}
                   className={({ isActive }) =>
                     [
                       "text-sm font-semibold transition-colors duration-200",
@@ -61,7 +66,7 @@ export default function Footer() {
                     ].join(" ")
                   }
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </NavLink>
               )
             ))}
@@ -71,24 +76,25 @@ export default function Footer() {
             <a
               href="mailto:mbengespoir@gmail.com"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:-translate-y-0.5 hover:border-brand-200 hover:text-brand-600"
-              aria-label="Email Beng Espoir"
+              aria-label={t("footer.emailLabel")}
             >
               <FiSend />
             </a>
+            <LanguageToggle />
             <NavLink
-              to="/booking"
+              to={localizedPath("/booking")}
               className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-bold text-white shadow-card transition hover:-translate-y-0.5 hover:bg-brand-600"
             >
               <FiCalendar />
-              Book Consultation
+              {t("footer.bookConsultation")}
             </NavLink>
           </div>
         </div>
 
         <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-5 text-sm text-slate-500">
-          <p>(c) 2025 BengEspoir. All rights reserved.</p>
+          <p>{t("footer.copyright")}</p>
           <p className="flex items-center gap-1">
-            Designed & built with <FiHeart className="text-red-500" />
+            {t("footer.built")} <FiHeart className="text-red-500" />
           </p>
         </div>
       </div>
@@ -104,7 +110,7 @@ export default function Footer() {
             return (
               <li key={`mobile-footer-${link.to}`}>
                 <NavLink
-                  to={link.to}
+                  to={localizedPath(link.to)}
                   end={link.to === "/"}
                   className={({ isActive }) =>
                     [
@@ -118,7 +124,7 @@ export default function Footer() {
                   }
                 >
                   <Icon className="text-lg" />
-                  <span>{link.label}</span>
+                  <span>{t(link.labelKey)}</span>
                 </NavLink>
               </li>
             );

@@ -8,9 +8,11 @@ import { absoluteUrl, siteConfig } from '../config/site';
 import { isSupabaseConfigured, supabase } from '../utils/supabase';
 import PageTransition from "../components/PageTransition";
 import TypewriterText from "../components/TypewriterText";
+import { useI18n } from '../i18n';
 
 export default function BlogPost() {
   const { slug } = useParams();
+  const { locale, localizedPath, t } = useI18n();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -55,13 +57,13 @@ export default function BlogPost() {
       <div className="site-container py-32 text-center min-h-[60vh] flex flex-col items-center justify-center">
         <TypewriterText
           as="h1"
-          text="Post not found"
+          text={t("blog.notFoundTitle")}
           startOnView={false}
           className="mb-6 text-3xl font-bold text-slate-900"
         />
-        <p className="text-slate-600 mb-8">The article you're looking for doesn't exist or has been removed.</p>
-        <Link to="/blog" className="inline-flex items-center justify-center h-12 px-6 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-colors">
-          <FiArrowLeft className="mr-2" /> Back to Blog
+        <p className="text-slate-600 mb-8">{t("blog.notFoundBody")}</p>
+        <Link to={localizedPath("/blog")} className="inline-flex items-center justify-center h-12 px-6 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-colors">
+          <FiArrowLeft className="mr-2" /> {t("common.backToBlog")}
         </Link>
       </div>
     );
@@ -98,11 +100,11 @@ export default function BlogPost() {
       <article className="pt-24 pb-32">
       {/* Header */}
       <header className="site-container max-w-4xl text-center mb-16">
-        <Link to="/blog" className="inline-flex items-center text-brand-600 hover:text-brand-700 mb-10 font-medium transition-colors">
-          <FiArrowLeft className="mr-2" /> Back to Blog
+        <Link to={localizedPath("/blog")} className="inline-flex items-center text-brand-600 hover:text-brand-700 mb-10 font-medium transition-colors">
+          <FiArrowLeft className="mr-2" /> {t("common.backToBlog")}
         </Link>
         <p className="text-sm font-bold tracking-widest text-slate-400 uppercase mb-5">
-          {new Date(post.published_at || post.created_at).toLocaleDateString('en-US', {
+          {new Date(post.published_at || post.created_at).toLocaleDateString(locale === "fr" ? "fr-FR" : "en-US", {
             month: 'long',
             day: 'numeric',
             year: 'numeric',
@@ -129,7 +131,9 @@ export default function BlogPost() {
             )}
             <div className="text-left">
               <span className="block font-bold text-slate-900">{post.author_name}</span>
-              <span className="block text-sm text-slate-500">Author • {post.reading_time || "5 min"} read</span>
+              <span className="block text-sm text-slate-500">
+                {t("common.author")} {"\u2022"} {post.reading_time || "5 min"} {t("common.read")}
+              </span>
             </div>
           </div>
         )}

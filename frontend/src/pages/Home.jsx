@@ -40,11 +40,12 @@ import TestimonialSubmissionModal from "../components/TestimonialSubmissionModal
 import BookingCTA from "../components/BookingCTA";
 import TypewriterText from "../components/TypewriterText";
 import { ProjectCardSkeleton } from "../components/Skeleton";
-import { revealUp, staggerContainer } from "../animations/motion";
-import { skillCategories, toolSkills } from "../data/skills";
+import { revealUp } from "../animations/motion";
+import { aiDevelopmentStrengths, skillCategories, toolSkills } from "../data/skills";
 import { sendContactEmail } from "../utils/api";
 import { isSupabaseConfigured, supabase, getPublicUrl } from "../utils/supabase";
 import { buildPersonJsonLd, buildWebsiteJsonLd } from "../config/site";
+import { useI18n } from "../i18n";
 
 const services = [
   {
@@ -132,18 +133,18 @@ const contactSocialLinks = [
   { icon: FaYoutube, href: "https://youtube.com", label: "YouTube" }
 ];
 
-function validateContactForm(formData) {
+function validateContactForm(formData, messages) {
   const errors = {};
 
-  if (!formData.name.trim()) errors.name = "Name is required.";
+  if (!formData.name.trim()) errors.name = messages.nameRequired;
   if (!formData.email.trim()) {
-    errors.email = "Email is required.";
+    errors.email = messages.emailRequired;
   } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-    errors.email = "Enter a valid email address.";
+    errors.email = messages.emailInvalid;
   }
 
-  if (!formData.subject.trim()) errors.subject = "Subject is required.";
-  if (!formData.message.trim()) errors.message = "Message is required.";
+  if (!formData.subject.trim()) errors.subject = messages.subjectRequired;
+  if (!formData.message.trim()) errors.message = messages.messageRequired;
 
   return errors;
 }
@@ -164,12 +165,51 @@ const toolColumns = [
   { domain: "documentation", title: "Docs" }
 ];
 
+function localizeExperienceRow(row, locale) {
+  const useFrench = locale === "fr";
+  return {
+    id: row.id || row.slug || row.company,
+    slug: row.slug,
+    company: row.company,
+    title: useFrench && row.title_fr ? row.title_fr : row.title,
+    period: useFrench && row.period_fr ? row.period_fr : row.period,
+    description: useFrench && row.description_fr ? row.description_fr : row.description,
+    tags: useFrench && Array.isArray(row.tags_fr) && row.tags_fr.length > 0 ? row.tags_fr : row.tags || []
+  };
+}
+
 export default function Home() {
+  const { locale, t } = useI18n();
+  const homeCopy = t("home");
+  const formCopy = t("forms.contact");
+  const skillCategoryCopy = t("skillsData.categories");
+  const aiStrengthCopy = t("skillsData.aiStrengths");
+  const serviceIcons = [FiPenTool, FiLayers, FiCode, FiGlobe];
+  const localizedServices = homeCopy.services.items.map((service, index) => ({
+    ...service,
+    icon: serviceIcons[index]
+  }));
+  const localizedSkillCategories = skillCategories.map((group, index) => ({
+    ...group,
+    title: skillCategoryCopy[index]?.title || group.title,
+    items: skillCategoryCopy[index]?.items || group.items
+  }));
+  const localizedAiStrengths = aiDevelopmentStrengths.map((item, index) => ({
+    ...item,
+    title: aiStrengthCopy[index]?.title || item.title,
+    description: aiStrengthCopy[index]?.description || item.description
+  }));
+  const localizedToolColumns = toolColumns.map((column) => ({
+    ...column,
+    title: homeCopy.skills.toolColumns[column.domain] || column.title
+  }));
+  const fallbackExperiences = homeCopy.experience.items;
   const [searchParams, setSearchParams] = useSearchParams();
   const reviewPromptRef = useRef(null);
   const [activeExperience, setActiveExperience] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
-  const activeExperienceItem = experiences[activeExperience];
+  const [experienceItems, setExperienceItems] = useState(fallbackExperiences);
+  const activeExperienceItem = experienceItems[activeExperience] || experienceItems[0] || fallbackExperiences[0];
   const [contactFormData, setContactFormData] = useState(contactInitialForm);
   const [contactErrors, setContactErrors] = useState({});
   const [isContactSending, setIsContactSending] = useState(false);
@@ -210,6 +250,35 @@ export default function Home() {
 
     fetchHomeProjects();
   }, []);
+
+  useEffect(() => {
+    async function fetchExperiences() {
+      setExperienceItems(fallbackExperiences);
+      setActiveExperience(0);
+
+      if (!isSupabaseConfigured) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('experiences')
+          .select('id, slug, company, title, period, description, tags, title_fr, period_fr, description_fr, tags_fr')
+          .eq('status', 'published')
+          .order('sort_order', { ascending: true })
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+
+        const publishedExperiences = (data || []).map((item) => localizeExperienceRow(item, locale));
+        if (publishedExperiences.length > 0) {
+          setExperienceItems(publishedExperiences);
+        }
+      } catch (error) {
+        console.warn('Experience data unavailable. Using local fallback.');
+      }
+    }
+
+    fetchExperiences();
+  }, [fallbackExperiences, locale]);
 
   useEffect(() => {
     setIsReviewModalOpen(searchParams.get("review") === "1");
@@ -269,7 +338,7 @@ export default function Home() {
   const handleContactSubmit = async (event) => {
     event.preventDefault();
 
-    const validationErrors = validateContactForm(contactFormData);
+    const validationErrors = validateContactForm(contactFormData, formCopy);
     if (Object.keys(validationErrors).length > 0) {
       setContactErrors(validationErrors);
       setContactStatus({ type: "", message: "" });
@@ -282,13 +351,13 @@ export default function Home() {
       await sendContactEmail(contactFormData);
       setContactStatus({
         type: "success",
-        message: "Your message has been sent successfully. I will get back to you soon."
+        message: formCopy.success
       });
       setContactFormData(contactInitialForm);
     } catch (error) {
       setContactStatus({
         type: "error",
-        message: "Message could not be sent. Please try again later."
+        message: formCopy.error
       });
     } finally {
       setIsContactSending(false);
@@ -296,19 +365,19 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (!isAutoPlay) return;
+    if (!isAutoPlay || experienceItems.length <= 1) return undefined;
     const intervalId = window.setInterval(() => {
-      setActiveExperience((currentIndex) => (currentIndex + 1) % experiences.length);
+      setActiveExperience((currentIndex) => (currentIndex + 1) % experienceItems.length);
     }, 5000);
 
     return () => window.clearInterval(intervalId);
-  }, [isAutoPlay]);
+  }, [isAutoPlay, experienceItems.length]);
 
   return (
     <PageTransition>
       <SEO
-        title="Beng Espoir | Product Designer & Software Engineer"
-        description="Portfolio of Beng Espoir Nong, a product designer and software engineering student specializing in UI/UX, web, mobile, and AI-assisted development."
+        title={t("seo.home.title")}
+        description={t("seo.home.description")}
         path="/"
         image="/images/portfolio-pic.jpg"
         jsonLd={[buildPersonJsonLd(), buildWebsiteJsonLd()]}
@@ -320,21 +389,20 @@ export default function Home() {
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <div className="space-y-6">
               <span className="inline-flex rounded-full bg-brand-50 px-4 py-1 text-sm font-semibold text-brand-600">
-                Product Designer and Software Engineering Student
+                {homeCopy.hero.eyebrow}
               </span>
               <TypewriterText
                 as="h1"
-                text="Hi I'm Beng Espoir Nong"
+                text={homeCopy.hero.title}
                 startOnView={false}
                 className="text-4xl font-extrabold leading-tight text-slate-900 sm:text-5xl"
               />
               <p className="max-w-xl text-lg text-slate-600">
-                I build meaningful digital products through UI/UX design, full-stack & mobile development,
-                and AI-powered system architecture.
+                {homeCopy.hero.body}
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button to="/booking" variant="cta" className="gap-2">
-                  Book a Consultation <FiArrowRight />
+                  {homeCopy.hero.book} <FiArrowRight />
                 </Button>
                 <Button
                   href="/resume.pdf"
@@ -342,7 +410,7 @@ export default function Home() {
                   className="gap-2"
                   download
                 >
-                  Download Resume <FiDownload />
+                  {homeCopy.hero.resume} <FiDownload />
                 </Button>
               </div>
             </div>
@@ -351,7 +419,7 @@ export default function Home() {
               <div className="overflow-hidden rounded-3xl bg-brand-100 p-2 shadow-soft">
                 <img
                   src={getPublicUrl("images/portfolio-pic.jpg")}
-                  alt="Beng Espoir portrait"
+                  alt={homeCopy.hero.portraitAlt}
                   className="h-full w-full rounded-[1.25rem] object-cover"
                   loading="lazy"
                 />
@@ -363,8 +431,8 @@ export default function Home() {
 
       <section className="site-container">
         <SectionTitle
-          title="About Me"
-          description="I blend design thinking with engineering foundations to craft digital experiences that are clear, practical, and polished."
+          title={homeCopy.about.title}
+          description={homeCopy.about.description}
         />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
           {/* Bento Item 1: Experience (Spans 2 columns on desktop) */}
@@ -373,8 +441,8 @@ export default function Home() {
               <FiCalendar size={24} />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-slate-900">Experience</h3>
-              <p className="mt-1 text-slate-600">2+ years of practical projects and collaborations.</p>
+              <h3 className="text-lg font-semibold text-slate-900">{homeCopy.about.cards[0].title}</h3>
+              <p className="mt-1 text-slate-600">{homeCopy.about.cards[0].body}</p>
             </div>
           </article>
 
@@ -384,8 +452,8 @@ export default function Home() {
               <FiPenTool size={24} />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-slate-900">Design Focus</h3>
-              <p className="mt-1 text-slate-600">UI/UX & Branding</p>
+              <h3 className="text-lg font-semibold text-slate-900">{homeCopy.about.cards[1].title}</h3>
+              <p className="mt-1 text-slate-600">{homeCopy.about.cards[1].body}</p>
             </div>
           </article>
 
@@ -395,8 +463,8 @@ export default function Home() {
               <FiMapPin size={24} />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-slate-900">Location</h3>
-              <p className="mt-1 text-slate-600">Yaounde, Cameroon</p>
+              <h3 className="text-lg font-semibold text-slate-900">{homeCopy.about.cards[2].title}</h3>
+              <p className="mt-1 text-slate-600">{homeCopy.about.cards[2].body}</p>
             </div>
           </article>
 
@@ -406,8 +474,8 @@ export default function Home() {
               <FiUsers size={24} />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-slate-900">Collaboration</h3>
-              <p className="mt-1 text-slate-600">Git, GitHub, agile workflows</p>
+              <h3 className="text-lg font-semibold text-slate-900">{homeCopy.about.cards[3].title}</h3>
+              <p className="mt-1 text-slate-600">{homeCopy.about.cards[3].body}</p>
             </div>
           </article>
         </div>
@@ -415,24 +483,17 @@ export default function Home() {
 
       <section className="site-container" data-motion={revealUp}>
         <SectionTitle
-          title="Skills & Tools"
-          description="A practical mix of design, development, programming, documentation, and collaboration skills used to deliver complete digital solutions."
+          title={homeCopy.skills.title}
+          description={homeCopy.skills.description}
           className="mb-8"
         />
 
-        <div
-          className={[
-            "card-surface mx-auto max-w-5xl rounded-3xl border border-slate-100 p-6 sm:p-8 lg:p-10",
-            staggerContainer
-          ].join(" ")}
-          data-motion={revealUp}
-        >
-
-          <div className="motion-stagger-item mt-8" style={{ "--stagger-index": 0 }}>
-            <h3 className="text-4xl font-bold text-brand-500">Skills</h3>
+        <div className="card-surface mx-auto max-w-5xl rounded-3xl border border-slate-100 p-6 sm:p-8 lg:p-10">
+          <div className="mt-8">
+            <h3 className="text-4xl font-bold text-brand-500">{homeCopy.skills.skills}</h3>
             <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
               {/* Category cards are rendered from shared data to keep Home/About in sync. */}
-              {skillCategories.map((group) => {
+              {localizedSkillCategories.map((group) => {
                 const GroupIcon = group.icon;
 
                 return (
@@ -450,8 +511,9 @@ export default function Home() {
                     </h4>
                     <ul className="mt-3 space-y-2 text-sm text-slate-700 sm:text-base">
                       {group.items.map((item) => (
-                        <li key={`${group.title}-${item}`} className="leading-relaxed">
-                          • {item}
+                        <li key={`${group.title}-${item}`} className="flex gap-2 leading-relaxed">
+                          <span aria-hidden="true">&bull;</span>
+                          <span>{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -461,18 +523,17 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="motion-stagger-item mt-10" style={{ "--stagger-index": 1 }}>
-            <h3 className="text-base font-semibold text-brand-600">Tools</h3>
+          <div className="mt-10">
+            <h3 className="text-base font-semibold text-brand-600">{homeCopy.skills.tools}</h3>
             {/* Mobile-first layout: 1 column on phones, 2 on tablets, 4 typed columns on desktop. */}
             <div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-5">
-              {toolColumns.map((column, columnIndex) => {
+              {localizedToolColumns.map((column, columnIndex) => {
                 const columnSkills = toolSkills.filter((skill) => skill.domain === column.domain);
 
                 return (
                   <article
                     key={column.domain}
-                    className="motion-stagger-item space-y-3"
-                    style={{ "--stagger-index": 2 + columnIndex }}
+                    className="space-y-3"
                   >
                     <h4
                       className={[
@@ -500,13 +561,32 @@ export default function Home() {
               })}
             </div>
           </div>
+
+          <div className="mt-10 rounded-2xl border border-brand-100 bg-brand-50/70 p-5 dark:border-brand-500/30 dark:bg-indigo-950/30">
+            <h3 className="text-base font-semibold text-brand-600 dark:text-brand-300">{homeCopy.skills.aiTitle}</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+              {homeCopy.skills.aiBody}
+            </p>
+            <div className="mt-4 grid gap-4 md:grid-cols-3">
+              {localizedAiStrengths.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <article key={item.title} className="rounded-2xl bg-white/80 p-4 shadow-sm dark:bg-slate-900/80 dark:ring-1 dark:ring-white/10">
+                    <Icon className="text-xl text-brand-600 dark:text-brand-300" />
+                    <h4 className="mt-3 text-sm font-bold text-slate-900 dark:text-white">{item.title}</h4>
+                    <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </section>
 
       <section className="site-container">
         <SectionTitle
-          title="Portfolio Preview"
-          description="A selection of design and development work showcasing process, execution, and outcomes."
+          title={homeCopy.portfolio.title}
+          description={homeCopy.portfolio.description}
         />
 
         {projectsLoading ? (
@@ -537,8 +617,8 @@ export default function Home() {
           </div>
         ) : (
           <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-12 text-center">
-            <h3 className="text-lg font-medium text-slate-900">No projects yet</h3>
-            <p className="mt-2 text-slate-500">Check back later for my latest work!</p>
+            <h3 className="text-lg font-medium text-slate-900">{homeCopy.portfolio.emptyTitle}</h3>
+            <p className="mt-2 text-slate-500">{homeCopy.portfolio.emptyBody}</p>
           </div>
         )}
 
@@ -548,25 +628,25 @@ export default function Home() {
             variant="secondary" 
             className="px-8 !bg-brand-500/10 hover:!bg-brand-600 !text-brand-600 dark:!text-brand-300 hover:!text-white !border !border-brand-500/20 hover:!border-brand-600 transition-all duration-300 shadow-sm"
           >
-            View All Projects
+            {homeCopy.portfolio.viewAll}
           </Button>
         </div>
       </section>
 
       <section className="site-container">
         <SectionTitle
-          title="Experience"
-          description="Internships, freelance projects, collaborations, and academic work that shaped my journey."
+          title={homeCopy.experience.title}
+          description={homeCopy.experience.description}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
           {/* Left Column: Tab list */}
           <div className="md:col-span-1 flex md:flex-col overflow-x-auto md:overflow-x-visible border-b md:border-b-0 md:border-l border-slate-200 dark:border-slate-800 scrollbar-none gap-2 md:gap-0 pb-3 md:pb-0">
-            {experiences.map((experience, index) => {
+            {experienceItems.map((experience, index) => {
               const isActive = index === activeExperience;
               return (
                 <button
-                  key={experience.company}
+                  key={experience.slug || experience.company}
                   type="button"
                   onClick={() => {
                     setActiveExperience(index);
@@ -606,7 +686,7 @@ export default function Home() {
               </p>
 
               <div className="flex flex-wrap gap-2 pt-4">
-                {activeExperienceItem.tags.map((item) => (
+                {(activeExperienceItem.tags || []).map((item) => (
                   <span key={item} className="rounded-full bg-brand-50 dark:bg-brand-900/30 px-3 py-1 text-xs font-semibold text-brand-600 dark:text-brand-400 border border-brand-100/50 dark:border-brand-900/20">
                     {item}
                   </span>
@@ -619,12 +699,12 @@ export default function Home() {
 
       <section ref={reviewPromptRef} className="site-container">
         <SectionTitle
-          title="Services I Offer"
-          description="How I can help transform your ideas into clean and engaging digital products."
+          title={homeCopy.services.title}
+          description={homeCopy.services.description}
         />
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {services.map((service) => {
+          {localizedServices.map((service) => {
             const Icon = service.icon;
             return (
               <article
@@ -642,7 +722,7 @@ export default function Home() {
         </div>
 
         <div className="mt-8 flex justify-center">
-          <Button to="/services">See Full Services</Button>
+          <Button to="/services">{homeCopy.services.seeFull}</Button>
         </div>
       </section>
 
@@ -650,18 +730,18 @@ export default function Home() {
       <TestimonialHighway />
 
       <section className="site-container -mt-12">
-        <div className="mx-auto flex max-w-4xl flex-col items-center gap-5 rounded-3xl border border-brand-100 bg-white/70 px-6 py-8 text-center shadow-soft backdrop-blur-md sm:px-8 lg:flex-row lg:justify-between lg:text-left">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-5 rounded-3xl border border-brand-100 bg-white/70 px-6 py-8 text-center shadow-soft backdrop-blur-md dark:border-brand-500/30 dark:bg-slate-900/85 sm:px-8 lg:flex-row lg:justify-between lg:text-left">
           <div>
-            <p className="text-sm font-semibold uppercase text-brand-500">Worked with me before?</p>
-            <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl">
-              Share a quick review for the portfolio.
+            <p className="text-sm font-semibold uppercase text-brand-500 dark:text-brand-300">{t("review.eyebrow")}</p>
+            <h2 className="mt-2 text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">
+              {t("review.headline")}
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
-              Your review goes into my dashboard first, then appears publicly only after I approve it.
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-base">
+              {t("review.body")}
             </p>
           </div>
           <Button type="button" onClick={openReviewModal} className="shrink-0 gap-2">
-            Leave a review <FiMessageSquare />
+            {t("review.cta")} <FiMessageSquare />
           </Button>
         </div>
       </section>
@@ -670,16 +750,16 @@ export default function Home() {
         <div className="subtle-gradient card-surface rounded-3xl px-6 py-12 sm:px-8 lg:px-10">
           <TypewriterText
             as="h2"
-            text="Let's Work Together"
+            text={homeCopy.contact.title}
             className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl"
           />
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-            Got a project, collaboration, or opportunity? I&apos;d love to hear from you.
+            {homeCopy.contact.body}
           </p>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <article className="card-surface rounded-2xl p-6 sm:p-8">
-              <h3 className="text-center text-3xl font-bold text-brand-500 lg:text-left">Contact Info</h3>
+              <h3 className="text-center text-3xl font-bold text-brand-500 lg:text-left">{homeCopy.contact.infoTitle}</h3>
 
               <div className="mt-8 space-y-7 text-center lg:text-left">
                 <p className="inline-flex items-center gap-2 text-lg text-slate-800">
@@ -706,7 +786,7 @@ export default function Home() {
                       href={social.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-700 shadow-card transition-all duration-300 hover:-translate-y-1 hover:text-brand-600"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-700 shadow-card transition-all duration-300 hover:-translate-y-1 hover:text-brand-600 dark:bg-slate-900 dark:text-slate-200 dark:ring-1 dark:ring-white/10"
                       aria-label={social.label}
                     >
                       <Icon />
@@ -717,12 +797,12 @@ export default function Home() {
             </article>
 
             <article className="form-dynamic-bg border shadow-soft rounded-2xl p-6 sm:p-8">
-              <h3 className="text-center text-3xl font-bold text-brand-500 lg:text-left">Got a Message For Me</h3>
+              <h3 className="text-center text-3xl font-bold text-brand-500 lg:text-left">{homeCopy.contact.formTitle}</h3>
 
               <form onSubmit={handleContactSubmit} className="mt-8 space-y-4" noValidate>
                 <div>
                   <label htmlFor="home-name" className="mb-2 block text-sm font-semibold text-slate-900">
-                    Name
+                    {formCopy.name}
                   </label>
                   <div className="relative">
                     <input
@@ -731,7 +811,7 @@ export default function Home() {
                       value={contactFormData.name}
                       onChange={handleContactChange}
                       type="text"
-                      placeholder="Enter your name"
+                      placeholder={formCopy.namePlaceholder}
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 outline-none transition focus:border-brand-400"
                     />
                     <FiUser className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -741,7 +821,7 @@ export default function Home() {
 
                 <div>
                   <label htmlFor="home-email" className="mb-2 block text-sm font-semibold text-slate-900">
-                    Email
+                    {formCopy.email}
                   </label>
                   <div className="relative">
                     <input
@@ -750,7 +830,7 @@ export default function Home() {
                       value={contactFormData.email}
                       onChange={handleContactChange}
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder={formCopy.emailPlaceholder}
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 outline-none transition focus:border-brand-400"
                     />
                     <FiMail className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -760,7 +840,7 @@ export default function Home() {
 
                 <div>
                   <label htmlFor="home-phone" className="mb-2 block text-sm font-semibold text-slate-900">
-                    Phone / WhatsApp <span className="text-sm font-normal text-slate-400">(Optional)</span>
+                    {formCopy.phone} <span className="text-sm font-normal text-slate-400">({t("common.optional")})</span>
                   </label>
                   <div className="relative">
                     <input
@@ -769,7 +849,7 @@ export default function Home() {
                       value={contactFormData.phone}
                       onChange={handleContactChange}
                       type="tel"
-                      placeholder="e.g. +237 6xx xxx xxx"
+                      placeholder={formCopy.phonePlaceholder}
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 outline-none transition focus:border-brand-400"
                     />
                     <FiPhone className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -778,7 +858,7 @@ export default function Home() {
 
                 <div>
                   <label htmlFor="home-subject" className="mb-2 block text-sm font-semibold text-slate-900">
-                    Subject
+                    {formCopy.subject}
                   </label>
                   <input
                     id="home-subject"
@@ -786,7 +866,7 @@ export default function Home() {
                     value={contactFormData.subject}
                     onChange={handleContactChange}
                     type="text"
-                    placeholder="Subject matter"
+                    placeholder={formCopy.subjectPlaceholder}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-brand-400"
                   />
                   {contactErrors.subject ? <p className="mt-1 text-sm text-red-600">{contactErrors.subject}</p> : null}
@@ -794,14 +874,14 @@ export default function Home() {
 
                 <div>
                   <label htmlFor="home-message" className="mb-2 block text-sm font-semibold text-slate-900">
-                    Message
+                    {formCopy.message}
                   </label>
                   <textarea
                     id="home-message"
                     name="message"
                     value={contactFormData.message}
                     onChange={handleContactChange}
-                    placeholder="Your message"
+                    placeholder={formCopy.messagePlaceholder}
                     rows={5}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-brand-400"
                   />
@@ -822,7 +902,7 @@ export default function Home() {
                 ) : null}
 
                 <Button type="submit" className="w-full gap-2" disabled={isContactSending}>
-                  {isContactSending ? "Sending..." : "Send Message"} <FiSend />
+                  {isContactSending ? formCopy.sending : formCopy.send} <FiSend />
                 </Button>
               </form>
             </article>
@@ -835,29 +915,29 @@ export default function Home() {
     </div>
 
     {showReviewPrompt && !isReviewModalOpen ? (
-      <div className="fixed inset-x-4 bottom-24 z-40 mx-auto max-w-3xl rounded-2xl border border-brand-100 bg-white/95 p-4 shadow-2xl shadow-slate-900/10 backdrop-blur-md sm:bottom-6">
+      <div className="fixed inset-x-4 bottom-24 z-40 mx-auto max-w-3xl rounded-2xl border border-brand-100 bg-white/95 p-4 shadow-2xl shadow-slate-900/10 backdrop-blur-md dark:border-brand-500/30 dark:bg-slate-900/95 sm:bottom-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
-            <div className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+            <div className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-500/20 dark:text-brand-300">
               <FiMessageSquare />
             </div>
             <div>
-              <p className="font-bold text-slate-900">Have we worked together?</p>
-              <p className="mt-1 text-sm leading-5 text-slate-600">
-                Leave a review and I will approve it before it appears publicly.
+              <p className="font-bold text-slate-900 dark:text-white">{t("review.headline")}</p>
+              <p className="mt-1 text-sm leading-5 text-slate-600 dark:text-slate-300">
+                {t("review.body")}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 sm:shrink-0">
             <Button type="button" size="sm" onClick={openReviewModal} className="gap-2">
-              Leave a review <FiMessageSquare />
+              {t("review.cta")} <FiMessageSquare />
             </Button>
             <button
               type="button"
               onClick={dismissReviewPrompt}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:text-slate-900"
-              aria-label="Dismiss review prompt"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:text-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:text-white"
+              aria-label={t("review.dismiss")}
             >
               <FiX />
             </button>

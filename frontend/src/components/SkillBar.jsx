@@ -4,37 +4,37 @@ const toneMap = {
   brand: {
     icon: "text-brand-600",
     percentHover: "group-hover:text-brand-700 group-focus-visible:text-brand-700",
-    track: "bg-brand-100/90",
+    track: "bg-brand-100/90 dark:bg-brand-950/40",
     fill: "bg-gradient-to-r from-brand-400 to-brand-600"
   },
   design: {
     icon: "text-fuchsia-600",
     percentHover: "group-hover:text-fuchsia-700 group-focus-visible:text-fuchsia-700",
-    track: "bg-fuchsia-100/90",
+    track: "bg-fuchsia-100/90 dark:bg-fuchsia-950/40",
     fill: "bg-gradient-to-r from-fuchsia-400 to-fuchsia-600"
   },
   web: {
     icon: "text-emerald-600",
     percentHover: "group-hover:text-emerald-700 group-focus-visible:text-emerald-700",
-    track: "bg-emerald-100/90",
+    track: "bg-emerald-100/90 dark:bg-emerald-950/40",
     fill: "bg-gradient-to-r from-emerald-400 to-emerald-600"
   },
   programming: {
     icon: "text-amber-600",
     percentHover: "group-hover:text-amber-700 group-focus-visible:text-amber-700",
-    track: "bg-amber-100/90",
+    track: "bg-amber-100/90 dark:bg-amber-950/40",
     fill: "bg-gradient-to-r from-amber-400 to-amber-600"
   },
   documentation: {
     icon: "text-indigo-600",
     percentHover: "group-hover:text-indigo-700 group-focus-visible:text-indigo-700",
-    track: "bg-indigo-100/90",
+    track: "bg-indigo-100/90 dark:bg-indigo-950/40",
     fill: "bg-gradient-to-r from-indigo-400 to-indigo-600"
   },
   others: {
     icon: "text-cyan-600",
     percentHover: "group-hover:text-cyan-700 group-focus-visible:text-cyan-700",
-    track: "bg-cyan-100/90",
+    track: "bg-cyan-100/90 dark:bg-cyan-950/40",
     fill: "bg-gradient-to-r from-cyan-400 to-cyan-600"
   }
 };
@@ -69,7 +69,7 @@ export default function SkillBar({
         tabIndex={0}
         aria-label={`${name} proficiency ${safeLevel}%`}
         className={[
-          "motion-skill-item group space-y-2 rounded-xl border border-slate-100 bg-white/90 p-3 shadow-sm",
+          "motion-skill-item group space-y-2 rounded-xl border border-slate-100 bg-white/90 p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900/80",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300",
           hoverLift
         ].join(" ")}
@@ -92,11 +92,11 @@ export default function SkillBar({
                 {icon}
               </span>
             )}
-            <span className="truncate text-sm font-semibold leading-tight text-slate-800">{name}</span>
+            <span className="truncate text-sm font-semibold leading-tight text-slate-800 dark:text-slate-100" translate="no">{name}</span>
           </div>
           <span
             className={[
-              "text-base font-extrabold leading-none tracking-tight text-slate-600",
+              "text-base font-extrabold leading-none tracking-tight text-slate-600 dark:text-slate-300",
               tone.percentHover
             ].join(" ")}
           >
@@ -123,7 +123,7 @@ export default function SkillBar({
       tabIndex={0}
       aria-label={`${name} proficiency ${safeLevel}%`}
       className={[
-        "motion-skill-item group rounded-2xl border border-slate-100 bg-white p-5 shadow-sm",
+        "motion-skill-item group rounded-2xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900/80",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300",
         hoverLift
       ].join(" ")}
@@ -146,11 +146,11 @@ export default function SkillBar({
               {icon}
             </span>
           )}
-          <span className="truncate text-base font-semibold text-slate-800">{name}</span>
+          <span className="truncate text-base font-semibold text-slate-800 dark:text-slate-100" translate="no">{name}</span>
         </div>
         <span
           className={[
-            "text-2xl font-extrabold leading-none tracking-tight text-slate-600",
+            "text-2xl font-extrabold leading-none tracking-tight text-slate-600 dark:text-slate-300",
             tone.percentHover
           ].join(" ")}
         >

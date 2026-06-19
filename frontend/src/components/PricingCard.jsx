@@ -7,7 +7,8 @@ export default function PricingCard({
   description,
   features,
   ctaLabel,
-  popular = false
+  popular = false,
+  popularLabel = "Most Popular"
 }) {
   return (
     <article
@@ -20,7 +21,7 @@ export default function PricingCard({
     >
       {popular ? (
         <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-400 px-5 py-1 text-sm font-semibold text-white shadow-sm">
-          Most Popular
+          {popularLabel}
         </span>
       ) : null}
 

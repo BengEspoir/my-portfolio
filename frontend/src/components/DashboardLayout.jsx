@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   FiCalendar,
+  FiBriefcase,
   FiFileText,
   FiHome,
   FiLayout,
@@ -26,6 +27,7 @@ export default function DashboardLayout({ children }) {
   const navItems = [
     { label: 'Overview', path: '/admin/dashboard', icon: FiHome },
     { label: 'Projects', path: '/admin/projects', icon: FiLayout },
+    { label: 'Experiences', path: '/admin/experiences', icon: FiBriefcase },
     { label: 'Blog Posts', path: '/admin/blog', icon: FiFileText },
     { label: 'Testimonials', path: '/admin/testimonials', icon: FiMessageSquare },
     { label: 'Appointments', path: '/admin/appointments', icon: FiCalendar },
@@ -42,7 +44,7 @@ export default function DashboardLayout({ children }) {
       <nav className="flex-1 space-y-1 px-3 py-4">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = location.pathname === item.path;
+          const isActive = location.pathname === item.path || location.pathname.startsWith(`${item.path}/`);
 
           return (
             <Link

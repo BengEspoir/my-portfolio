@@ -3,14 +3,16 @@ import { FiMenu, FiMoon, FiSun, FiX } from "react-icons/fi";
 import { NavLink, useLocation } from "react-router-dom";
 import BrandLogo from "./BrandLogo";
 import Button from "./Button";
+import LanguageToggle from "./LanguageToggle";
+import { useI18n } from "../i18n";
 
 const navLinks = [
-  { label: "Home", to: "/" },
-  { label: "About", to: "/about" },
-  { label: "Portfolio", to: "/portfolio" },
-  { label: "Services", to: "/services" },
-  { label: "Blog", to: "/blog" },
-  { label: "Contact", to: "/contact" }
+  { labelKey: "nav.home", to: "/" },
+  { labelKey: "nav.about", to: "/about" },
+  { labelKey: "nav.portfolio", to: "/portfolio" },
+  { labelKey: "nav.services", to: "/services" },
+  { labelKey: "nav.blog", to: "/blog" },
+  { labelKey: "nav.contact", to: "/contact" }
 ];
 
 function linkClassName({ isActive }) {
@@ -20,14 +22,15 @@ function linkClassName({ isActive }) {
   ].join(" ");
 }
 
-function ThemeToggle({ theme, onToggleTheme, className = "" }) {
+function ThemeToggle({ theme, onToggleTheme, className = "", lightLabel = "Switch to light mode", darkLabel = "Switch to dark mode" }) {
   const isDark = theme === "dark";
+  const label = isDark ? lightLabel : darkLabel;
 
   return (
     <button
       type="button"
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={label}
+      title={label}
       onClick={onToggleTheme}
       className={[
         "inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition-colors duration-200 hover:text-brand-500",
@@ -42,6 +45,7 @@ function ThemeToggle({ theme, onToggleTheme, className = "" }) {
 export default function Navbar({ theme = "light", onToggleTheme = () => {} }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { localizedPath, t } = useI18n();
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -50,29 +54,41 @@ export default function Navbar({ theme = "light", onToggleTheme = () => {} }) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
       <nav className="site-container flex h-20 items-center justify-between">
-        <NavLink to="/" className="inline-flex items-center">
+        <NavLink to={localizedPath("/")} className="inline-flex items-center">
           <BrandLogo />
         </NavLink>
 
         <ul className="hidden items-center gap-10 lg:flex">
           {navLinks.map((link) => (
             <li key={link.to}>
-              <NavLink to={link.to} className={linkClassName}>
-                {link.label}
+              <NavLink to={localizedPath(link.to)} end={link.to === "/"} className={linkClassName}>
+                {t(link.labelKey)}
               </NavLink>
             </li>
           ))}
         </ul>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <ThemeToggle theme={theme} onToggleTheme={onToggleTheme} />
+          <LanguageToggle />
+          <ThemeToggle
+            theme={theme}
+            onToggleTheme={onToggleTheme}
+            lightLabel={t("theme.light")}
+            darkLabel={t("theme.dark")}
+          />
           <Button to="/contact" size="md">
-            Hire Me
+            {t("nav.hireMe")}
           </Button>
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <ThemeToggle theme={theme} onToggleTheme={onToggleTheme} />
+          <LanguageToggle className="h-9" />
+          <ThemeToggle
+            theme={theme}
+            onToggleTheme={onToggleTheme}
+            lightLabel={t("theme.light")}
+            darkLabel={t("theme.dark")}
+          />
           <button
             type="button"
             className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 text-slate-700"
@@ -90,14 +106,14 @@ export default function Navbar({ theme = "light", onToggleTheme = () => {} }) {
             <ul className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <li key={link.to}>
-                  <NavLink to={link.to} className={linkClassName}>
-                    {link.label}
+                  <NavLink to={localizedPath(link.to)} end={link.to === "/"} className={linkClassName}>
+                    {t(link.labelKey)}
                   </NavLink>
                 </li>
               ))}
             </ul>
             <Button to="/contact" className="mt-5 w-full">
-              Hire Me
+              {t("nav.hireMe")}
             </Button>
           </div>
         </div>

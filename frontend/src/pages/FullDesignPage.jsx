@@ -10,9 +10,12 @@ import PageTransition from "../components/PageTransition";
 import TypewriterText from "../components/TypewriterText";
 import GraphicDesignProjectDetail from "../components/GraphicDesignProjectDetail";
 import { isGraphicDesignProject } from "../utils/projectUtils";
+import { useI18n } from "../i18n";
 
 export default function FullDesignPage() {
   const { slug } = useParams();
+  const { localizedPath, t } = useI18n();
+  const pageCopy = t("projectDetail");
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -57,12 +60,12 @@ export default function FullDesignPage() {
       <div className="site-container py-20 text-center">
         <TypewriterText
           as="h1"
-          text="Project Not Found"
+          text={pageCopy.notFound}
           startOnView={false}
           className="text-4xl font-bold"
         />
-        <Link to="/portfolio" className="mt-4 inline-flex items-center gap-2 text-brand-600 hover:underline">
-          <FiArrowLeft /> Back to Portfolio
+        <Link to={localizedPath("/portfolio")} className="mt-4 inline-flex items-center gap-2 text-brand-600 hover:underline">
+          <FiArrowLeft /> {t("common.backToPortfolio")}
         </Link>
       </div>
     );
@@ -86,7 +89,7 @@ export default function FullDesignPage() {
               "@type": "Person",
               name: siteConfig.name
             },
-            url: absoluteUrl(`/projects/${project.slug}/full-design`)
+            url: absoluteUrl(localizedPath(`/projects/${project.slug}/full-design`))
           }}
         />
         <GraphicDesignProjectDetail project={project} />
@@ -111,15 +114,15 @@ export default function FullDesignPage() {
             "@type": "Person",
             name: siteConfig.name
           },
-          url: absoluteUrl(`/projects/${project.slug}/full-design`)
+          url: absoluteUrl(localizedPath(`/projects/${project.slug}/full-design`))
         }}
       />
 
       <div className="space-y-24 pb-24 pt-10">
       {/* Hero / Cover */}
       <section className="site-container">
-        <Link to="/portfolio" className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition-colors hover:text-brand-600">
-          <FiArrowLeft /> BACK TO PORTFOLIO
+        <Link to={localizedPath("/portfolio")} className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition-colors hover:text-brand-600">
+          <FiArrowLeft /> {t("common.backToPortfolio")}
         </Link>
         
         <div className="space-y-8">
@@ -132,9 +135,9 @@ export default function FullDesignPage() {
             />
             <div className="flex items-center gap-3">
               <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 uppercase tracking-widest">
-                Full Design Preview
+                {pageCopy.fullDesignPreview}
               </span>
-              <span className="text-slate-400">•</span>
+              <span className="text-slate-400">{"\u2022"}</span>
               <span className="text-sm font-medium text-slate-500">{project.categories?.join(", ")}</span>
             </div>
           </div>
@@ -154,7 +157,7 @@ export default function FullDesignPage() {
         <div className="grid gap-16 lg:grid-cols-3">
           <div className="lg:col-span-1 space-y-6">
             <div className="flex items-center gap-2 font-bold text-brand-600">
-              <FiInfo /> Project Overview
+              <FiInfo /> {pageCopy.overview}
             </div>
             <p className="text-xl leading-relaxed text-slate-700">
               {project.project_background}
@@ -162,7 +165,7 @@ export default function FullDesignPage() {
           </div>
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center gap-2 font-bold text-brand-600">
-              <FiLayout /> UX Flow & Concept
+              <FiLayout /> {pageCopy.uxFlow}
             </div>
             <div className="rounded-3xl bg-slate-50 p-8 text-lg leading-relaxed text-slate-600">
               {project.design_journey}
@@ -175,8 +178,8 @@ export default function FullDesignPage() {
       {project.preview_screens?.length > 0 && (
         <section className="site-container">
           <SectionTitle 
-            title="Interface Screens" 
-            description="A close-up look at the primary interface screens and the visual language used across the design."
+            title={pageCopy.interfaceScreens}
+            description={pageCopy.interfaceDescription}
           />
           <div className="grid gap-10 md:grid-cols-2">
             {project.preview_screens.slice(0, 6).map((screen, idx) => (
@@ -185,7 +188,7 @@ export default function FullDesignPage() {
                   <img src={screen} alt={`Interface Screen 0${idx + 1}`} className="h-full w-full object-cover" />
                 </div>
                 <p className="text-sm font-bold text-slate-500 uppercase tracking-widest">
-                  View 0{idx + 1}
+                  {pageCopy.view} 0{idx + 1}
                 </p>
               </div>
             ))}
@@ -198,7 +201,7 @@ export default function FullDesignPage() {
         <div className="rounded-[3rem] bg-brand-600 p-12 text-white lg:p-20" style={{ backgroundColor: project.brand_color }}>
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div className="space-y-6">
-              <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">Design Notes & Logic</h2>
+              <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">{pageCopy.designNotes}</h2>
               <p className="text-xl text-brand-50 leading-relaxed">
                 {project.solution}
               </p>
@@ -214,7 +217,7 @@ export default function FullDesignPage() {
               <FiEye className="text-[100px] text-white/40" />
               {project.figma_url && (
                 <Button href={project.figma_url} target="_blank" variant="cta" className="!bg-white !text-brand-600 hover:!bg-brand-50">
-                  <FiFigma /> View Design in Figma
+                  <FiFigma /> {pageCopy.viewDesignFigma}
                 </Button>
               )}
             </div>

@@ -17,7 +17,7 @@ import {
   SiWordpress
 } from "react-icons/si";
 import { FaFileExcel, FaFilePowerpoint, FaFileWord, FaJava } from "react-icons/fa6";
-import { FiBookOpen, FiCpu, FiMonitor, FiPenTool, FiSmartphone, FiStar } from "react-icons/fi";
+import { FiBookOpen, FiCpu, FiMonitor, FiPenTool, FiSmartphone, FiStar, FiZap } from "react-icons/fi";
 
 // Shared source of truth for the Skills section across pages.
 export const skillCategories = [
@@ -82,6 +82,24 @@ export const toolSkills = [
   { name: "Django", level: 77, icon: SiDjango, domain: "web" },
   { name: "Premiere Pro", level: 70, icon: SiAdobepremierepro, domain: "design" },
   { name: "MySQL", level: 85, icon: SiMysql, domain: "programming" }
+];
+
+export const aiDevelopmentStrengths = [
+  {
+    title: "AI-Powered Assistant Development",
+    description: "Designing practical assistants that turn rough inputs into structured content, workflows, and dashboard actions.",
+    icon: FiZap
+  },
+  {
+    title: "System Architecture Understanding",
+    description: "Connecting frontend, backend, database, automation, and AI layers into clear product workflows.",
+    icon: FiCpu
+  },
+  {
+    title: "AI-Assisted Product Execution",
+    description: "Using tools like Banani.co, UX Magic, and Stage workflows to accelerate research, UX direction, and implementation quality.",
+    icon: FiMonitor
+  }
 ];
 
 export const quickFacts = [

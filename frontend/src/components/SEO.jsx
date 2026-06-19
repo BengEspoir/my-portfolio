@@ -1,5 +1,11 @@
 import { Helmet } from "react-helmet-async";
 import { absoluteUrl, siteConfig } from "../config/site";
+import { buildLocalizedAlternates, localizePath, useI18n } from "../i18n";
+
+const openGraphLocale = {
+  en: "en_US",
+  fr: "fr_FR"
+};
 
 export default function SEO({
   title = siteConfig.title,
@@ -10,18 +16,37 @@ export default function SEO({
   jsonLd,
   noindex = false
 }) {
-  const canonicalUrl = absoluteUrl(path);
+  const { locale } = useI18n();
+  const localizedPath = localizePath(path, locale);
+  const canonicalUrl = absoluteUrl(localizedPath);
   const imageUrl = absoluteUrl(image || siteConfig.defaultImage);
   const structuredData = Array.isArray(jsonLd) ? jsonLd.filter(Boolean) : jsonLd ? [jsonLd] : [];
+  const alternates = buildLocalizedAlternates(path);
 
   return (
     <Helmet>
+      <html lang={locale} />
       <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={canonicalUrl} />
+      {!noindex
+        ? Object.entries(alternates).map(([hrefLang, alternatePath]) => (
+            <link
+              key={hrefLang}
+              rel="alternate"
+              hrefLang={hrefLang}
+              href={absoluteUrl(alternatePath)}
+            />
+          ))
+        : null}
       <meta name="robots" content={noindex ? "noindex,nofollow" : "index,follow"} />
 
       <meta property="og:type" content={type} />
+      <meta property="og:locale" content={openGraphLocale[locale] || openGraphLocale.en} />
+      <meta
+        property="og:locale:alternate"
+        content={locale === "fr" ? openGraphLocale.en : openGraphLocale.fr}
+      />
       <meta property="og:site_name" content={siteConfig.shortName} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />

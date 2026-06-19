@@ -16,6 +16,7 @@ import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
 import SEO from "../components/SEO";
 import { sendContactEmail } from "../utils/api";
+import { useI18n } from "../i18n";
 
 const initialForm = {
   name: "",
@@ -38,23 +39,26 @@ const socialLinks = [
   { icon: FaYoutube, href: "https://youtube.com", label: "YouTube" }
 ];
 
-function validateForm(formData) {
+function validateForm(formData, messages) {
   const errors = {};
 
-  if (!formData.name.trim()) errors.name = "Name is required.";
+  if (!formData.name.trim()) errors.name = messages.nameRequired;
   if (!formData.email.trim()) {
-    errors.email = "Email is required.";
+    errors.email = messages.emailRequired;
   } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-    errors.email = "Enter a valid email address.";
+    errors.email = messages.emailInvalid;
   }
 
-  if (!formData.subject.trim()) errors.subject = "Subject is required.";
-  if (!formData.message.trim()) errors.message = "Message is required.";
+  if (!formData.subject.trim()) errors.subject = messages.subjectRequired;
+  if (!formData.message.trim()) errors.message = messages.messageRequired;
 
   return errors;
 }
 
 export default function Contact() {
+  const { t } = useI18n();
+  const pageCopy = t("contact");
+  const formCopy = t("forms.contact");
   const [formData, setFormData] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [isSending, setIsSending] = useState(false);
@@ -71,7 +75,7 @@ export default function Contact() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const validationErrors = validateForm(formData);
+    const validationErrors = validateForm(formData, formCopy);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       setStatus({ type: "", message: "" });
@@ -85,13 +89,13 @@ export default function Contact() {
       await sendContactEmail(formData);
       setStatus({
         type: "success",
-        message: "Your message has been sent successfully. I will get back to you soon."
+        message: formCopy.success
       });
       setFormData(initialForm);
     } catch (error) {
       setStatus({
         type: "error",
-        message: "Message could not be sent. Please try again later."
+        message: formCopy.error
       });
     } finally {
       setIsSending(false);
@@ -101,14 +105,14 @@ export default function Contact() {
   return (
     <div className="space-y-24 pb-24 pt-10">
       <SEO
-        title="Contact | Beng Espoir"
-        description="Contact Beng Espoir Nong for UI/UX design, frontend development, graphic design, portfolio work, or collaboration."
+        title={t("seo.contact.title")}
+        description={t("seo.contact.description")}
         path="/contact"
       />
       <section className="site-container">
         <SectionTitle
-          title="Get in Touch"
-          description="Have a project in mind, or want to collaborate? Feel free to reach out."
+          title={pageCopy.title}
+          description={pageCopy.description}
         />
 
         <div className="mx-auto max-w-4xl rounded-3xl form-dynamic-bg p-6 shadow-soft sm:p-8 border">
@@ -116,7 +120,7 @@ export default function Contact() {
             {/* EmailJS placeholders to replace are in src/utils/emailjs.js, not these input placeholder texts. */}
             <div>
               <label htmlFor="name" className="mb-2 block font-semibold text-slate-900">
-                Name
+                {formCopy.name}
               </label>
               <div className="relative">
                 <input
@@ -125,7 +129,7 @@ export default function Contact() {
                   value={formData.name}
                   onChange={handleChange}
                   type="text"
-                  placeholder="Enter your name"
+                  placeholder={formCopy.namePlaceholder}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 outline-none transition focus:border-brand-400"
                 />
                 <FiUser className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -135,7 +139,7 @@ export default function Contact() {
 
             <div>
               <label htmlFor="email" className="mb-2 block font-semibold text-slate-900">
-                Email
+                {formCopy.email}
               </label>
               <div className="relative">
                 <input
@@ -144,7 +148,7 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={formCopy.emailPlaceholder}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 outline-none transition focus:border-brand-400"
                 />
                 <FiMail className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -154,7 +158,7 @@ export default function Contact() {
 
             <div>
               <label htmlFor="phone" className="mb-2 block font-semibold text-slate-900">
-                Phone / WhatsApp <span className="text-sm font-normal text-slate-400">(Optional)</span>
+                {formCopy.phone} <span className="text-sm font-normal text-slate-400">({t("common.optional")})</span>
               </label>
               <div className="relative">
                 <input
@@ -163,7 +167,7 @@ export default function Contact() {
                   value={formData.phone}
                   onChange={handleChange}
                   type="tel"
-                  placeholder="e.g. +237 6xx xxx xxx"
+                  placeholder={formCopy.phonePlaceholder}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 outline-none transition focus:border-brand-400"
                 />
                 <FiPhone className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -172,7 +176,7 @@ export default function Contact() {
 
             <div>
               <label htmlFor="subject" className="mb-2 block font-semibold text-slate-900">
-                Subject
+                {formCopy.subject}
               </label>
               <input
                 id="subject"
@@ -180,7 +184,7 @@ export default function Contact() {
                 value={formData.subject}
                 onChange={handleChange}
                 type="text"
-                placeholder="Subject matter"
+                placeholder={formCopy.subjectPlaceholder}
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-brand-400"
               />
               {errors.subject ? <p className="mt-1 text-sm text-red-600">{errors.subject}</p> : null}
@@ -188,14 +192,14 @@ export default function Contact() {
 
             <div>
               <label htmlFor="message" className="mb-2 block font-semibold text-slate-900">
-                Message
+                {formCopy.message}
               </label>
               <textarea
                 id="message"
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
-                placeholder="Your message"
+                placeholder={formCopy.messagePlaceholder}
                 rows={6}
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-brand-400"
               />
@@ -216,7 +220,7 @@ export default function Contact() {
             ) : null}
 
             <Button type="submit" className="w-full gap-2" disabled={isSending}>
-              {isSending ? "Sending..." : "Submit"} <FiSend />
+              {isSending ? formCopy.sending : formCopy.submit} <FiSend />
             </Button>
           </form>
         </div>
@@ -224,15 +228,15 @@ export default function Contact() {
 
       <section className="site-container">
         <div className="text-center">
-          <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">Book a Free Consultation</h2>
+          <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">{pageCopy.bookingTitle}</h2>
           <p className="mx-auto mt-3 max-w-2xl text-lg text-slate-600">
-            Pick a time that works best for you, and let&apos;s chat about your project.
+            {pageCopy.bookingBody}
           </p>
           <Button
             to="/booking"
             className="mt-5 gap-2"
           >
-            Book Consultation <FiCalendar />
+            {pageCopy.bookingCta} <FiCalendar />
           </Button>        </div>
       </section>
 
@@ -240,13 +244,13 @@ export default function Contact() {
         <div className="grid gap-6 text-center md:grid-cols-3">
           <article className="card-surface p-6">
             <FiMail className="mx-auto text-3xl text-brand-500" />
-            <h3 className="mt-3 text-2xl font-bold text-slate-900">Email</h3>
+            <h3 className="mt-3 text-2xl font-bold text-slate-900">{pageCopy.email}</h3>
             <p className="mt-2 text-slate-600">mbengespoir@gmail.com</p>
           </article>
 
           <article className="card-surface p-6">
             <FiPhone className="mx-auto text-3xl text-brand-500" />
-            <h3 className="mt-3 text-2xl font-bold text-slate-900">Phone</h3>
+            <h3 className="mt-3 text-2xl font-bold text-slate-900">{pageCopy.phone}</h3>
             <p className="mt-2 text-slate-600">+237 (683-077-263)</p>
             <a
               href="https://wa.me/237683077263"
@@ -260,14 +264,14 @@ export default function Contact() {
 
           <article className="card-surface p-6">
             <FiMapPin className="mx-auto text-3xl text-brand-500" />
-            <h3 className="mt-3 text-2xl font-bold text-slate-900">Location</h3>
+            <h3 className="mt-3 text-2xl font-bold text-slate-900">{pageCopy.location}</h3>
             <p className="mt-2 text-slate-600">Nsimeyong, Yaounde, Cameroon</p>
           </article>
         </div>
       </section>
 
       <section className="site-container text-center">
-        <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">Get to Me on Social Media</h2>
+        <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">{pageCopy.socialTitle}</h2>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-5">
           {socialLinks.map((social) => {
             const Icon = social.icon;
@@ -288,7 +292,7 @@ export default function Contact() {
 
         <div className="mt-10 flex justify-center">
           <Button href="/resume.pdf" variant="secondary" className="gap-2" download>
-            Download My Resume <FiCheckCircle />
+            {pageCopy.resume} <FiCheckCircle />
           </Button>
         </div>
       </section>

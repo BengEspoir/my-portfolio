@@ -73,6 +73,17 @@
     background-color: rgb(15 23 42 / 0.95) !important;
   }
 
+  html.dark .bg-white\/70,
+  html.dark .bg-white\/80,
+  html.dark .bg-white\/90 {
+    background-color: rgb(15 23 42 / 0.82) !important;
+  }
+
+  html.dark .bg-brand-50,
+  html.dark .bg-brand-50\/70 {
+    background-color: rgb(49 46 129 / 0.32) !important;
+  }
+
   html.dark .bg-slate-50 {
     background-color: rgb(15 23 42) !important;
   }
@@ -107,6 +118,10 @@
   html.dark .border-slate-200,
   html.dark .border-slate-300 {
     border-color: rgb(51 65 85) !important;
+  }
+
+  html.dark .border-brand-100 {
+    border-color: rgb(79 70 229 / 0.32) !important;
   }
 
   html.dark .card-surface {

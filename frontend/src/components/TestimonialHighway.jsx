@@ -5,11 +5,13 @@ import TestimonialCard from "./TestimonialCard";
 import TypewriterText from "./TypewriterText";
 import { FiMessageSquare } from "react-icons/fi";
 import Button from "./Button";
+import { useI18n } from "../i18n";
 
 export default function TestimonialHighway() {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const containerRef = useRef(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     async function fetchTestimonials() {
@@ -57,26 +59,26 @@ export default function TestimonialHighway() {
   const row2 = testimonials.slice(midPoint);
 
   return (
-    <section className="relative py-32 overflow-hidden bg-black-50/50">
+    <section className="relative py-32 overflow-hidden bg-black-50/50 dark:bg-slate-950/40">
       {/* Background Accents */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-black-500/5 rounded-full blur-[10px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-black-500/5 rounded-full blur-[10px] pointer-events-none" />
 
       <div className="site-container relative z-10 mb-20">
         <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 mb-2">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-500/20 dark:text-brand-300 mb-2">
             <FiMessageSquare size={24} />
           </div>
           <TypewriterText
             as="h2"
-            text="Glance of what People Say about me"
-            className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl"
+            text={t("review.headline")}
+            className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-white md:text-5xl"
           />
-          <p className="text-lg text-slate-600 leading-relaxed">
-            Real feedback from partners and clients who have navigated digital transformations with me.
+          <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+            {t("review.body")}
           </p>
           <Button to="/?review=1" variant="secondary" className="mt-4">
-            Have we worked together? Leave a review
+            {t("review.cta")}
           </Button>
         </div>
       </div>
@@ -120,8 +122,8 @@ export default function TestimonialHighway() {
       </div>
 
       {/* Side Fades for Seamless Look */}
-      <div className="absolute top-0 left-0 h-full w-40 bg-gradient-to-r from-black-50 to-transparent z-20 pointer-events-none" />
-      <div className="absolute top-0 right-0 h-full w-40 bg-gradient-to-l from-black-50 to-transparent z-20 pointer-events-none" />
+      <div className="absolute top-0 left-0 h-full w-40 bg-gradient-to-r from-black-50 to-transparent dark:from-slate-950 z-20 pointer-events-none" />
+      <div className="absolute top-0 right-0 h-full w-40 bg-gradient-to-l from-black-50 to-transparent dark:from-slate-950 z-20 pointer-events-none" />
     </section>
   );
 }

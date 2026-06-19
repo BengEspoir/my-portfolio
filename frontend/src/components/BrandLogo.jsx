@@ -7,7 +7,9 @@ export default function BrandLogo({ className = "" }) {
   if (failed) {
     return (
       <span className="text-3xl font-extrabold tracking-tight text-brand-500">
+        <span translate="no">
         BENG ESPOIR
+        </span>
       </span>
     );
   }
@@ -18,6 +20,7 @@ export default function BrandLogo({ className = "" }) {
       alt="Beng Espoir logo"
       className={["h-30 w-50 object-contain sm:h-20", className].filter(Boolean).join(" ")}
       loading="eager"
+      translate="no"
       onError={() => setFailed(true)}
     />
   );

@@ -72,3 +72,35 @@ export async function submitTestimonial(formData) {
     throw error;
   }
 }
+
+export async function extractDashboardContent({
+  mode = 'extract',
+  contentType,
+  rawText = '',
+  instruction = '',
+  messages = [],
+  currentDraft = {}
+}) {
+  try {
+    const { data, error } = await supabase.functions.invoke('extract-dashboard-content', {
+      body: { mode, contentType, rawText, instruction, messages, currentDraft },
+    });
+
+    if (error) {
+      throw new Error(error.message || 'AI extraction failed.');
+    }
+
+    if (!data?.result) {
+      throw new Error(data?.error || 'The assistant returned an empty response.');
+    }
+
+    return {
+      provider: data.provider,
+      assistantMessage: data.assistantMessage,
+      result: data.result
+    };
+  } catch (error) {
+    console.error('Dashboard AI extraction error:', error);
+    throw error;
+  }
+}
