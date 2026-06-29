@@ -356,8 +356,9 @@ async function extractWithGemini(args: {
   messages: AssistantMessage[];
   currentDraft: Record<string, unknown>;
 }) {
+  // This key must be configured in Supabase Edge Function secrets, not frontend/.env.local.
   const apiKey = Deno.env.get("GEMINI_API_KEY");
-  const model = Deno.env.get("GEMINI_MODEL") || "gemini-1.5-flash";
+  const model = Deno.env.get("GEMINI_MODEL") || "gemini-3.5-flash";
   if (!apiKey) throw new Error("GEMINI_API_KEY is not configured.");
 
   const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
@@ -398,8 +399,9 @@ async function extractWithGroq(args: {
   messages: AssistantMessage[];
   currentDraft: Record<string, unknown>;
 }) {
+  // This key must be configured in Supabase Edge Function secrets, not frontend/.env.local.
   const apiKey = Deno.env.get("GROQ_API_KEY");
-  const model = Deno.env.get("GROQ_MODEL") || "llama-3.3-70b-versatile";
+  const model = Deno.env.get("GROQ_MODEL") || "openai/gpt-oss-20b";
   if (!apiKey) throw new Error("GROQ_API_KEY is not configured.");
 
   const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -482,8 +484,12 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "Write a short instruction for the assistant." }, 400);
     }
 
-    const args = { contentType, mode, rawText, instruction, messages, currentDraft };
     const provider = (Deno.env.get("AI_EXTRACT_PROVIDER") || "gemini").toLowerCase();
+    if (!["gemini", "groq"].includes(provider)) {
+      return jsonResponse({ error: "Unsupported AI_EXTRACT_PROVIDER. Use gemini or groq." }, 400);
+    }
+
+    const args = { contentType, mode, rawText, instruction, messages, currentDraft };
     const rawResult = provider === "groq"
       ? await extractWithGroq(args)
       : await extractWithGemini(args);

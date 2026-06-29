@@ -1,5 +1,30 @@
 import { supabase } from './supabase';
 
+async function getFunctionErrorMessage(error, fallbackMessage) {
+  const context = error?.context;
+
+  if (context && typeof context.json === 'function') {
+    try {
+      const payload = await context.json();
+      if (payload?.error) return payload.error;
+      if (payload?.message) return payload.message;
+    } catch (_parseError) {
+      // Fall through to the text/message fallback.
+    }
+  }
+
+  if (context && typeof context.text === 'function') {
+    try {
+      const text = await context.text();
+      if (text) return text;
+    } catch (_parseError) {
+      // Fall through to the default message.
+    }
+  }
+
+  return error?.message || fallbackMessage;
+}
+
 export async function sendContactEmail(formData) {
   try {
     // 1. Save to Supabase Database (contacts table)
@@ -63,7 +88,7 @@ export async function submitTestimonial(formData) {
     });
 
     if (error) {
-      throw new Error(error.message || 'Testimonial submission failed.');
+      throw new Error(await getFunctionErrorMessage(error, 'Testimonial submission failed.'));
     }
 
     return { success: true, data };
@@ -87,7 +112,7 @@ export async function extractDashboardContent({
     });
 
     if (error) {
-      throw new Error(error.message || 'AI extraction failed.');
+      throw new Error(await getFunctionErrorMessage(error, 'AI extraction failed.'));
     }
 
     if (!data?.result) {

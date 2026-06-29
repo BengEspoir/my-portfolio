@@ -13,6 +13,13 @@ VITE_SUPABASE_ANON_KEY=your-anon-public-key
 
 Keep real values in `.env.local` only. `frontend/.env.example` must stay placeholder-only.
 
+Important: do not add AI provider keys, service-role keys, or email-provider secrets to `frontend/.env.local`. That file is bundled into the browser when values use the `VITE_` prefix, so it should stay limited to browser-safe values:
+
+```env
+VITE_SUPABASE_URL=https://your-project-id.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-public-key
+```
+
 ## 2. Database Migrations
 
 Run the files in `supabase/migrations` in order. They create and update:
@@ -76,6 +83,28 @@ The assistant supports `project`, `blog`, `testimonial`, and `experience` conten
 
 The function responds with `assistantMessage` plus a `result` draft object. The frontend only applies that draft when the admin clicks "Apply to Form"; it never saves or publishes automatically.
 
+### Copy/Paste AI Secrets
+
+Add these values in **Supabase Dashboard -> Project Settings -> Edge Functions -> Secrets**. Use placeholder-free real values in the dashboard only; do not paste them into `frontend/.env.local`, `.env.example`, or frontend source.
+
+Gemini recommended:
+
+```txt
+ADMIN_EMAIL=mbengespoir@gmail.com
+AI_EXTRACT_PROVIDER=gemini
+GEMINI_API_KEY=paste-your-google-ai-studio-api-key-here
+GEMINI_MODEL=gemini-3.5-flash
+```
+
+Groq alternative:
+
+```txt
+ADMIN_EMAIL=mbengespoir@gmail.com
+AI_EXTRACT_PROVIDER=groq
+GROQ_API_KEY=paste-your-groq-api-key-here
+GROQ_MODEL=openai/gpt-oss-20b
+```
+
 Set the Resend, site, and AI assistant secrets:
 
 ```bash
@@ -88,11 +117,11 @@ supabase secrets set ADMIN_EMAIL=mbengespoir@gmail.com
 # Default provider is Gemini. Use AI_EXTRACT_PROVIDER=groq to switch.
 supabase secrets set AI_EXTRACT_PROVIDER=gemini
 supabase secrets set GEMINI_API_KEY=your-google-ai-studio-key
-supabase secrets set GEMINI_MODEL=gemini-1.5-flash
+supabase secrets set GEMINI_MODEL=gemini-3.5-flash
 
 # Optional Groq fallback/provider switch.
 supabase secrets set GROQ_API_KEY=your-groq-key
-supabase secrets set GROQ_MODEL=llama-3.3-70b-versatile
+supabase secrets set GROQ_MODEL=openai/gpt-oss-20b
 ```
 
 Deploy:
@@ -106,6 +135,52 @@ supabase functions deploy extract-dashboard-content
 
 Use a Resend-verified domain for `RESEND_FROM_EMAIL` before production traffic.
 Keep AI provider keys in Supabase secrets only. Do not add them to `frontend/.env.local`, `.env.example`, or any Vite-exposed variable.
+
+### AI Assistant Setup Walkthrough
+
+If the dashboard assistant is not working, check these in order:
+
+1. Apply the latest migrations in Supabase, especially `supabase/migrations/0011_experiences_cms.sql`.
+2. Deploy the assistant function to the same Supabase project used by `VITE_SUPABASE_URL`:
+
+```bash
+supabase functions deploy extract-dashboard-content
+```
+
+3. Set the function secrets in Supabase Dashboard or with the CLI:
+
+```bash
+supabase secrets set ADMIN_EMAIL=mbengespoir@gmail.com
+supabase secrets set AI_EXTRACT_PROVIDER=gemini
+supabase secrets set GEMINI_API_KEY=your-google-ai-studio-key
+supabase secrets set GEMINI_MODEL=gemini-3.5-flash
+```
+
+For Groq, switch the provider and use a structured-output-compatible model:
+
+```bash
+supabase secrets set AI_EXTRACT_PROVIDER=groq
+supabase secrets set GROQ_API_KEY=your-groq-key
+supabase secrets set GROQ_MODEL=openai/gpt-oss-20b
+```
+
+4. Log into the admin dashboard as the exact `ADMIN_EMAIL`, currently `mbengespoir@gmail.com`.
+5. Open `/admin/projects/new`, `/admin/blog/new`, `/admin/testimonials?new=1`, or `/admin/experiences/new`.
+6. Paste at least 20 characters into "Quick Import with AI Assistant", click "Extract Details", review the draft, then click "Apply to Form".
+
+Common errors:
+
+- `Authentication is required.` means the admin user is not logged in or the session expired.
+- `Authentication is invalid or expired.` means Supabase rejected the current session token.
+- `You do not have permission to use this assistant.` means the logged-in email does not match `ADMIN_EMAIL`.
+- `Function not found` or `404` means `extract-dashboard-content` is not deployed to the Supabase project used by `VITE_SUPABASE_URL`.
+- `GEMINI_API_KEY is not configured.` means the key is missing from Supabase Edge Function secrets.
+- `GROQ_API_KEY is not configured.` means Groq is selected but the Groq secret is missing.
+- `Unsupported AI_EXTRACT_PROVIDER. Use gemini or groq.` means the provider secret has an unsupported value.
+- `model not found` or provider-specific model errors mean `GEMINI_MODEL` or `GROQ_MODEL` is wrong for that provider account.
+- Groq schema or `400` errors usually mean the selected Groq model does not support the structured output mode used by the assistant. Start with Gemini first, then switch to Groq after the assistant works.
+
+The AI keys should only be visible in Supabase Edge Function secrets. They should not appear in `frontend/.env.local`, `.env.example`, frontend source, or any variable beginning with `VITE_`.
 
 ## 6. Verification Checklist
 
