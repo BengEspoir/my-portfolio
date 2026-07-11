@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import TestimonialCard from "./TestimonialCard";
 import TypewriterText from "./TypewriterText";
 import { FiMessageSquare } from "react-icons/fi";
-import Button from "./Button";
 import { useI18n } from "../i18n";
 
 export default function TestimonialHighway() {
@@ -71,15 +70,12 @@ export default function TestimonialHighway() {
           </div>
           <TypewriterText
             as="h2"
-            text={t("review.headline")}
+            text={t("review.showcaseTitle")}
             className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-white md:text-5xl"
           />
           <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-            {t("review.body")}
+            {t("review.showcaseBody")}
           </p>
-          <Button to="/?review=1" variant="secondary" className="mt-4">
-            {t("review.cta")}
-          </Button>
         </div>
       </div>
 

@@ -12,8 +12,7 @@ import {
   FiPhone,
   FiSend,
   FiUser,
-  FiUsers,
-  FiX
+  FiUsers
 } from "react-icons/fi";
 import {
   FaBehance,
@@ -27,7 +26,7 @@ import {
   FaXTwitter,
   FaYoutube
 } from "react-icons/fa6";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Button from "../components/Button";
 import SEO from "../components/SEO";
@@ -72,7 +71,7 @@ const services = [
 
 const quickItems = [
   { icon: FiPenTool, label: "Design Focus", value: "UI/UX & Branding" },
-  { icon: FiCalendar, label: "Experience", value: "2+ years of practical projects" },
+  { icon: FiCalendar, label: "Experience", value: "3+ years in design" },
   { icon: FiMapPin, label: "Location", value: "Yaounde, Cameroon" },
   { icon: FiUsers, label: "Collaboration", value: "Git, GitHub, agile workflows" }
 ];
@@ -205,7 +204,6 @@ export default function Home() {
   }));
   const fallbackExperiences = homeCopy.experience.items;
   const [searchParams, setSearchParams] = useSearchParams();
-  const reviewPromptRef = useRef(null);
   const [activeExperience, setActiveExperience] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
   const [experienceItems, setExperienceItems] = useState(fallbackExperiences);
@@ -217,11 +215,6 @@ export default function Home() {
   const [homeProjects, setHomeProjects] = useState([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [showReviewPrompt, setShowReviewPrompt] = useState(false);
-  const [isReviewPromptDismissed, setIsReviewPromptDismissed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.sessionStorage.getItem("testimonialReviewPromptDismissed") === "true";
-  });
 
   useEffect(() => {
     async function fetchHomeProjects() {
@@ -284,31 +277,10 @@ export default function Home() {
     setIsReviewModalOpen(searchParams.get("review") === "1");
   }, [searchParams]);
 
-  useEffect(() => {
-    if (isReviewPromptDismissed || showReviewPrompt) return undefined;
-
-    const promptNode = reviewPromptRef.current;
-    if (!promptNode) return undefined;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShowReviewPrompt(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.35 }
-    );
-
-    observer.observe(promptNode);
-    return () => observer.disconnect();
-  }, [isReviewPromptDismissed, showReviewPrompt]);
-
   const openReviewModal = () => {
     const nextSearchParams = new URLSearchParams(searchParams);
     nextSearchParams.set("review", "1");
     setSearchParams(nextSearchParams);
-    setShowReviewPrompt(false);
     setIsReviewModalOpen(true);
   };
 
@@ -317,14 +289,6 @@ export default function Home() {
     nextSearchParams.delete("review");
     setSearchParams(nextSearchParams, { replace: true });
     setIsReviewModalOpen(false);
-  };
-
-  const dismissReviewPrompt = () => {
-    setShowReviewPrompt(false);
-    setIsReviewPromptDismissed(true);
-    if (typeof window !== "undefined") {
-      window.sessionStorage.setItem("testimonialReviewPromptDismissed", "true");
-    }
   };
 
   const handleContactChange = (event) => {
@@ -697,7 +661,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section ref={reviewPromptRef} className="site-container">
+      <section className="site-container">
         <SectionTitle
           title={homeCopy.services.title}
           description={homeCopy.services.description}
@@ -913,38 +877,6 @@ export default function Home() {
       {/* Booking CTA Section */}
       <BookingCTA />
     </div>
-
-    {showReviewPrompt && !isReviewModalOpen ? (
-      <div className="fixed inset-x-4 bottom-24 z-40 mx-auto max-w-3xl rounded-2xl border border-brand-100 bg-white/95 p-4 shadow-2xl shadow-slate-900/10 backdrop-blur-md dark:border-brand-500/30 dark:bg-slate-900/95 sm:bottom-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
-            <div className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-500/20 dark:text-brand-300">
-              <FiMessageSquare />
-            </div>
-            <div>
-              <p className="font-bold text-slate-900 dark:text-white">{t("review.headline")}</p>
-              <p className="mt-1 text-sm leading-5 text-slate-600 dark:text-slate-300">
-                {t("review.body")}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 sm:shrink-0">
-            <Button type="button" size="sm" onClick={openReviewModal} className="gap-2">
-              {t("review.cta")} <FiMessageSquare />
-            </Button>
-            <button
-              type="button"
-              onClick={dismissReviewPrompt}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:text-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:text-white"
-              aria-label={t("review.dismiss")}
-            >
-              <FiX />
-            </button>
-          </div>
-        </div>
-      </div>
-    ) : null}
 
     <TestimonialSubmissionModal isOpen={isReviewModalOpen} onClose={closeReviewModal} />
   </PageTransition>

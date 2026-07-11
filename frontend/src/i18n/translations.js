@@ -103,6 +103,8 @@ export const translations = {
       }
     },
     review: {
+      showcaseTitle: "Testimonials",
+      showcaseBody: "A live wall of approved feedback from clients, collaborators, and project partners.",
       eyebrow: "Review invitation",
       modalEyebrow: "Review submission",
       headline: "Have We Worked Together?",
@@ -161,7 +163,7 @@ export const translations = {
         description:
           "I blend design thinking with engineering foundations to craft digital experiences that are clear, practical, and polished.",
         cards: [
-          { title: "Experience", body: "2+ years of practical projects and collaborations." },
+          { title: "Experience", body: "3+ years in design" },
           { title: "Design Focus", body: "UI/UX & Branding" },
           { title: "Location", body: "Yaounde, Cameroon" },
           { title: "Collaboration", body: "Git, GitHub, agile workflows" }
@@ -707,6 +709,8 @@ export const translations = {
       }
     },
     review: {
+      showcaseTitle: "Temoignages",
+      showcaseBody: "Un mur vivant d'avis approuves de clients, collaborateurs et partenaires de projet.",
       eyebrow: "Invitation a laisser un avis",
       modalEyebrow: "Soumission d'avis",
       headline: "Avons-nous travaille ensemble ?",
@@ -765,7 +769,7 @@ export const translations = {
         description:
           "Je combine la pensee design et les bases de l'ingenierie pour creer des experiences digitales claires, pratiques et soignees.",
         cards: [
-          { title: "Experience", body: "Plus de 2 ans de projets pratiques et de collaborations." },
+          { title: "Experience", body: "Plus de 3 ans en design" },
           { title: "Orientation design", body: "UI/UX & Branding" },
           { title: "Localisation", body: "Yaounde, Cameroun" },
           { title: "Collaboration", body: "Git, GitHub, methodes agiles" }

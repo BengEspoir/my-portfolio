@@ -12,6 +12,8 @@ import {
   FiMessageSquare
 } from 'react-icons/fi';
 import { supabase } from '../utils/supabase';
+import { DashboardAssistantProvider } from '../context/DashboardAssistantContext';
+import EspoirAssistantWidget from './EspoirAssistantWidget';
 import SEO from './SEO';
 
 export default function DashboardLayout({ children }) {
@@ -79,48 +81,51 @@ export default function DashboardLayout({ children }) {
   return (
     <>
       <SEO title="Admin CMS | Beng Espoir" description="Private portfolio administration area." path={location.pathname} noindex />
-      <div className="flex min-h-screen bg-slate-50">
-        <aside className="hidden w-64 lg:block">
-          <Sidebar />
-        </aside>
+      <DashboardAssistantProvider>
+        <div className="flex min-h-screen bg-slate-50">
+          <aside className="hidden w-64 lg:block">
+            <Sidebar />
+          </aside>
 
-        {isMobileMenuOpen ? (
-          <div className="fixed inset-0 z-50 lg:hidden">
-            <button
-              type="button"
-              className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"
-              onClick={() => setIsMobileMenuOpen(false)}
-              aria-label="Close admin navigation"
-            />
-            <aside className="fixed inset-y-0 left-0 w-64 shadow-2xl">
-              <Sidebar />
-            </aside>
-          </div>
-        ) : null}
-
-        <div className="flex flex-1 flex-col overflow-hidden">
-          <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6 lg:px-8">
-            <button
-              type="button"
-              className="text-slate-500 lg:hidden"
-              onClick={() => setIsMobileMenuOpen(true)}
-              aria-label="Open admin navigation"
-            >
-              <FiMenu className="h-6 w-6" />
-            </button>
-
-            <div className="flex items-center gap-4">
-              <Link to="/" className="text-sm font-medium text-slate-500 hover:text-brand-600">
-                View Site
-              </Link>
+          {isMobileMenuOpen ? (
+            <div className="fixed inset-0 z-50 lg:hidden">
+              <button
+                type="button"
+                className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"
+                onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Close admin navigation"
+              />
+              <aside className="fixed inset-y-0 left-0 w-64 shadow-2xl">
+                <Sidebar />
+              </aside>
             </div>
-          </header>
+          ) : null}
 
-          <main className="flex-1 overflow-y-auto p-6 lg:p-8">
-            {children}
-          </main>
+          <div className="flex flex-1 flex-col overflow-hidden">
+            <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6 lg:px-8">
+              <button
+                type="button"
+                className="text-slate-500 lg:hidden"
+                onClick={() => setIsMobileMenuOpen(true)}
+                aria-label="Open admin navigation"
+              >
+                <FiMenu className="h-6 w-6" />
+              </button>
+
+              <div className="flex items-center gap-4">
+                <Link to="/" className="text-sm font-medium text-slate-500 hover:text-brand-600">
+                  View Site
+                </Link>
+              </div>
+            </header>
+
+            <main className="flex-1 overflow-y-auto p-6 lg:p-8">
+              {children}
+            </main>
+          </div>
         </div>
-      </div>
+        <EspoirAssistantWidget />
+      </DashboardAssistantProvider>
     </>
   );
 }

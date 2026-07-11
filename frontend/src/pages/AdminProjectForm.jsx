@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { 
@@ -18,10 +18,12 @@ import DashboardLayout from '../components/DashboardLayout';
 import Button from '../components/Button';
 import QuickImportAssistant from '../components/QuickImportAssistant';
 import Toast from '../components/Toast';
+import { useDashboardAssistant } from '../hooks/useDashboardAssistant';
 import { createStorageFileName } from '../utils/files';
 import { slugify } from '../utils/text';
 
 const CATEGORIES = ["UI/UX", "WEB DEV", "MOBILE DEV", "GRAPHICS DESIGN", "PROGRAMMING"];
+const CTA_TYPES = ['default', 'case-study', 'full-design', 'prototype'];
 
 const defaultDesignDetails = {
   designType: '',
@@ -47,6 +49,53 @@ function inputToList(value) {
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function mergeUnique(current = [], additions = []) {
+  return [...new Set([
+    ...current.map((item) => String(item).trim()).filter(Boolean),
+    ...additions.map((item) => String(item).trim()).filter(Boolean)
+  ])];
+}
+
+function normalizeCtaType(value) {
+  const text = String(value || '').trim().toLowerCase();
+  if (CTA_TYPES.includes(text)) return text;
+  if (text.includes('prototype')) return 'prototype';
+  if (text.includes('full') || text.includes('design')) return 'full-design';
+  if (text.includes('case')) return 'case-study';
+  return '';
+}
+
+function normalizeProjectType(value, tags = []) {
+  const text = `${value || ''} ${tags.join(' ')}`.toLowerCase();
+  if (text.includes('android')) return 'Android';
+  if (text.includes('mobile') || text.includes('react native')) return 'Mobile';
+  if (text.includes('web') || text.includes('frontend') || text.includes('website')) return 'Web';
+  if (text.includes('ux') || text.includes('ui') || text.includes('product design')) return 'UX';
+  return String(value || '').trim();
+}
+
+function inferCategory(projectType, tags = []) {
+  const text = `${projectType || ''} ${tags.join(' ')}`.toLowerCase();
+  if (text.includes('android') || text.includes('mobile') || text.includes('react native')) return 'MOBILE DEV';
+  if (text.includes('web') || text.includes('frontend') || text.includes('website') || text.includes('react')) return 'WEB DEV';
+  if (text.includes('ux') || text.includes('ui') || text.includes('product design')) return 'UI/UX';
+  return '';
+}
+
+function ProjectAssistantRegistration({ formData, onApply }) {
+  const { registerAssistantTarget } = useDashboardAssistant();
+
+  useEffect(() => registerAssistantTarget({
+    id: 'admin-project-form',
+    label: formData.title ? `Project form: ${formData.title}` : 'New project form',
+    contentType: 'project',
+    currentDraft: formData,
+    onApply
+  }), [formData, onApply, registerAssistantTarget]);
+
+  return null;
 }
 
 export default function AdminProjectForm() {
@@ -170,28 +219,39 @@ export default function AdminProjectForm() {
     handleDesignDetailsChange(name, inputToList(value));
   };
 
-  const handleQuickImport = (result) => {
+  const handleQuickImport = useCallback((result) => {
     const title = String(result.title || '').trim();
     const description = String(result.description || '').trim();
     const caseStudyContent = String(result.case_study_content || '').trim();
+    const problemStatement = String(result.problem_statement || '').trim();
+    const solution = String(result.solution || '').trim();
     const tags = Array.isArray(result.tags)
       ? result.tags.map((tag) => String(tag).trim()).filter(Boolean)
       : [];
+    const projectType = normalizeProjectType(result.project_type, tags);
+    const category = inferCategory(projectType, tags);
+    const ctaType = normalizeCtaType(result.cta_type);
 
     setFormData((previous) => ({
       ...previous,
       title: title || previous.title,
       slug: previous.slug || slugify(title),
       description: description || previous.description,
+      categories: category ? mergeUnique(previous.categories, [category]) : previous.categories,
+      project_type: projectType || previous.project_type,
+      cta_type: ctaType || previous.cta_type,
+      cta_label: previous.cta_label || (ctaType === 'prototype' ? 'View Prototype' : 'View Case Study'),
       case_study_title: title || previous.case_study_title,
       project_background: caseStudyContent || description || previous.project_background,
-      tools_tech: tags.length > 0 ? tags : previous.tools_tech,
+      problem_statement: problemStatement || previous.problem_statement,
+      solution: solution || previous.solution,
+      tools_tech: tags.length > 0 ? mergeUnique(previous.tools_tech, tags) : previous.tools_tech,
       seo_title: title ? `${title} | Project Case Study` : previous.seo_title,
       seo_description: description || previous.seo_description
     }));
-    setActiveTab('basic');
-    setToast({ type: 'success', message: 'AI assistant populated the project draft. Review before saving.' });
-  };
+    setActiveTab(problemStatement || solution ? 'case-study' : 'basic');
+    setToast({ type: 'success', message: 'Espoir populated the project draft. Review before saving.' });
+  }, []);
 
   const updateDesignImageAlt = (index, alt) => {
     setFormData(prev => ({
@@ -325,6 +385,7 @@ export default function AdminProjectForm() {
 
   return (
     <DashboardLayout>
+      <ProjectAssistantRegistration formData={formData} onApply={handleQuickImport} />
       <Toast toast={toast} onClose={() => setToast(null)} />
       <form onSubmit={handleSubmit} className="space-y-8 max-w-5xl mx-auto pb-20">
         <div className="flex items-center justify-between">

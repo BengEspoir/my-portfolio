@@ -123,11 +123,15 @@ function schemaForResult(contentType: ContentType) {
     type: "object",
     properties: {
       title: { type: "string" },
+      project_type: { type: "string" },
+      problem_statement: { type: "string" },
+      solution: { type: "string" },
+      cta_type: { type: "string" },
       description: { type: "string" },
       case_study_content: { type: "string" },
       tags: { type: "array", items: { type: "string" } }
     },
-    required: ["title", "description", "case_study_content", "tags"]
+    required: ["title", "project_type", "problem_statement", "solution", "cta_type", "description", "case_study_content", "tags"]
   };
 }
 
@@ -155,6 +159,24 @@ function normalizeTags(value: unknown) {
     .slice(0, 12);
 }
 
+function normalizeProjectType(value: unknown, tags: string[]) {
+  const text = `${normalizeString(value, 80)} ${tags.join(" ")}`.toLowerCase();
+  if (text.includes("android")) return "Android";
+  if (text.includes("mobile") || text.includes("react native")) return "Mobile";
+  if (text.includes("web") || text.includes("frontend") || text.includes("website")) return "Web";
+  if (text.includes("ux") || text.includes("ui") || text.includes("product design")) return "UX";
+  return normalizeString(value, 80);
+}
+
+function normalizeCtaType(value: unknown) {
+  const text = normalizeString(value, 80).toLowerCase();
+  if (["default", "case-study", "full-design", "prototype"].includes(text)) return text;
+  if (text.includes("prototype")) return "prototype";
+  if (text.includes("full") || text.includes("design")) return "full-design";
+  if (text.includes("case")) return "case-study";
+  return "case-study";
+}
+
 function normalizeMessages(value: unknown): AssistantMessage[] {
   if (!Array.isArray(value)) return [];
   return value
@@ -179,7 +201,22 @@ function allowedDraftKeys(contentType: ContentType) {
   if (contentType === "experience") {
     return ["company", "title", "period", "description", "tags", "title_fr", "period_fr", "description_fr", "tags_fr", "status", "sort_order"];
   }
-  return ["title", "slug", "description", "case_study_title", "project_background", "tools_tech", "seo_title", "seo_description"];
+  return [
+    "title",
+    "slug",
+    "description",
+    "categories",
+    "project_type",
+    "case_study_title",
+    "project_background",
+    "problem_statement",
+    "solution",
+    "cta_type",
+    "cta_label",
+    "tools_tech",
+    "seo_title",
+    "seo_description"
+  ];
 }
 
 function normalizeCurrentDraft(contentType: ContentType, value: unknown) {
@@ -225,7 +262,7 @@ function promptFor({
 
   const contentInstructions: Record<ContentType, string> = {
     project:
-      "For a project, return title, description, case_study_content, and tags. The case study content should be a useful deep-dive summary.",
+      "For a project, return title, project_type, problem_statement, solution, cta_type, description, case_study_content, and tags. Project type should be UX, Web, Android, or Mobile when possible. cta_type must be default, case-study, full-design, or prototype. Do not parse, describe, or request images because project screens are uploaded manually.",
     blog:
       "For a blog post, return title, description, excerpt, markdown content, category, tags, SEO fields, and reading_time.",
     testimonial:
@@ -334,11 +371,16 @@ function normalizeResult(contentType: ContentType, value: unknown): ExtractedCon
     return result;
   }
 
+  const tags = normalizeTags(input.tags);
   const result = {
     title: normalizeString(input.title, 140),
+    project_type: normalizeProjectType(input.project_type, tags),
+    problem_statement: normalizeString(input.problem_statement, 2500),
+    solution: normalizeString(input.solution, 2500),
+    cta_type: normalizeCtaType(input.cta_type),
     description: normalizeString(input.description, 320),
     case_study_content: normalizeString(input.case_study_content, 8000),
-    tags: normalizeTags(input.tags)
+    tags
   };
 
   if (!result.title || !result.description || !result.case_study_content) {
