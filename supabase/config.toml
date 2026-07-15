@@ -4,6 +4,21 @@
 # working directory name when running `supabase init`.
 project_id = "Porfolio"
 
+# These functions apply their access and validation rules in their handlers.
+# Disabling the legacy gateway JWT check also lets browser OPTIONS requests
+# reach their CORS handler when the frontend uses newer publishable API keys.
+[functions.extract-dashboard-content]
+verify_jwt = false
+
+[functions.submit-testimonial]
+verify_jwt = false
+
+[functions.send-contact-email]
+verify_jwt = false
+
+[functions.send-booking-email]
+verify_jwt = false
+
 [api]
 enabled = true
 # Port to use for the API URL.

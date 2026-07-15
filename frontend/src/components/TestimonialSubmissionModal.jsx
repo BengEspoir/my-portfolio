@@ -63,6 +63,11 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
   const [status, setStatus] = useState({ type: "", message: "" });
   const dialogRef = useRef(null);
   const nameInputRef = useRef(null);
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!imageFile) {
@@ -85,7 +90,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
 
     function handleKeyDown(event) {
       if (event.key === "Escape") {
-        onClose();
+        onCloseRef.current();
         return;
       }
 
@@ -114,7 +119,7 @@ export default function TestimonialSubmissionModal({ isOpen, onClose }) {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

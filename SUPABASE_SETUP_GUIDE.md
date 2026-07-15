@@ -133,6 +133,27 @@ supabase functions deploy submit-testimonial
 supabase functions deploy extract-dashboard-content
 ```
 
+### Deploy the Browser Functions Without the CLI
+
+If the browser console reports CORS plus `Failed to send a request to the Edge Function`, first check whether the function URL returns `404`. A missing function is surfaced by the browser as a CORS failure because the `404` gateway response does not include the function's CORS headers.
+
+To deploy from the Supabase Dashboard instead of a terminal:
+
+1. Open **Supabase Dashboard -> Edge Functions**.
+2. For each function below, click **Deploy a new function -> Via Editor** if it does not exist, or open the existing function and choose **Deploy updates**:
+
+   - `extract-dashboard-content` -> `supabase/functions/extract-dashboard-content/index.ts`
+   - `submit-testimonial` -> `supabase/functions/submit-testimonial/index.ts`
+   - `send-contact-email` -> `supabase/functions/send-contact-email/index.ts`
+   - `send-booking-email` -> `supabase/functions/send-booking-email/index.ts`
+
+3. Replace the editor contents with the matching repository file, then deploy each function.
+4. In each function's settings, turn off the legacy **Verify JWT** check if the option is shown. The assistant validates the signed-in admin inside its handler, testimonial submission is intentionally public and moderated, and contact/booking email functions are called after their database records are saved.
+5. Confirm all four function URLs use the same project ref as `VITE_SUPABASE_URL`.
+6. Keep the Gemini/Groq keys under **Edge Functions -> Secrets**. Do not add them to `frontend/.env.local`.
+
+The repository also declares `verify_jwt = false` for all four browser functions in `supabase/config.toml`, so future CLI deployments preserve the same behavior automatically.
+
 Use a Resend-verified domain for `RESEND_FROM_EMAIL` before production traffic.
 Keep AI provider keys in Supabase secrets only. Do not add them to `frontend/.env.local`, `.env.example`, or any Vite-exposed variable.
 

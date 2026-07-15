@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { 
@@ -86,14 +86,24 @@ function inferCategory(projectType, tags = []) {
 
 function ProjectAssistantRegistration({ formData, onApply }) {
   const { registerAssistantTarget } = useDashboardAssistant();
+  const formDataRef = useRef(formData);
+  const onApplyRef = useRef(onApply);
+
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
+
+  useEffect(() => {
+    onApplyRef.current = onApply;
+  }, [onApply]);
 
   useEffect(() => registerAssistantTarget({
     id: 'admin-project-form',
-    label: formData.title ? `Project form: ${formData.title}` : 'New project form',
+    label: 'Project form',
     contentType: 'project',
-    currentDraft: formData,
-    onApply
-  }), [formData, onApply, registerAssistantTarget]);
+    getCurrentDraft: () => formDataRef.current,
+    onApply: (result) => onApplyRef.current(result)
+  }), [registerAssistantTarget]);
 
   return null;
 }

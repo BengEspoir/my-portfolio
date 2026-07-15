@@ -1,15 +1,10 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@^2";
+import { corsHeaders } from "npm:@supabase/supabase-js@^2/cors";
 
 type ContentType = "project" | "blog" | "testimonial" | "experience";
 type AssistantMode = "extract" | "chat";
 type ExtractedContent = Record<string, string | number | string[] | null>;
 type AssistantMessage = { role: "user" | "assistant"; content: string };
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS"
-};
 
 const maxRawTextLength = 12000;
 const maxInstructionLength = 3000;

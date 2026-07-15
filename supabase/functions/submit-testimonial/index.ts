@@ -1,13 +1,21 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@^2";
+import { corsHeaders } from "npm:@supabase/supabase-js@^2/cors";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL");
-const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS"
-};
+function getSupabaseSecretKey() {
+  const secretKeys = Deno.env.get("SUPABASE_SECRET_KEYS");
+  if (secretKeys) {
+    try {
+      const parsed = JSON.parse(secretKeys);
+      if (typeof parsed.default === "string") return parsed.default;
+    } catch (_error) {
+      // Fall back to the legacy service-role secret while projects migrate keys.
+    }
+  }
+
+  return Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+}
 
 const allowedImageTypes = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
 const maxImageSize = 2 * 1024 * 1024;
@@ -53,6 +61,7 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const serviceRoleKey = getSupabaseSecretKey();
     if (!supabaseUrl || !serviceRoleKey) {
       throw new Error("Supabase function environment is not configured.");
     }

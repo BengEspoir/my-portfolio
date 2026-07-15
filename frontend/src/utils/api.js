@@ -22,7 +22,13 @@ async function getFunctionErrorMessage(error, fallbackMessage) {
     }
   }
 
-  return error?.message || fallbackMessage;
+  const message = error?.message || fallbackMessage;
+
+  if (/failed to send a request to the edge function/i.test(message)) {
+    return 'The Supabase Edge Function could not be reached. Confirm that it is deployed and that its browser CORS/JWT configuration is enabled.';
+  }
+
+  return message;
 }
 
 export async function sendContactEmail(formData) {

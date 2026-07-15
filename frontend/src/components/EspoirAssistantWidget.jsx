@@ -89,6 +89,9 @@ export default function EspoirAssistantWidget() {
       ? { role: 'user', content: `I pasted project notes for extraction (${text.length} characters).` }
       : { role: 'user', content: prompt };
     const nextMessages = [...messages, userMessage];
+    const currentDraft = typeof assistantTarget.getCurrentDraft === 'function'
+      ? assistantTarget.getCurrentDraft()
+      : (assistantTarget.currentDraft || {});
 
     setMessages(nextMessages);
     setLoadingMode(mode);
@@ -100,7 +103,7 @@ export default function EspoirAssistantWidget() {
         rawText: text,
         instruction: mode === 'chat' ? prompt : '',
         messages: nextMessages,
-        currentDraft: assistantTarget.currentDraft || {}
+        currentDraft
       });
 
       const assistantMessage = response.assistantMessage || 'I prepared a project draft you can review and apply.';
