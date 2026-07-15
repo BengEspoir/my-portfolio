@@ -16,6 +16,7 @@ import Button from "../components/Button";
 import SectionTitle from "../components/SectionTitle";
 import SEO from "../components/SEO";
 import { sendContactEmail } from "../utils/api";
+import { siteConfig, socialProfiles } from "../config/site";
 import { useI18n } from "../i18n";
 
 const initialForm = {
@@ -26,18 +27,23 @@ const initialForm = {
   message: ""
 };
 
-const socialLinks = [
-  { icon: FaBehance, href: "https://www.behance.net", label: "Behance" },
-  { icon: FaDribbble, href: "https://dribbble.com", label: "Dribbble" },
-  { icon: FaGithub, href: "https://github.com", label: "GitHub" },
-  { icon: FaFigma, href: "https://figma.com", label: "Figma" },
-  { icon: FaLinkedin, href: "https://www.linkedin.com/in/beng-espoir-a9a279318", label: "LinkedIn" },
-  { icon: FaXTwitter, href: "https://x.com", label: "X" },
-  { icon: FaInstagram, href: "https://instagram.com", label: "Instagram" },
-  { icon: FaFacebook, href: "https://www.facebook.com/bengespoir", label: "Facebook" },
-  { icon: FaTiktok, href: "https://tiktok.com", label: "TikTok" },
-  { icon: FaYoutube, href: "https://youtube.com", label: "YouTube" }
-];
+const socialIconMap = {
+  behance: FaBehance,
+  dribbble: FaDribbble,
+  github: FaGithub,
+  figma: FaFigma,
+  linkedin: FaLinkedin,
+  x: FaXTwitter,
+  instagram: FaInstagram,
+  facebook: FaFacebook,
+  tiktok: FaTiktok,
+  youtube: FaYoutube
+};
+
+const socialLinks = socialProfiles.map((profile) => ({
+  ...profile,
+  icon: socialIconMap[profile.id]
+}));
 
 function validateForm(formData, messages) {
   const errors = {};
@@ -245,15 +251,19 @@ export default function Contact() {
           <article className="card-surface p-6">
             <FiMail className="mx-auto text-3xl text-brand-500" />
             <h3 className="mt-3 text-2xl font-bold text-slate-900">{pageCopy.email}</h3>
-            <p className="mt-2 text-slate-600">mbengespoir@gmail.com</p>
+            <a href={`mailto:${siteConfig.email}`} className="mt-2 inline-block text-slate-600 hover:text-brand-600">
+              {siteConfig.email}
+            </a>
           </article>
 
           <article className="card-surface p-6">
             <FiPhone className="mx-auto text-3xl text-brand-500" />
             <h3 className="mt-3 text-2xl font-bold text-slate-900">{pageCopy.phone}</h3>
-            <p className="mt-2 text-slate-600">+237 (683-077-263)</p>
+            <a href={`tel:${siteConfig.phone}`} className="mt-2 inline-block text-slate-600 hover:text-brand-600">
+              {siteConfig.phone}
+            </a>
             <a
-              href="https://wa.me/237683077263"
+              href={siteConfig.whatsappUrl}
               target="_blank"
               rel="noreferrer"
               className="mt-2 inline-flex text-brand-600 underline"
@@ -276,9 +286,9 @@ export default function Contact() {
           {socialLinks.map((social) => {
             const Icon = social.icon;
             return (
-              <a
-                key={social.label}
-                href={social.href}
+                <a
+                  key={social.label}
+                  href={social.url}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-2xl text-slate-700 shadow-card transition-all duration-300 hover:-translate-y-1 hover:text-brand-600"

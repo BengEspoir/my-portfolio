@@ -199,6 +199,7 @@ Common errors:
 - `GROQ_API_KEY is not configured.` means Groq is selected but the Groq secret is missing.
 - `Unsupported AI_EXTRACT_PROVIDER. Use gemini or groq.` means the provider secret has an unsupported value.
 - `model not found` or provider-specific model errors mean `GEMINI_MODEL` or `GROQ_MODEL` is wrong for that provider account.
+- `Invalid value at generation_config.response_format.text.mime_type` means the deployed function is using an outdated Gemini structured-output payload. Replace the deployed `extract-dashboard-content` source with the current repository version and deploy it again. The current function uses `responseMimeType: "application/json"` and `responseJsonSchema`.
 - Groq schema or `400` errors usually mean the selected Groq model does not support the structured output mode used by the assistant. Start with Gemini first, then switch to Groq after the assistant works.
 
 The AI keys should only be visible in Supabase Edge Function secrets. They should not appear in `frontend/.env.local`, `.env.example`, frontend source, or any variable beginning with `VITE_`.

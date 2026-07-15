@@ -10,6 +10,7 @@ import {
 import { Link, NavLink } from "react-router-dom";
 import LanguageToggle from "./LanguageToggle";
 import { useI18n } from "../i18n";
+import { siteConfig } from "../config/site";
 
 const desktopLinks = [
   { labelKey: "nav.home", to: "/" },
@@ -74,7 +75,7 @@ export default function Footer() {
 
           <div className="flex flex-wrap items-center gap-3 lg:justify-end">
             <a
-              href="mailto:mbengespoir@gmail.com"
+              href={`mailto:${siteConfig.email}`}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:-translate-y-0.5 hover:border-brand-200 hover:text-brand-600"
               aria-label={t("footer.emailLabel")}
             >

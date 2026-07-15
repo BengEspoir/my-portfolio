@@ -408,12 +408,8 @@ async function extractWithGemini(args: {
       contents: [{ role: "user", parts: [{ text: promptFor(args) }] }],
       generationConfig: {
         temperature: 0.2,
-        responseFormat: {
-          text: {
-            mimeType: "application/json",
-            schema: outputSchemaFor(args.contentType)
-          }
-        }
+        responseMimeType: "application/json",
+        responseJsonSchema: outputSchemaFor(args.contentType)
       }
     })
   });

@@ -43,7 +43,7 @@ import { revealUp } from "../animations/motion";
 import { aiDevelopmentStrengths, skillCategories, toolSkills } from "../data/skills";
 import { sendContactEmail } from "../utils/api";
 import { isSupabaseConfigured, supabase, getPublicUrl } from "../utils/supabase";
-import { buildPersonJsonLd, buildWebsiteJsonLd } from "../config/site";
+import { buildPersonJsonLd, buildWebsiteJsonLd, siteConfig, socialProfiles } from "../config/site";
 import { useI18n } from "../i18n";
 
 const services = [
@@ -119,18 +119,23 @@ const contactInitialForm = {
   message: ""
 };
 
-const contactSocialLinks = [
-  { icon: FaBehance, href: "https://www.behance.net", label: "Behance" },
-  { icon: FaDribbble, href: "https://dribbble.com", label: "Dribbble" },
-  { icon: FaGithub, href: "https://github.com", label: "GitHub" },
-  { icon: FaFigma, href: "https://figma.com", label: "Figma" },
-  { icon: FaLinkedin, href: "https://linkedin.com", label: "LinkedIn" },
-  { icon: FaXTwitter, href: "https://x.com", label: "X" },
-  { icon: FaInstagram, href: "https://instagram.com", label: "Instagram" },
-  { icon: FaFacebook, href: "https://facebook.com", label: "Facebook" },
-  { icon: FaTiktok, href: "https://tiktok.com", label: "TikTok" },
-  { icon: FaYoutube, href: "https://youtube.com", label: "YouTube" }
-];
+const socialIconMap = {
+  behance: FaBehance,
+  dribbble: FaDribbble,
+  github: FaGithub,
+  figma: FaFigma,
+  linkedin: FaLinkedin,
+  x: FaXTwitter,
+  instagram: FaInstagram,
+  facebook: FaFacebook,
+  tiktok: FaTiktok,
+  youtube: FaYoutube
+};
+
+const contactSocialLinks = socialProfiles.map((profile) => ({
+  ...profile,
+  icon: socialIconMap[profile.id]
+}));
 
 function validateContactForm(formData, messages) {
   const errors = {};
@@ -728,11 +733,15 @@ export default function Home() {
               <div className="mt-8 space-y-7 text-center lg:text-left">
                 <p className="inline-flex items-center gap-2 text-lg text-slate-800">
                   <FiMail className="text-brand-500" />
-                  <span>mbengespoir@gmail.com</span>
+                  <a href={`mailto:${siteConfig.email}`} className="transition-colors hover:text-brand-600">
+                    {siteConfig.email}
+                  </a>
                 </p>
                 <p className="inline-flex items-center gap-2 text-lg text-slate-800">
                   <FiPhone className="text-brand-500" />
-                  <span>+237(683-077-263)</span>
+                  <a href={`tel:${siteConfig.phone}`} className="transition-colors hover:text-brand-600">
+                    {siteConfig.phone}
+                  </a>
                 </p>
                 <p className="inline-flex items-center gap-2 text-lg text-slate-800">
                   <FiMapPin className="text-brand-500" />
@@ -747,7 +756,7 @@ export default function Home() {
                   return (
                     <a
                       key={social.label}
-                      href={social.href}
+                      href={social.url}
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-700 shadow-card transition-all duration-300 hover:-translate-y-1 hover:text-brand-600 dark:bg-slate-900 dark:text-slate-200 dark:ring-1 dark:ring-white/10"
